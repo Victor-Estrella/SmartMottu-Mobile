@@ -9,4 +9,10 @@ interface ListaLogin {
     senha: string
 }
 
-export { ListaCadastro, ListaLogin }; 
+interface BotaoProps { 
+    title : string
+    onPress: () => void
+}
+
+
+export { ListaCadastro, ListaLogin, BotaoProps }; 

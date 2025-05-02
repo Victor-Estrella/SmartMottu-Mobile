@@ -1,7 +1,8 @@
   import { ParamListBase } from "@react-navigation/native"
   import { useState } from "react"
-  import { Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
+  import { Pressable, Text, TextInput, View } from "react-native"
   import { styles } from "./estilos"
+import { BotaoProps } from "./Cadastro"
 
   interface MotoFormularioProps extends ParamListBase {
       onGravar : (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void
@@ -47,30 +48,27 @@
               <Text style={{marginRight: 32}}>Chassi:</Text>
               <TextInput value={chassi} onChangeText={setChassi} style={styles.input}/>
             </View>
-
-            <Botao title="Gravar" color="black" onPress={() => props.onGravar(setor, id, modelo, unidade, status, placa, chassi)} />
+            <View>
+              <Botao title="Gravar" onPress={() => 
+                props.onGravar(setor, id, modelo, unidade, status, placa, chassi)} 
+                
+              />
+            </View>
           </View>
         </View>
       )
   }
 
-  interface BotaoProps { 
-    title : string
-    color : string
-    onPress: () => void
-  }
-
-
-  function Botao( props : BotaoProps ) { 
-    return (
-      <Pressable onPress={props.onPress}>
-      <View style={{ backgroundColor: props.color}}>
+function Botao( props : BotaoProps ) { 
+  return (
+    <Pressable onPress={props.onPress}>
+      <View style={{borderRadius: 16, marginTop: 12, backgroundColor: 'black', alignItems:'center'}} >
         <Text style={styles.buttonText}>
           {props.title}
         </Text>
       </View>
     </Pressable>
-    );
-  }
+  );
+}
 
   export {FormularioMoto};

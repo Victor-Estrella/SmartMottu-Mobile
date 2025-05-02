@@ -1,7 +1,8 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native"
 import { useState } from "react"
-import { Button, Text, TextInput, View } from "react-native"
+import { Button, Pressable, Text, TextInput, View } from "react-native"
 import { styles } from "./estilos"
+import { BotaoProps } from "./Cadastro";
 
 
 interface LoginProps {
@@ -24,13 +25,26 @@ const Login = (props: LoginProps) : React.ReactElement => {
                     <Text style={{marginRight: 32}}>Senha</Text>
                     <TextInput style={styles.input} value={senha} onChangeText={setSenha}/>
                 </View>
-                <Button title="Logar" onPress={()=>{
+                <Botao title="Logar" onPress={()=>{
                 props.onLogin(nome, senha)
-                props.navigation.navigate("MotoFormulario")
                 }} />
             </View>
         </View>
     )
+}
+
+
+
+function Botao( props : BotaoProps ) { 
+    return (
+        <Pressable onPress={props.onPress}>
+            <View style={{borderRadius: 16, marginTop: 12, backgroundColor: 'black'}} >
+                <Text style={styles.buttonText}>
+                    {props.title}
+                </Text>
+            </View>
+        </Pressable>
+    );
 }
 
 

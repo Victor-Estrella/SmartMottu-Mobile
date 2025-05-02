@@ -3,7 +3,7 @@ import { FontAwesome} from '@expo/vector-icons';
 import { styles } from './estilos';
 import { Login } from './LoginFormulario';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ListaCadastro, ListaLogin } from './Cadastro';
+import { ListaCadastro } from './Cadastro';
 import { Cadastro } from './CadastroFormulario';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
@@ -12,17 +12,20 @@ import { StatusBar } from 'expo-status-bar';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
-export default function Autenticacao() {
+export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => void }) {
     const [cadastro, setCadastro] = useState<ListaCadastro[]>([]);
-    const [login, setLogin] = useState<boolean>(false);
 
     const logar = (nome : string, senha: string) => { 
             const obj = {nome, senha};
             const strLista = JSON.stringify(obj);
             AsyncStorage.setItem("LOGIN", strLista)
-                .then(() =>{console.log("Login realizado com sucesso");})
-                .catch(() =>{console.log("Erro ao realizar login");});
-            setLogin(true);
+                .then(() =>{
+                    console.log("Login realizado com sucesso");
+                    SucessoLogin();
+                })
+                .catch(() =>{
+                    console.log("Erro ao realizar login");
+                });
     }
 
 
