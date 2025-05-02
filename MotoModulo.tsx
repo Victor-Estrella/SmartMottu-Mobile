@@ -1,16 +1,17 @@
-import { View } from "react-native";
+import { Button, View } from "react-native";
 import { FormularioMoto } from "./MotoFormulario";
 import { ListagemMoto } from "./MotoListagem";
 import Moto from "./Moto";
 import { ReactNode, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {Feather} from '@expo/vector-icons';
-import { NavigationContainer } from "@react-navigation/native";
+import MotoDetalhes from "./MotoDetalhes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Tab = createBottomTabNavigator();
 
-const MotoModulo = () : React.ReactElement => {
+const MotoModulo = ({ onLogout }: { onLogout: () => void }) : React.ReactElement => {
     const [listaMoto, setListaMoto] = useState<Moto[]>([]);
   
     const gravar = (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => { 
@@ -19,8 +20,21 @@ const MotoModulo = () : React.ReactElement => {
       const novaLista = [ ...listaMoto, moto ];
       setListaMoto( novaLista );
     }
+
+    const deslogar = () => { 
+      AsyncStorage.removeItem("LOGIN")
+          .then(() =>{
+              console.log("Deslogando");
+              onLogout();
+          })
+          .catch(() =>{
+              console.log("Erro ao deslogar");
+          });
+}
+
     return (
         <View style={{  flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
+          <Button title="Sair" onPress={deslogar} />
           <Tab.Navigator screenOptions={{headerShown: false}}>
             <Tab.Screen name="MotoFormulario" component={(navProps: any) => (
               <FormularioMoto onGravar={gravar}  {...navProps}/> ) } options={{
@@ -32,8 +46,8 @@ const MotoModulo = () : React.ReactElement => {
                 }
               }}/>
     
-            <Tab.Screen name="Listagem" component={(navProps: any) => (
-              <ListagemMoto listaMoto={listaMoto}  {...navProps}/> ) } options={{
+            <Tab.Screen name="Listagem" component={({navigation}: {navigation: any}, navProps: any) => (
+              <ListagemMoto listaMoto={listaMoto} navigation={navigation}  {...navProps}/> ) } options={{
                 title: 'Listagem',
                 tabBarIcon: (screenProps: any) : ReactNode => {
                   return (
@@ -41,6 +55,19 @@ const MotoModulo = () : React.ReactElement => {
                   )
                 }
               }}/>
+              {listaMoto.length > 0 ? (
+                <Tab.Screen name="MotoDetalhes" component={(navProps: any) => (
+                  <MotoDetalhes {...navProps} /> ) } options={{
+                    title: 'Detalhes',
+                    tabBarIcon: (screenProps: any) : ReactNode => {
+                      return (
+                        <Feather name="info" size={screenProps.size} color={screenProps.color}  />
+                      )
+                    }
+                  }}/>
+                ) : null
+              }
+
           </Tab.Navigator>
         </View>
     )
