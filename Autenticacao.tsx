@@ -40,14 +40,14 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
             <Navigator>
                 <Screen name='Cadastro'component={({ navigation }: { navigation: any }) => (
                     <Cadastro onCadastro={cadastrar} navigation={navigation} />)} options={{
-                        title: "Cadastro",
+                        headerShown: false,
                         tabBarIcon: (screenProps: any) =>
                         <FontAwesome name='wpforms' size={screenProps.size} color={screenProps.color}/>
                     }}
                 />
                 <Screen name='Login' component={({navigation}:{navigation:any}) => (
                     <Login onLogin={logar} navigation={navigation} />)} options={{
-                        title: "Login",
+                        headerShown: false,
                         tabBarIcon: (screenProps: any) => 
                         <FontAwesome name='motorcycle' size={screenProps.size} color={screenProps.color}/>
                     }} 
