@@ -27,7 +27,7 @@ export default function App() {
           {!login ? (
             <Screen name="Autenticacao" component={() => <Autenticacao SucessoLogin={() => setLogin(true)} />} />
           ) : (
-            <Screen name="MotoModulo" component={() => <MotoModulo onLogout={() => setLogin(false)} />} />
+            <Screen name="MotoModulo" component={() => <MotoModulo SucessoLogout={() => setLogin(false)} />} />
           )}
         </Navigator>
         <StatusBar style="auto" />

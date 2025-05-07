@@ -1,8 +1,8 @@
   import { ParamListBase } from "@react-navigation/native"
-  import { useState } from "react"
-  import { Pressable, Text, TextInput, View } from "react-native"
-  import { styles } from "./estilos"
+import { useState } from "react"
+import { Pressable, Text, TextInput, View } from "react-native"
 import { BotaoProps } from "./Cadastro"
+import { styles } from "./estilos"
 
   interface MotoFormularioProps extends ParamListBase {
       onGravar : (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void
@@ -17,7 +17,7 @@ import { BotaoProps } from "./Cadastro"
       const [chassi, setChassi] = useState("")
       const [id, setId] = useState("")
       return (
-        <View style={{flex:1, justifyContent: 'center', backgroundColor: 'black'}}>
+        <View style={{flex:1, justifyContent: 'center', backgroundColor: 'black', overflow: "scroll"}}>
           <Text style={styles.tituloFormulario}>Formulario de Cadastro da Moto</Text>
           <View style={{flex: 1, alignSelf: 'center', width: '70%'}}>
             <View style={styles.viewInputFormulario}>
@@ -69,4 +69,5 @@ function Botao( props : BotaoProps ) {
   );
 }
 
-  export {FormularioMoto};
+  export { FormularioMoto }
+
