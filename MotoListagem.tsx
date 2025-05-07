@@ -1,38 +1,30 @@
-import Moto from "./Moto"
-import { FlatList, Pressable, Text, View } from "react-native"
-import { BotaoProps } from "./Cadastro"
-import { styles } from "./estilos"
+import Moto from "./Moto";
+import { FlatList, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import { BotaoProps } from "./Cadastro";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { styles } from "./estilos";
 
 interface MotoPropsExtra {
   item: Moto;
-  navigation: any;
+  navigation: NavigationProp<ParamListBase>;
 }
 
-
-
 const MotoProps = ({ item, navigation }: MotoPropsExtra): React.ReactElement => {
-  
   return (
-    <View style={{flex:1, alignItems:'center'}}>
-      <View style={{borderWidth: 1, borderColor: 'black', borderRadius: 12, padding: 12, marginTop: 12}}>
-        <Text>Setor: {item.setor}</Text>
-        <Text>Id: {item.id}</Text>
-        <Text>Modelo: {item.modelo}</Text>
-        <Botao title="Ver mais detalhes" onPress={() => {
-          navigation.navigate("MotoDetalhes", { moto: item});
-        }}/>
-      </View>
+    <View style={styles.linhaTabela}>
+      <Text style={styles.objetosTabela}>{item.setor}</Text>
+      <Text style={styles.objetosTabela}>{item.id}</Text>
+      <Text style={styles.objetosTabela}>{item.modelo}</Text>
+      <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { moto: item })}/>
     </View>
   );
 };
 
-function Botao( props : BotaoProps ) { 
+function Botao(props: BotaoProps) {
   return (
-    <Pressable onPress={props.onPress}>
-      <View style={{borderRadius: 16, marginTop: 12, backgroundColor: 'black', alignItems:'center'}} >
-        <Text style={styles.buttonText}>
-          {props.title}
-        </Text>
+    <Pressable onPress={props.onPress} style={styles.pressableDetalhesTabela}>
+      <View style={styles.botaoDetalhes}>
+        <Text style={styles.botaoTextoDetalhes}>{props.title}</Text>
       </View>
     </Pressable>
   );
@@ -43,15 +35,22 @@ interface ListagemProps {
   navigation: any;
 }
 
-
 const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElement => {
   return (
-    <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{fontSize:22, fontWeight: 'bold', marginTop: 32}}>Listagem de Motos</Text>
-      <FlatList data={listaMoto} keyExtractor={(item) => item.id.toString()} renderItem={({ item }) => (<MotoProps item={item} navigation={navigation} />)}/>
+    <View style={{ backgroundColor: "black", flex:1 }}>
+      <View style={styles.tabelaContainer}>
+        <Text style={styles.tituloTabela}>Listagem de Motos</Text>
+        <View style={styles.cabecalhoTabela}>
+          <Text style={styles.cabecalhoTextoTabela}>Setor</Text>
+          <Text style={styles.cabecalhoTextoTabela}>Id</Text>
+          <Text style={styles.cabecalhoTextoTabela}>Modelo</Text>
+          <Text style={styles.cabecalhoTextoTabela}>Ação</Text>
+        </View>
+        <FlatList data={listaMoto} renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />} keyExtractor={(item) => item.id.toString()}/>
+      </View>
     </View>
   );
 };
 
-export {ListagemMoto};
-  
+
+export { ListagemMoto };

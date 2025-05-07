@@ -46,8 +46,8 @@ const MotoModulo = ({ onLogout }: { onLogout: () => void }) : React.ReactElement
                 }
               }}/>
     
-            <Tab.Screen name="Listagem" component={({navigation}: {navigation: any}, navProps: any) => (
-              <ListagemMoto listaMoto={listaMoto} navigation={navigation}  {...navProps}/> ) } options={{
+            <Tab.Screen name="Listagem" component={({navigation}: {navigation: any}) => (
+              <ListagemMoto listaMoto={listaMoto} navigation={navigation} /> ) } options={{
                 title: 'Listagem',
                 tabBarIcon: (screenProps: any) : ReactNode => {
                   return (
@@ -67,7 +67,6 @@ const MotoModulo = ({ onLogout }: { onLogout: () => void }) : React.ReactElement
                   }}/>
                 ) : null
               }
-
           </Tab.Navigator>
         </View>
     )
