@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MotoModulo } from './MotoModulo';
 import Autenticacao from './Autenticacao';
+import Landing from './Landing';
 
 
 const {Navigator, Screen} = createStackNavigator();
@@ -24,6 +25,7 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <Navigator screenOptions={{ headerShown: false }}>
+          {/* <Screen name='Landing' component={Landing}/> */}
           {!login ? (
             <Screen name="Autenticacao" component={() => <Autenticacao SucessoLogin={() => setLogin(true)} />} />
           ) : (
