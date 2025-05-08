@@ -36,14 +36,10 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Botão de logout fixo no topo direito */}
       <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: 'black', zIndex: 2 }}>
-        <Pressable onPress={deslogar} style={{ padding: 10, backgroundColor: 'red', borderRadius: 10, marginTop: 20  }}>
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>Sair</Text>
-        </Pressable>
+        <Botao title="Sair" onPress={deslogar} />
       </View>
 
-      {/* Abas abaixo do botão */}
       <View style={{ flex: 1, }}>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="MotoFormulario" component={(navProps: any) => ( <FormularioMoto onGravar={gravar} SucessoLogout={SucessoLogout} {...navProps} /> )} options={{
@@ -76,13 +72,9 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
 
 function Botao(props: BotaoProps) {
   return (
-    <Pressable onPress={props.onPress} style={{ padding: 10, backgroundColor: 'red', borderRadius: 10 }}>
-      <View style={{ borderRadius: 16, backgroundColor: 'green', position: 'absolute' }}>
-        <Text style={{ color: 'white', fontWeight: 'bold'}}>
-          {props.title}
-        </Text>
-      </View>
-    </Pressable>
+      <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10, marginTop: 20  }}>
+          <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Sair</Text>
+      </Pressable>
   );
 }
 

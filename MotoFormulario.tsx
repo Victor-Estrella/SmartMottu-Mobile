@@ -17,7 +17,7 @@ import { styles } from "./estilos"
       const [chassi, setChassi] = useState("")
       const [id, setId] = useState("")
       return (
-        <View style={{flex:1, justifyContent: 'center', backgroundColor: 'black', overflow: "scroll"}}>
+        <View style={{flex:1, justifyContent: 'center', backgroundColor: 'black'}}>
           <Text style={styles.tituloFormulario}>Formulario de Cadastro da Moto</Text>
           <View style={{flex: 1, alignSelf: 'center', width: '70%'}}>
             <View style={styles.viewInputFormulario}>

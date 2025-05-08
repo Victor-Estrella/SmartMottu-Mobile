@@ -15,28 +15,25 @@ const MotoDetalhes = (props: MotoPropsExtra) => {
     if (route.params !== undefined) {
         const { moto } = route.params as { moto: Moto };
         return (
-            <View style={{ padding: 20 }}>
-                <View style={{ marginBottom: 20 }}>
-                    <Botao title="Voltar" onPress={() => {
-                        props.navigation.navigate("Listagem");
-                    }}></Botao>
-                </View>
-                <View>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Detalhes da Moto</Text>
-                    <Text>Setor: {moto.setor}</Text>
-                    <Text>ID: {moto.id}</Text>
-                    <Text>Modelo: {moto.modelo}</Text>
-                    <Text>Unidade: {moto.unidade}</Text>
-                    <Text>Status: {moto.status}</Text>
-                    <Text>Placa: {moto.placa}</Text>
-                    <Text>Chassi: {moto.chassi}</Text>
+            <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'black'}}>
+                <Text style={{ fontSize: 32, fontWeight: 'bold', color: 'green', marginTop: 30 }}>Detalhes da Moto</Text>
+                <View style={{ marginTop: 20, backgroundColor: 'black' }}>
+                    <Text style={{color: 'white'}}>Setor: {moto.setor}</Text>
+                    <Text style={{color: 'white'}}>ID: {moto.id}</Text>
+                    <Text style={{color: 'white'}}>Modelo: {moto.modelo}</Text>
+                    <Text style={{color: 'white'}}>Unidade: {moto.unidade}</Text>
+                    <Text style={{color: 'white'}}>Status: {moto.status}</Text>
+                    <Text style={{color: 'white'}}>Placa: {moto.placa}</Text>
+                    <Text style={{color: 'white'}}>Chassi: {moto.chassi}</Text>
                 </View>
             </View>
         );
     } else {
         return (
-            <Botao title="Voltar" onPress={() =>
-                props.navigation.navigate("Listagem")} />
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+                <Text style={{ color: 'white', fontSize: 18, marginBottom: 30 }}>Nenhuma moto selecionada</Text>
+                <Botao title="Voltar" onPress={() => props.navigation.navigate("Listagem")} />
+            </View>
         )
     }
 };
