@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Pressable, Text, TextInput, View } from "react-native"
 import { BotaoProps } from "./Cadastro"
 import { styles } from "./estilos"
+import { ScrollView } from "react-native-gesture-handler"
 
   interface MotoFormularioProps extends ParamListBase {
       onGravar : (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void
@@ -17,9 +18,9 @@ import { styles } from "./estilos"
       const [chassi, setChassi] = useState("")
       const [id, setId] = useState("")
       return (
-        <View style={{flex:1, justifyContent: 'center', backgroundColor: 'black'}}>
+        <ScrollView contentContainerStyle={{minHeight: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
           <Text style={styles.tituloFormulario}>Formulario de Cadastro da Moto</Text>
-          <View style={{flex: 1, alignSelf: 'center', width: '70%'}}>
+          <View style={{ width: '70%',  backgroundColor: 'black'}}>
             <View style={styles.viewInputFormulario}>
               <Text style={styles.labelFormulario}>Setor</Text>
               <TextInput value={setor} onChangeText={setSetor} style={styles.input} placeholderTextColor="white"/>
@@ -53,14 +54,14 @@ import { styles } from "./estilos"
                 props.onGravar(setor, id, modelo, unidade, status, placa, chassi)}/>
             </View>
           </View>
-        </View>
+        </ScrollView>
       )
   }
 
 function Botao( props : BotaoProps ) { 
   return (
     <Pressable onPress={props.onPress}>
-      <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}}>
+      <View style={{borderRadius: 16, marginVertical: 42, backgroundColor: 'green'}}>
         <Text style={styles.botaoTexto}>
           {props.title}
         </Text>
@@ -70,4 +71,3 @@ function Botao( props : BotaoProps ) {
 }
 
   export { FormularioMoto }
-
