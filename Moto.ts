@@ -6,6 +6,4 @@ export default interface Moto {
     status: string;
     placa: string;
     chassi: string;
-    posX: number;
-    posY: number;
 }

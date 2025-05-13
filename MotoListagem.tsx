@@ -1,5 +1,5 @@
 import Moto from "./Moto";
-import { FlatList, Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import { FlatList, Pressable, Text, View, ScrollView } from "react-native";
 import { BotaoProps } from "./Cadastro";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { styles } from "./estilos";
@@ -38,7 +38,7 @@ interface ListagemProps {
 const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElement => {
   return (
     <View style={{ backgroundColor: "black", flex:1 }}>
-      <View style={styles.tabelaContainer}>
+      <ScrollView style={styles.tabelaContainer}>
         <Text style={styles.tituloTabela}>Listagem de Motos</Text>
         <View style={styles.cabecalhoTabela}>
           <Text style={styles.cabecalhoTextoTabela}>Setor</Text>
@@ -47,7 +47,7 @@ const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElem
           <Text style={styles.cabecalhoTextoTabela}>Ação</Text>
         </View>
         <FlatList data={listaMoto} renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />} keyExtractor={(item) => item.id.toString()}/>
-      </View>
+      </ScrollView>
     </View>
   );
 };

@@ -27,9 +27,13 @@ export default function App() {
         <Navigator screenOptions={{ headerShown: false }}>
           {/* <Screen name='Landing' component={Landing}/> */}
           {!login ? (
-            <Screen name="Autenticacao" component={() => <Autenticacao SucessoLogin={() => setLogin(true)} />} />
+            <Screen name="Autenticacao"> 
+            {(navProps) => <Autenticacao {...navProps} SucessoLogin={() => setLogin(true)} />} 
+            </Screen>
           ) : (
-            <Screen name="MotoModulo" component={() => <MotoModulo SucessoLogout={() => setLogin(false)} />} />
+            <Screen name="MotoModulo"> 
+            {(navProps) => <MotoModulo {...navProps} SucessoLogout={() => setLogin(false)} />} 
+            </Screen>
           )}
         </Navigator>
         <StatusBar style="auto" />
