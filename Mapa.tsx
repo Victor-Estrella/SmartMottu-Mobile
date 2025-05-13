@@ -18,3 +18,12 @@ return (
     </View>
 );
 }
+
+// pendência : amarelo 
+// reparo simples : azul
+// danos estruturais graves : laranja
+// motor defeituoso : vermelho
+// agendada para manutenção : cinza
+// Pronta para aluguel : verde escuro
+// Sem placa : rosa
+// "Minha Mottu" : verde claro

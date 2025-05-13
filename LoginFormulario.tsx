@@ -18,7 +18,7 @@ const Login = (props: LoginProps) : React.ReactElement => {
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={styles.tituloAutenticacao}>Login</Text>
             </View>
-            <View style={{flex: 3, alignItems: 'center'}}>
+            <View style={{flex: 3,width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Nome" value={nome} onChangeText={setNome}/>
                 </View>

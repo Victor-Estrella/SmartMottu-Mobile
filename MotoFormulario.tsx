@@ -23,7 +23,7 @@ import { ScrollView } from "react-native-gesture-handler"
           <View style={{ width: '70%',  backgroundColor: 'black'}}>
             <View style={styles.viewInputFormulario}>
               <Text style={styles.labelFormulario}>Setor</Text>
-              <TextInput value={setor} onChangeText={setSetor} style={styles.input} placeholderTextColor="white"/>
+              <TextInput value={setor}  onChangeText={setSetor} style={styles.input} placeholderTextColor="white"/>
             </View>
             <View style={styles.viewInputFormulario}>
               <Text style={styles.labelFormulario}>Id</Text>

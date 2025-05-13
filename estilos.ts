@@ -10,9 +10,6 @@ const styles = StyleSheet.create({
 
     // Formulário de Autenticação (Cadastro e Login)
     viewInputAutenticacao: {
-      flexDirection:'row', 
-      alignItems: 'center',
-      justifyContent:'center', 
       marginTop:40,
       marginBottom: 12,
     }, 
@@ -23,7 +20,6 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 22,
       fontWeight: 300,
-      width: '50%',
     },
     tituloAutenticacao: {
       fontSize:48, 
