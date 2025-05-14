@@ -19,6 +19,17 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
   const [chassi, setChassi] = useState("")
   const [id, setId] = useState("")
 
+  const limparFormulario = () => {
+    setSetorSelecionado("pendencia");
+    setModelo("");
+    setUnidade("");
+    setStatus("");
+    setPlaca("");
+    setChassi("");
+    setId("");
+  };
+
+
   return (
     <ScrollView contentContainerStyle={{minHeight: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
       <Text style={styles.tituloFormulario}>Formulario de Cadastro da Moto</Text>
@@ -62,8 +73,10 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
           <TextInput value={chassi} onChangeText={setChassi} style={styles.input} placeholderTextColor="white"/>
         </View>
         <View style={{alignItems: 'center'}}>
-          <Botao title="Gravar" onPress={() => 
-          props.onGravar(setorSelecionado, id, modelo, unidade, status, placa, chassi)}/>
+          <Botao title="Gravar" onPress={() => {
+            props.onGravar(setorSelecionado, id, modelo, unidade, status, placa, chassi)
+            limparFormulario(); 
+          }}/>
         </View>
       </View>
     </ScrollView>
