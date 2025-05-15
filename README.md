@@ -1,5 +1,10 @@
 # SmartMottu
 
+## Integrantes
+- Julia Monteiro - RM:557023 - Turma: 2TDSPV
+- Sofia Andrade Petruk - RM:556585 - Turma: 2TDSPV
+- Victor Henrique Estrella Carracci - RM:556206 - Turma: 2TDSPH
+
 ## Objetivo
 O objetivo deste projeto é resolver o principal problema interno da Mottu: a dificuldade de localizar motos nos pátios, especialmente quando estão paradas sem placas, com o chassi encoberto ou quando o GPS entra em modo de hibernação. Esse problema gera confusão, retrabalho, atrasos e impacta diretamente na produtividade e satisfação dos clientes.
 
@@ -25,3 +30,8 @@ A solução proposta é uma plataforma inteligente de gestão de pátios que int
 - **Node.js** instalado
 - **Expo CLI** instalado: `npm install -g expo-cli`
 - **React Native** configurado no seu ambiente de desenvolvimento
+
+### Ao clonar o projeto
+- **Entrar no diretório**: `cd challenge-mobile` caso esteja fora dessa pasta
+- **Node Modules** `npm install` para baixar todos os arquivos da node_modules
+- **Rodar o projeto**: `npm run start` caso queira abrir atráves de um emulador ou `npm run web` caso queira abrir direto do navegador

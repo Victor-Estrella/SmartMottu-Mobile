@@ -16,7 +16,7 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
     const [cadastro, setCadastro] = useState<ListaCadastro[]>([]);
 
     const logar = (nome : string, senha: string) => { 
-            const obj = {nome, senha};
+            const obj = {nome, senha};  
             const strLista = JSON.stringify(obj);
             AsyncStorage.setItem("LOGIN", strLista)
                 .then(() =>{
@@ -38,20 +38,20 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
     return (
         <View style={styles.container}>
             <Navigator>
-                <Screen name='Cadastro'component={({ navigation }: { navigation: any }) => (
-                    <Cadastro onCadastro={cadastrar} navigation={navigation} />)} options={{
-                        title: "Cadastro",
-                        tabBarIcon: (screenProps: any) =>
+                <Screen name='Cadastro' options={{
+                    headerShown: false,
+                    tabBarIcon: (screenProps: any) =>
                         <FontAwesome name='wpforms' size={screenProps.size} color={screenProps.color}/>
-                    }}
-                />
-                <Screen name='Login' component={({navigation}:{navigation:any}) => (
-                    <Login onLogin={logar} navigation={navigation} />)} options={{
-                        title: "Login",
-                        tabBarIcon: (screenProps: any) => 
+                    }}>
+                    {({ navigation }: { navigation: any }) => ( <Cadastro onCadastro={cadastrar} navigation={navigation} />)}
+                </Screen>
+                <Screen name='Login' options={{
+                    headerShown: false,
+                    tabBarIcon: (screenProps: any) => 
                         <FontAwesome name='motorcycle' size={screenProps.size} color={screenProps.color}/>
-                    }} 
-                /> 
+                    }}>
+                    {({navigation}:{navigation:any}) => ( <Login onLogin={logar} navigation={navigation} />)}
+                </Screen> 
             </Navigator>
             <StatusBar style="auto" />
         </View>

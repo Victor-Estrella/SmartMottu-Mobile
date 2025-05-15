@@ -1,6 +1,6 @@
 import { ParamListBase, NavigationProp } from "@react-navigation/native"
 import { useState } from "react"
-import { Button, Pressable, Text, TextInput, View } from "react-native"
+import { Pressable, Text, TextInput, View } from "react-native"
 import { styles } from "./estilos"
 import { BotaoProps } from "./Cadastro";
 
@@ -14,25 +14,26 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     return (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize:22, fontWeight: 'bold', marginTop: 32}}>Cadastro</Text>
-            <View style={{flex: 1}}>
-                <View style={styles.viewInput}>
-                    <Text style={{marginRight: 32}}>Nome</Text>
-                    <TextInput style={styles.input} value={nome} onChangeText={setNome}/>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.tituloAutenticacao}>Cadastro</Text>
+            </View>
+            <View style={{flex: 3, width: '50%'}}>
+                <View style={styles.viewInputAutenticacao}>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Nome" value={nome} onChangeText={setNome}/>
                 </View>
-                <View style={styles.viewInput}>
-                    <Text style={{marginRight: 32}}>Email</Text>
-                    <TextInput style={styles.input} value={email} onChangeText={setEmail}/>
+                <View style={styles.viewInputAutenticacao}>    
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
                 </View>
-                <View style={styles.viewInput}>
-                    <Text style={{marginRight: 32}}>Senha</Text>
-                    <TextInput style={styles.input} value={senha} onChangeText={setSenha}/>
+                <View style={styles.viewInputAutenticacao}>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
                 </View>
-                <Botao title="Cadastrar" onPress={()=>{
-                props.onCadastro(nome, email, senha)
-                props.navigation.navigate("Login")
-                }} />
+                <View style={{alignItems: 'center'}}>
+                    <Botao title="Cadastrar" onPress={()=>{
+                        props.onCadastro(nome, email, senha)
+                        props.navigation.navigate("Login")
+                    }} />
+                </View>
             </View>
         </View>
     )
@@ -42,8 +43,8 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
 function Botao( props : BotaoProps ) { 
     return (
         <Pressable onPress={props.onPress}>
-            <View style={{borderRadius: 16, marginTop: 12, backgroundColor: 'black'}} >
-                <Text style={styles.buttonText}>
+            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
+                <Text style={styles.buttonTextAutenticacao}>
                     {props.title}
                 </Text>
             </View>

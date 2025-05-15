@@ -14,18 +14,18 @@ const Login = (props: LoginProps) : React.ReactElement => {
     const [nome, setNome] = useState("")
     const [senha, setSenha] = useState("")
     return (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize:22, fontWeight: 'bold', marginTop: 32}}>Login</Text>
-            <View style={{flex: 1}}>
-                <View style={styles.viewInput}>
-                    <Text style={{marginRight: 32}}>Nome</Text>
-                    <TextInput style={styles.input} value={nome} onChangeText={setNome}/>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.tituloAutenticacao}>Login</Text>
+            </View>
+            <View style={{flex: 3,width: '50%'}}>
+                <View style={styles.viewInputAutenticacao}>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Nome" value={nome} onChangeText={setNome}/>
                 </View>
-                <View style={styles.viewInput}>
-                    <Text style={{marginRight: 32}}>Senha</Text>
-                    <TextInput style={styles.input} value={senha} onChangeText={setSenha}/>
+                <View style={styles.viewInputAutenticacao}>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
                 </View>
-                <Botao title="Logar" onPress={()=>{
+                <Botao title="Entrar" onPress={()=>{
                 props.onLogin(nome, senha)
                 }} />
             </View>
@@ -38,8 +38,8 @@ const Login = (props: LoginProps) : React.ReactElement => {
 function Botao( props : BotaoProps ) { 
     return (
         <Pressable onPress={props.onPress}>
-            <View style={{borderRadius: 16, marginTop: 12, backgroundColor: 'black'}} >
-                <Text style={styles.buttonText}>
+            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
+                <Text style={styles.buttonTextAutenticacao}>
                     {props.title}
                 </Text>
             </View>
