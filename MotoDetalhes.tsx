@@ -1,19 +1,28 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { BotaoProps } from './Cadastro';
 import { styles } from './estilos';
 import Moto from './Moto';
 
 
-interface MotoPropsExtra {
+interface MotoDetalhesProps {
     navigation: any;
+    listaMoto: Moto[];
+    setListaMoto: React.Dispatch<React.SetStateAction<Moto[]>>;
 }
 
-const MotoDetalhes = (props: MotoPropsExtra) => {
+const MotoDetalhes = ({ navigation, listaMoto, setListaMoto }: MotoDetalhesProps) => {
     const route = useRoute();
     if (route.params !== undefined) {
         const { moto } = route.params as { moto: Moto };
+        
+        const deletarMoto = () => {
+            const novaLista = listaMoto.filter(item => item.id !== moto.id);
+            setListaMoto(novaLista);
+            Alert.alert("Sucesso", "Moto deletada com sucesso!");
+            navigation.navigate("Listagem");
+        };
         return (
             <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'black'}}>
                 <Text style={{ fontSize: 32, fontWeight: 'bold', color: 'green', marginTop: 30 }}>Detalhes da Moto</Text>
@@ -25,6 +34,12 @@ const MotoDetalhes = (props: MotoPropsExtra) => {
                     <Text style={{color: 'white'}}>Status: {moto.status}</Text>
                     <Text style={{color: 'white'}}>Placa: {moto.placa}</Text>
                     <Text style={{color: 'white'}}>Chassi: {moto.chassi}</Text>
+                    <View style={{ marginTop: 20 }}>
+                        <Botao title="Atualizar" onPress={() => navigation.navigate("MotoAtualizar", { moto })}/>
+                    </View>
+                    <View style={{ marginTop: 20 }}>
+                        <Botao title="Deletar" onPress={deletarMoto}/>
+                    </View>
                 </View>
             </View>
         );
@@ -32,7 +47,7 @@ const MotoDetalhes = (props: MotoPropsExtra) => {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
                 <Text style={{ color: 'white', fontSize: 18, marginBottom: 30 }}>Nenhuma moto selecionada</Text>
-                <Botao title="Voltar" onPress={() => props.navigation.navigate("Listagem")} />
+                <Botao title="Voltar" onPress={() => navigation.navigate("Listagem")} />
             </View>
         )
     }

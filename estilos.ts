@@ -125,6 +125,33 @@ const styles = StyleSheet.create({
       fontSize: 12,
     },
   
+
+    // Configurações
+    containerConfig: {
+      flex: 1,
+      padding: 24,
+      backgroundColor: '#000',
+      justifyContent: 'center',
+    },
+    tituloConfig: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      marginBottom: 32,
+      textAlign: 'center',
+      color: '#00b131',
+    },
+    inputConfig: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 8,
+      padding: 12,
+      marginBottom: 16,
+      fontSize: 16,
+      color: 'white',
+    },
+    deleteConfig: {
+      marginTop: 32,
+    },
 });
 
 export { styles };

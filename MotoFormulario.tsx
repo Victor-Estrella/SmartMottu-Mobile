@@ -11,8 +11,8 @@ interface MotoFormularioProps extends ParamListBase {
 }
 
 const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
-  const [setorSelecionado, setSetorSelecionado] = useState("pendencia")
-  const [modelo, setModelo] = useState("")
+  const [setorSelecionado, setSetorSelecionado] = useState("Pendencia")
+  const [modelo, setModelo] = useState("Mottu Pop")
   const [unidade, setUnidade] = useState("")
   const [status, setStatus] = useState("")
   const [placa, setPlaca] = useState("")
@@ -20,8 +20,8 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
   const [id, setId] = useState("")
 
   const limparFormulario = () => {
-    setSetorSelecionado("pendencia");
-    setModelo("");
+    setSetorSelecionado("Pendencia");
+    setModelo("Mottu Pop");
     setUnidade("");
     setStatus("");
     setPlaca("");
@@ -54,7 +54,11 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Modelo</Text>
-          <TextInput value={modelo} onChangeText={setModelo} style={styles.input} placeholderTextColor="white"/>
+          <Picker style={styles.input} selectedValue={modelo} onValueChange={(itemValue, itemIndex) => setModelo(itemValue)}>
+            <Picker.Item label="Mottu Pop" value="Mottu Pop" />
+            <Picker.Item label="Mottu Sport" value="Mottu Sport" />
+            <Picker.Item label="Mottu-E" value="Mottu-E" />
+          </Picker>
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Unidade</Text>
