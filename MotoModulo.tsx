@@ -9,6 +9,7 @@ import MotoDetalhes from "./MotoDetalhes";
 import { FormularioMoto } from "./MotoFormulario";
 import { ListagemMoto } from "./MotoListagem";
 import { MapaPatio } from './Mapa';
+import Configuracoes from './Configuracoes';
 
 
 const Tab = createBottomTabNavigator();
@@ -73,10 +74,18 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                   <Feather name="info" size={screenProps.size} color={screenProps.color} />
                 ),
               }}>
-              {(navProps: any) => <MotoDetalhes {...navProps} />} 
+              {(navProps: any) => <MotoDetalhes listaMoto={listaMoto} setListaMoto={setListaMoto}  {...navProps} />} 
             </Tab.Screen>
             ) : null
           }
+          <Tab.Screen name="Configurações" options={{
+              title: 'Configurações',
+              tabBarIcon: (screenProps: any): ReactNode => (
+                <Feather name="settings" size={screenProps.size} color={screenProps.color} />
+              ),
+            }}>
+            {(navProps: any) => ( <Configuracoes {...navProps} /> )}
+          </Tab.Screen>
         </Tab.Navigator>
       </View>
     </View>
