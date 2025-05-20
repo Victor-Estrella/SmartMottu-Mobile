@@ -19,19 +19,46 @@ A solução proposta é uma plataforma inteligente de gestão de pátios que int
 5. **Busca e Identificação Visual**: O operador pode buscar por uma moto utilizando imagens capturadas pelas câmeras e o sistema de visão computacional (baseado em **TensorFlow** ou **PyTorch**). O sistema indicará a localização exata da moto, convertendo coordenadas de imagem para pontos no mapa digital.
 
 ## Tecnologias Utilizadas:
-- **React Native** para o desenvolvimento do app mobile.
-- **TensorFlow** ou **PyTorch** para a implementação de visão computacional.
+- **React Native** com **Expo**
+- **React Navigation** para navegação entre telas
+- **AsyncStorage** para persistência de dados localmente
 - **React Native Maps** para exibição do mapa interativo.
 - **Expo Barcode Scanner** para leitura do QR Code.
+- **TensorFlow** ou **PyTorch** para a implementação de visão computacional.
 
 ## Como Rodar o Projeto
 
 ### Pré-requisitos
 - **Node.js** instalado
-- **Expo CLI** instalado: `npm install -g expo-cli`
+- **Expo CLI** instalado: 
+
+    ```bash
+    npm install -g expo-cli
+    ```
 - **React Native** configurado no seu ambiente de desenvolvimento
 
-### Ao clonar o projeto
-- **Entrar no diretório**: `cd challenge-mobile` caso esteja fora dessa pasta
-- **Node Modules** `npm install` para baixar todos os arquivos da node_modules
-- **Rodar o projeto**: `npm run start` caso queira abrir atráves de um emulador ou `npm run web` caso queira abrir direto do navegador
+### Instruções
+1. Clone o repositório e entre no diretório do projeto:
+
+    ```bash
+    git clone https://github.com/jliamonteiro/challenge-mobile.git
+    cd challenge-mobile
+    ```
+
+2. Instale as dependências:
+    ```bash
+    npm install
+    ```
+
+3. Rode o projeto:
+    - Para emulador ou Expo Go:
+        
+        ```
+        npm run start
+        ```
+
+    - Para navegador (modo web):
+
+        ```bash
+        npm run web
+        ```
