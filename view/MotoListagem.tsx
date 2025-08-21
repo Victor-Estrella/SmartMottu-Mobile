@@ -1,8 +1,8 @@
-import Moto from "./Moto";
+import { Moto } from "../model/Moto";
 import { FlatList, Pressable, Text, View, ScrollView } from "react-native";
-import { BotaoProps } from "./Cadastro";
+import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { styles } from "./estilos";
+import { styles } from "../estilos";
 
 interface MotoPropsExtra {
   item: Moto;
@@ -15,7 +15,7 @@ const MotoProps = ({ item, navigation }: MotoPropsExtra): React.ReactElement => 
       <Text style={styles.objetosTabela}>{item.setor}</Text>
       <Text style={styles.objetosTabela}>{item.id}</Text>
       <Text style={styles.objetosTabela}>{item.modelo}</Text>
-      <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { moto: item })}/>
+      <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { moto: item })} />
     </View>
   );
 };
@@ -37,7 +37,7 @@ interface ListagemProps {
 
 const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElement => {
   return (
-    <View style={{ backgroundColor: "black", flex:1 }}>
+    <View style={{ backgroundColor: "black", flex: 1 }}>
       <ScrollView style={styles.tabelaContainer}>
         <Text style={styles.tituloTabela}>Listagem de Motos</Text>
         <View style={styles.cabecalhoTabela}>
@@ -46,7 +46,7 @@ const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElem
           <Text style={styles.cabecalhoTextoTabela}>Modelo</Text>
           <Text style={styles.cabecalhoTextoTabela}>Ação</Text>
         </View>
-        <FlatList data={listaMoto} renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />} keyExtractor={(item) => item.id.toString()}/>
+        <FlatList data={listaMoto} renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />} keyExtractor={(item) => item.id.toString()} />
       </ScrollView>
     </View>
   );

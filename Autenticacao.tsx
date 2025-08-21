@@ -3,7 +3,7 @@ import { FontAwesome} from '@expo/vector-icons';
 import { styles } from './estilos';
 import { Login } from './LoginFormulario';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ListaCadastro } from './Cadastro';
+import { ListaCadastro } from './model/Cadastro';
 import { Cadastro } from './CadastroFormulario';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';

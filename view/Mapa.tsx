@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { styles } from "./estilos";
-import Moto from "./Moto";
-import { useWindowDimensions } from "react-native";
+import React from 'react';
+import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-native';
+import { styles } from '../estilos';
+import { Moto } from '../model/Moto';
 
 export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
     const { width } = useWindowDimensions();
@@ -32,7 +31,7 @@ export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
         { setor: "outro", cor: "white", label: "Outro" },
     ];
 
-    const [filtro, setFiltro] = useState<string | null>(null);
+    const [filtro, setFiltro] = React.useState<string | null>(null);
 
     const motosFiltradas = filtro
         ? listaMoto.filter(m => m.setor.toLowerCase() === filtro)
@@ -43,8 +42,8 @@ export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
             <Text style={styles.tituloFormulario}>Mapa do Pátio</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", margin: 10, justifyContent: "center" }}>
                 {legenda.map(item => (
-                    <Pressable key={item.setor} onPress={() => setFiltro(filtro === item.setor ? null : item.setor)} style={{ flexDirection: "row", alignItems: "center", margin: 5, opacity: filtro && filtro !== item.setor ? 0.5 : 1,}}>
-                        <View style={{ width: 20, height: 20, backgroundColor: item.cor, borderRadius: 4, marginRight: 6, borderWidth: filtro === item.setor ? 2 : 1, borderColor: filtro === item.setor ? "white" : "gray",}} />
+                    <Pressable key={item.setor} onPress={() => setFiltro(filtro === item.setor ? null : item.setor)} style={{ flexDirection: "row", alignItems: "center", margin: 5, opacity: filtro && filtro !== item.setor ? 0.5 : 1, }}>
+                        <View style={{ width: 20, height: 20, backgroundColor: item.cor, borderRadius: 4, marginRight: 6, borderWidth: filtro === item.setor ? 2 : 1, borderColor: filtro === item.setor ? "white" : "gray", }} />
                         <Text style={{ color: "white", fontSize: 14 }}>{item.label}</Text>
                     </Pressable>
                 ))}
@@ -60,8 +59,8 @@ export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
                     const cor = corPorSetor[moto.setor.toLowerCase()] || "white";
 
                     return (
-                        <View key={index} style={{ position: "absolute", left: posX, top: posY, width: 75, height: 75, backgroundColor: cor, borderRadius: 5, justifyContent: "center", alignItems: "center",}}>
-                            <Text style={{ color: "black", fontSize: 15, textAlign: "center", flexShrink: 1,}} numberOfLines={2}>{moto.placa || moto.chassi}</Text>
+                        <View key={index} style={{ position: "absolute", left: posX, top: posY, width: 75, height: 75, backgroundColor: cor, borderRadius: 5, justifyContent: "center", alignItems: "center", }}>
+                            <Text style={{ color: "black", fontSize: 15, textAlign: "center", flexShrink: 1, }} numberOfLines={2}>{moto.placa || moto.chassi}</Text>
                         </View>
                     );
                 })}

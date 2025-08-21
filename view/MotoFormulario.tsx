@@ -1,23 +1,23 @@
-import { ParamListBase } from "@react-navigation/native"
-import { useState } from "react"
-import { Pressable, Text, TextInput, View } from "react-native"
-import { BotaoProps } from "./Cadastro"
-import { styles } from "./estilos"
-import { ScrollView } from "react-native-gesture-handler"
-import { Picker, PickerIOS } from "@react-native-picker/picker"
+import { ParamListBase } from "@react-navigation/native";
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { BotaoProps } from "../model/Botao";
+import { styles } from "../estilos";
+import { ScrollView } from "react-native-gesture-handler";
+import { Picker } from "@react-native-picker/picker";
 
 interface MotoFormularioProps extends ParamListBase {
-  onGravar : (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void
+  onGravar: (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void;
 }
 
-const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
-  const [setorSelecionado, setSetorSelecionado] = useState("Pendencia")
-  const [modelo, setModelo] = useState("Mottu Pop")
-  const [unidade, setUnidade] = useState("")
-  const [status, setStatus] = useState("")
-  const [placa, setPlaca] = useState("")
-  const [chassi, setChassi] = useState("")
-  const [id, setId] = useState("")
+const FormularioMoto = (props: MotoFormularioProps): React.ReactElement => {
+  const [setorSelecionado, setSetorSelecionado] = useState("Pendencia");
+  const [modelo, setModelo] = useState("Mottu Pop");
+  const [unidade, setUnidade] = useState("");
+  const [status, setStatus] = useState("");
+  const [placa, setPlaca] = useState("");
+  const [chassi, setChassi] = useState("");
+  const [id, setId] = useState("");
 
   const limparFormulario = () => {
     setSetorSelecionado("Pendencia");
@@ -29,11 +29,10 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
     setId("");
   };
 
-
   return (
-    <ScrollView contentContainerStyle={{minHeight: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'black'}}>
+    <ScrollView contentContainerStyle={{ minHeight: "100%", alignItems: "center", justifyContent: "center", backgroundColor: "black" }}>
       <Text style={styles.tituloFormulario}>Formulario de Cadastro da Moto</Text>
-      <View style={{ width: '70%',  backgroundColor: 'black'}}>
+      <View style={{ width: "70%", backgroundColor: "black" }}>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Setor</Text>
           <Picker style={styles.input} selectedValue={setorSelecionado} onValueChange={(itemValue, itemIndex) => setSetorSelecionado(itemValue)}>
@@ -50,7 +49,7 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Id</Text>
-          <TextInput value={id} onChangeText={setId} style={styles.input} placeholderTextColor="white"/>
+          <TextInput value={id} onChangeText={setId} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Modelo</Text>
@@ -62,35 +61,35 @@ const FormularioMoto = (props: MotoFormularioProps) : React.ReactElement => {
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Unidade</Text>
-          <TextInput value={unidade} onChangeText={setUnidade} style={styles.input} placeholderTextColor="white"/>
+          <TextInput value={unidade} onChangeText={setUnidade} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Status</Text>
-          <TextInput value={status} onChangeText={setStatus} style={styles.input} placeholderTextColor="white"/>
+          <TextInput value={status} onChangeText={setStatus} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Placa</Text>
-          <TextInput value={placa} onChangeText={setPlaca} style={styles.input} placeholderTextColor="white"/>
+          <TextInput value={placa} onChangeText={setPlaca} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Chassi</Text>
-          <TextInput value={chassi} onChangeText={setChassi} style={styles.input} placeholderTextColor="white"/>
+          <TextInput value={chassi} onChangeText={setChassi} style={styles.input} placeholderTextColor="white" />
         </View>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: "center" }}>
           <Botao title="Gravar" onPress={() => {
-            props.onGravar(setorSelecionado, id, modelo, unidade, status, placa, chassi)
-            limparFormulario(); 
-          }}/>
+            props.onGravar(setorSelecionado, id, modelo, unidade, status, placa, chassi);
+            limparFormulario();
+          }} />
         </View>
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-function Botao( props : BotaoProps ) { 
+function Botao(props: BotaoProps) {
   return (
     <Pressable onPress={props.onPress}>
-      <View style={{borderRadius: 16, marginVertical: 42, backgroundColor: 'green'}}>
+      <View style={{ borderRadius: 16, marginVertical: 42, backgroundColor: "green" }}>
         <Text style={styles.botaoTexto}>
           {props.title}
         </Text>
@@ -99,4 +98,4 @@ function Botao( props : BotaoProps ) {
   );
 }
 
-  export { FormularioMoto }
+export { FormularioMoto };

@@ -1,28 +1,20 @@
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
-import { BotaoProps } from './Cadastro';
-import Moto from "./Moto";
-import MotoDetalhes from "./MotoDetalhes";
-import { FormularioMoto } from "./MotoFormulario";
-import { ListagemMoto } from "./MotoListagem";
-import { MapaPatio } from './Mapa';
-import Configuracoes from './Configuracoes';
-
+import { BotaoProps } from './model/Botao';
+import { FormularioMoto } from './view/MotoFormulario';
+import { ListagemMoto } from './view/MotoListagem';
+import MotoDetalhes from './view/MotoDetalhes';
+import { MapaPatio } from './view/Mapa';
+import Configuracoes from './view/Configuracoes';
+import { useMotoControl } from './control/motoControl';
 
 const Tab = createBottomTabNavigator();
 
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
-  const [listaMoto, setListaMoto] = useState<Moto[]>([]);
-
-
-  const gravar = ( setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => {
-    const moto = { setor, id, modelo, unidade, status, placa, chassi };
-
-    setListaMoto([...listaMoto, moto]);
-  };
+  const { listaMoto, gravar, deletar, atualizar, limpar, setListaMoto } = useMotoControl();
 
   const deslogar = () => {
     AsyncStorage.removeItem("LOGIN")

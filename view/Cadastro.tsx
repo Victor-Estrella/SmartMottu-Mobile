@@ -1,8 +1,8 @@
 import { ParamListBase, NavigationProp } from "@react-navigation/native"
 import { useState } from "react"
 import { Pressable, Text, TextInput, View } from "react-native"
-import { styles } from "./estilos"
-import { BotaoProps } from "./model/Botao";
+import { styles } from "../estilos"
+import { BotaoProps } from "../model/Botao";
 
 interface CadastroProps {
     navigation: NavigationProp<ParamListBase>;
@@ -39,17 +39,12 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
     )
 }
 
-
-function Botao( props : BotaoProps ) { 
+const Botao = ({ title, onPress }: BotaoProps) => {
     return (
-        <Pressable onPress={props.onPress}>
-            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
-                <Text style={styles.buttonTextAutenticacao}>
-                    {props.title}
-                </Text>
-            </View>
+        <Pressable onPress={onPress} style={styles.botao}>
+            <Text style={styles.botaoTexto}>{title}</Text>
         </Pressable>
     );
-}
+};
 
 export { Cadastro };

@@ -1,10 +1,9 @@
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { BotaoProps } from './Cadastro';
-import { styles } from './estilos';
-import Moto from './Moto';
-
+import { BotaoProps } from '../model/Botao';
+import { styles } from '../estilos';
+import { Moto } from '../model/Moto';
 
 interface MotoDetalhesProps {
     navigation: any;
@@ -16,7 +15,7 @@ const MotoDetalhes = ({ navigation, listaMoto, setListaMoto }: MotoDetalhesProps
     const route = useRoute();
     if (route.params !== undefined) {
         const { moto } = route.params as { moto: Moto };
-        
+
         const deletarMoto = () => {
             const novaLista = listaMoto.filter(item => item.id !== moto.id);
             setListaMoto(novaLista);
@@ -35,10 +34,10 @@ const MotoDetalhes = ({ navigation, listaMoto, setListaMoto }: MotoDetalhesProps
                     <Text style={{color: 'white'}}>Placa: {moto.placa}</Text>
                     <Text style={{color: 'white'}}>Chassi: {moto.chassi}</Text>
                     <View style={{ marginTop: 20 }}>
-                        <Botao title="Atualizar" onPress={() => navigation.navigate("MotoAtualizar", { moto })}/>
+                        <Botao title="Atualizar" onPress={() => navigation.navigate("MotoAtualizar", { moto })} />
                     </View>
                     <View style={{ marginTop: 20 }}>
-                        <Botao title="Deletar" onPress={deletarMoto}/>
+                        <Botao title="Deletar" onPress={deletarMoto} />
                     </View>
                 </View>
             </View>
