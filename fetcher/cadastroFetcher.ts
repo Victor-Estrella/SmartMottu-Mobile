@@ -1,19 +1,45 @@
-import { ListaCadastro } from "../model/Cadastro";
 import axios from 'axios';
+import { ListaCadastro, ListaLogin } from "../model/Cadastro";
 
-const apiBase = axios.create({
-  baseURL: "https://tdsph-ad96c-default-rtdb.firebaseio.com",
+const apiLocal = axios.create({
+  baseURL: "http://192.168.0.24:8080",
 });
 
-interface SalvarCallback {
-  (sucesso: boolean, mensagem: string, key?: string): void;
+
+// Cria um novo usuário tipado
+export async function criarUsuario(data: ListaCadastro) {
+  const resp = await apiLocal.post('/usuarios', data);
+  return resp.data;
 }
 
-const cadastroFetcherSalvar = (cadastro: ListaCadastro, callback: SalvarCallback): void => {
-  apiBase
-    .post('/cadastros.json', cadastro)
-    .then((resp) => callback(true, '', resp.data && resp.data.name ? resp.data.name : undefined))
-    .catch((err: any) => callback(false, err.message || String(err)));
-};
+// Realiza login
+export async function loginUsuario(login: ListaLogin) {
+  const resp = await apiLocal.post('/usuarios/login', login);
+  return resp.data;
+}
 
-export { cadastroFetcherSalvar, SalvarCallback };
+// Retorna todos os usuários
+export async function listarUsuarios() {
+  const resp = await apiLocal.get('/usuarios');
+  return resp.data;
+}
+
+// Retorna um usuário específico
+export async function buscarUsuario(idUsuario: number) {
+  const resp = await apiLocal.get(`/usuarios/${idUsuario}`);
+  return resp.data;
+}
+
+// Atualiza um usuário específico
+export async function atualizarUsuario(idUsuario: number, data: ListaCadastro) {
+  const resp = await apiLocal.put(`/usuarios/${idUsuario}`, data);
+  return resp.data;
+}
+
+// Deleta um usuário específico
+export async function deletarUsuario(idUsuario: number) {
+  const resp = await apiLocal.delete(`/usuarios/${idUsuario}`);
+  return resp.status === 200;
+}
+
+

@@ -9,54 +9,55 @@ const useMotoControl = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-    motoServicoListar((sucesso, dados, mensagem) => {
-      if (sucesso && dados) {
+    const fetchMotos = async () => {
+      setLoading(true);
+      try {
+        const dados = await motoServicoListar();
         setListaMoto(dados);
-      } else {
-        console.warn('Erro ao listar motos:', mensagem);
+      } catch (err: any) {
+        console.warn('Erro ao listar motos:', err.message || String(err));
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+    fetchMotos();
   }, []);
 
-  const gravar: GravarMotoFn = (setor, id, modelo, unidade, status, placa, chassi) => {
+  const gravar: GravarMotoFn = async (setor, id, modelo, unidade, status, placa, chassi) => {
     setLoading(true);
-    const moto: Moto = { setor, id, modelo, unidade, status, placa, chassi } as Moto;
-    motoServicoSalvar(moto, (sucesso, mensagem, key) => {
+    const moto: Moto = { setor, id, modelo, unidade, status, placa, chassi };
+    try {
+      const result = await motoServicoSalvar(moto);
+      setListaMoto(prev => [...prev, { ...moto, id: result.id || id }]);
+    } catch (err: any) {
+      console.warn('Erro ao salvar moto:', err.message || String(err));
+    } finally {
       setLoading(false);
-      if (sucesso) {
-        const nova = { ...moto } as Moto;
-        if (key) nova.id = key;
-        setListaMoto(prev => [...prev, nova]);
-      } else {
-        console.warn('Erro ao salvar moto:', mensagem);
-      }
-    });
+    }
   };
 
-  const atualizar = (key: string, motoAtualizada: Moto) => {
+  const atualizar = async (key: string, motoAtualizada: Moto) => {
     setLoading(true);
-    motoServicoAtualizar(key, motoAtualizada, (sucesso, mensagem) => {
+    try {
+      await motoServicoAtualizar(key, motoAtualizada);
+      setListaMoto(prev => prev.map(m => (m.id === key ? motoAtualizada : m)));
+    } catch (err: any) {
+      console.warn('Erro ao atualizar moto:', err.message || String(err));
+    } finally {
       setLoading(false);
-      if (sucesso) {
-        setListaMoto(prev => prev.map(m => (m.id === key ? motoAtualizada : m)));
-      } else {
-        console.warn('Erro ao atualizar moto:', mensagem);
-      }
-    });
+    }
   };
 
-  const deletar = (key: string) => {
+  const deletar = async (key: string) => {
     setLoading(true);
-    motoServicoDeletar(key, (sucesso, mensagem) => {
+    try {
+      await motoServicoDeletar(key);
+      setListaMoto(prev => prev.filter(m => m.id !== key));
+    } catch (err: any) {
+      console.warn('Erro ao deletar moto:', err.message || String(err));
+    } finally {
       setLoading(false);
-      if (sucesso) {
-        setListaMoto(prev => prev.filter(m => m.id !== key));
-      } else {
-        console.warn('Erro ao deletar moto:', mensagem);
-      }
-    });
+    }
   };
 
   const limpar = () => setListaMoto([]);

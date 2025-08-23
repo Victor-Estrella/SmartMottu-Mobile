@@ -1,16 +1,12 @@
-import { ParamListBase } from "@react-navigation/native";
 import { useState } from "react";
+import { useMotoControl } from '../control/motoControl';
 import { Pressable, Text, TextInput, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
-import { styles } from "../estilos";
+import { styles } from "../styles/estilos";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 
-interface MotoFormularioProps extends ParamListBase {
-  onGravar: (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void;
-}
-
-const FormularioMoto = (props: MotoFormularioProps): React.ReactElement => {
+const FormularioMoto = (): React.ReactElement => {
   const [setorSelecionado, setSetorSelecionado] = useState("Pendencia");
   const [modelo, setModelo] = useState("Mottu Pop");
   const [unidade, setUnidade] = useState("");
@@ -19,6 +15,7 @@ const FormularioMoto = (props: MotoFormularioProps): React.ReactElement => {
   const [chassi, setChassi] = useState("");
   const [id, setId] = useState("");
 
+  const { gravar, loading } = useMotoControl();
   const limparFormulario = () => {
     setSetorSelecionado("Pendencia");
     setModelo("Mottu Pop");
@@ -76,8 +73,8 @@ const FormularioMoto = (props: MotoFormularioProps): React.ReactElement => {
           <TextInput value={chassi} onChangeText={setChassi} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={{ alignItems: "center" }}>
-          <Botao title="Gravar" onPress={() => {
-            props.onGravar(setorSelecionado, id, modelo, unidade, status, placa, chassi);
+          <Botao title={loading ? "Salvando..." : "Gravar"} onPress={async () => {
+            await gravar(setorSelecionado, id, modelo, unidade, status, placa, chassi);
             limparFormulario();
           }} />
         </View>

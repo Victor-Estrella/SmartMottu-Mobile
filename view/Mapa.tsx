@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-native';
-import { styles } from '../estilos';
+import { styles } from '../styles/estilos';
 import { Moto } from '../model/Moto';
 
 export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {

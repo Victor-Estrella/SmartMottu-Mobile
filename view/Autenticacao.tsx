@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FontAwesome} from '@expo/vector-icons';
-import { styles } from './estilos';
+import { styles } from '../styles/estilos';
 import { Login } from './LoginFormulario';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ListaCadastro } from './model/Cadastro';
-import { Cadastro } from './CadastroFormulario';
+import { useCadastroControl } from '../control/cadastroControl';
+import { loginUsuario } from '../fetcher/cadastroFetcher';
+import { Cadastro } from './Cadastro';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -13,27 +13,20 @@ import { StatusBar } from 'expo-status-bar';
 const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => void }) {
-    const [cadastro, setCadastro] = useState<ListaCadastro[]>([]);
+    const { salvar, loading, mensagem } = useCadastroControl();
 
-    const logar = (nome : string, senha: string) => { 
-            const obj = {nome, senha};  
-            const strLista = JSON.stringify(obj);
-            AsyncStorage.setItem("LOGIN", strLista)
-                .then(() =>{
-                    console.log("Login realizado com sucesso");
-                    SucessoLogin();
-                })
-                .catch(() =>{
-                    console.log("Erro ao realizar login");
-                });
-    }
+    const logar = async (nome: string, senha: string) => {
+        try {
+            await loginUsuario({ nome, senha });
+            SucessoLogin();
+        } catch (err) {
+            console.log("Erro ao realizar login", err);
+        }
+    };
 
-
-    const cadastrar = (nome : string, email:string, senha: string) => {
-        const obj = {nome, email, senha};
-        setCadastro([...cadastro, obj])
-    }
-
+    const cadastrar = async (nome: string, email: string, senha: string) => {
+        await salvar(nome, email, senha);
+    };
 
     return (
         <View style={styles.container}>
@@ -43,7 +36,7 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
                     tabBarIcon: (screenProps: any) =>
                         <FontAwesome name='wpforms' size={screenProps.size} color={screenProps.color}/>
                     }}>
-                    {({ navigation }: { navigation: any }) => ( <Cadastro onCadastro={cadastrar} navigation={navigation} />)}
+                    {({ navigation }: { navigation: any }) => ( <Cadastro navigation={navigation} />)}
                 </Screen>
                 <Screen name='Login' options={{
                     headerShown: false,

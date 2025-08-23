@@ -1,33 +1,24 @@
 import { Moto, motoSchema } from "../model/Moto";
-import { motoFetcherSalvar, MotoSalvarCallback, motoFetcherListar, MotoListarCallback, motoFetcherAtualizar, motoFetcherDeletar } from "../fetcher/motoFetcher";
+import { criarMoto, listarMotos, atualizarMoto, deletarMoto } from "../fetcher/motoFetcher";
 
-const motoServicoSalvar = (moto: Moto, callback: MotoSalvarCallback): void => {
-  // validar com schema se disponível
+export async function motoServicoSalvar(moto: Moto) {
   if (motoSchema && motoSchema.validate) {
-    motoSchema.validate(moto)
-      .then(() => motoFetcherSalvar(moto, callback))
-      .catch((errors: any) => callback(false, errors.message || String(errors)));
-  } else {
-    motoFetcherSalvar(moto, callback);
+    await motoSchema.validate(moto);
   }
-};
+  return await criarMoto(moto);
+}
 
-const motoServicoListar = (callback: MotoListarCallback): void => {
-  motoFetcherListar(callback);
-};
+export async function motoServicoListar() {
+  return await listarMotos();
+}
 
-const motoServicoAtualizar = (key: string, moto: Moto, callback: MotoSalvarCallback): void => {
+export async function motoServicoAtualizar(idMoto: string, moto: Moto) {
   if (motoSchema && motoSchema.validate) {
-    motoSchema.validate(moto)
-      .then(() => motoFetcherAtualizar(key, moto, callback))
-      .catch((errors: any) => callback(false, errors.message || String(errors)));
-  } else {
-    motoFetcherAtualizar(key, moto, callback);
+    await motoSchema.validate(moto);
   }
-};
+  return await atualizarMoto(Number(idMoto), moto);
+}
 
-const motoServicoDeletar = (key: string, callback: (sucesso: boolean, mensagem: string) => void): void => {
-  motoFetcherDeletar(key, callback);
-};
-
-export { motoServicoSalvar, motoServicoListar, motoServicoAtualizar, motoServicoDeletar };
+export async function motoServicoDeletar(idMoto: string) {
+  return await deletarMoto(Number(idMoto));
+}

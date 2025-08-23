@@ -1,12 +1,13 @@
 import React from 'react';
 import { Alert, Pressable, Text, TextInput, View } from 'react-native';
-import { styles } from '../estilos';
+import { styles } from '../styles/estilos';
 
 const Configuracoes = (): React.ReactElement => {
     const [nome, setNome] = React.useState('');
     const [email, setEmail] = React.useState('');
 
     const atualizarConta = () => {
+        // Código para atualizar os dados do usuário
         Alert.alert('Conta atualizada!', 'Suas informações foram atualizadas com sucesso.');
     };
 
@@ -18,6 +19,7 @@ const Configuracoes = (): React.ReactElement => {
                 { text: 'Cancelar', style: 'cancel' },
                 {
                     text: 'Deletar', style: 'destructive', onPress: () => {
+                        // Código para deletar a conta do usuário
                         Alert.alert('Conta deletada', 'Sua conta foi deletada.');
                     }
                 },

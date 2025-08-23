@@ -2,7 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
 import { BotaoProps } from '../model/Botao';
-import { styles } from '../estilos';
+import { styles } from '../styles/estilos';
 import { Moto } from '../model/Moto';
 
 interface MotoDetalhesProps {

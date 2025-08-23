@@ -2,12 +2,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { styles } from './estilos';
+import { styles } from './styles/estilos';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MotoModulo } from './MotoModulo';
-import Autenticacao from './Autenticacao';
-import Landing from './Landing';
+import { MotoModulo } from './view/MotoModulo';
+import Autenticacao from './view/Autenticacao';
 
 
 const {Navigator, Screen} = createStackNavigator();
@@ -25,7 +24,6 @@ export default function App() {
     <NavigationContainer>
       <View style={styles.container}>
         <Navigator screenOptions={{ headerShown: false }}>
-          {/* <Screen name='Landing' component={Landing}/> */}
           {!login ? (
             <Screen name="Autenticacao"> 
             {(navProps) => <Autenticacao {...navProps} SucessoLogin={() => setLogin(true)} />} 

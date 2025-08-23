@@ -1,14 +1,9 @@
 import { ListaCadastro, cadastroSchema } from "../model/Cadastro";
-import { cadastroFetcherSalvar, SalvarCallback } from "../fetcher/cadastroFetcher";
+import { criarUsuario } from "../fetcher/cadastroFetcher";
 
-const cadastroServicoSalvar = (cadastro: ListaCadastro, callback: SalvarCallback): void => {
+export async function cadastroServicoSalvar(cadastro: ListaCadastro) {
   if (cadastroSchema && cadastroSchema.validate) {
-    cadastroSchema.validate(cadastro)
-      .then(() => cadastroFetcherSalvar(cadastro, callback))
-      .catch((errors: any) => callback(false, errors.message || String(errors)));
-  } else {
-    cadastroFetcherSalvar(cadastro, callback);
+    await cadastroSchema.validate(cadastro);
   }
-};
-
-export { cadastroServicoSalvar };
+  return await criarUsuario(cadastro);
+}

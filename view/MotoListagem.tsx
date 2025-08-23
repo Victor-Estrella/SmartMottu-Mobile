@@ -2,7 +2,7 @@ import { Moto } from "../model/Moto";
 import { FlatList, Pressable, Text, View, ScrollView } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { styles } from "../estilos";
+import { styles } from "../styles/estilos";
 
 interface MotoPropsExtra {
   item: Moto;
@@ -30,24 +30,26 @@ function Botao(props: BotaoProps) {
   );
 }
 
-interface ListagemProps {
-  listaMoto: Moto[];
-  navigation: any;
-}
+import { useMotoControl } from '../control/motoControl';
 
-const ListagemMoto = ({ listaMoto, navigation }: ListagemProps): React.ReactElement => {
+const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement => {
+  const { listaMoto } = useMotoControl();
   return (
     <View style={{ backgroundColor: "black", flex: 1 }}>
-      <ScrollView style={styles.tabelaContainer}>
-        <Text style={styles.tituloTabela}>Listagem de Motos</Text>
-        <View style={styles.cabecalhoTabela}>
-          <Text style={styles.cabecalhoTextoTabela}>Setor</Text>
-          <Text style={styles.cabecalhoTextoTabela}>Id</Text>
-          <Text style={styles.cabecalhoTextoTabela}>Modelo</Text>
-          <Text style={styles.cabecalhoTextoTabela}>Ação</Text>
-        </View>
-        <FlatList data={listaMoto} renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />} keyExtractor={(item) => item.id.toString()} />
-      </ScrollView>
+      <Text style={styles.tituloTabela}>Listagem de Motos</Text>
+      <View style={styles.cabecalhoTabela}>
+        <Text style={styles.cabecalhoTextoTabela}>Setor</Text>
+        <Text style={styles.cabecalhoTextoTabela}>Id</Text>
+        <Text style={styles.cabecalhoTextoTabela}>Modelo</Text>
+        <Text style={styles.cabecalhoTextoTabela}>Ação</Text>
+      </View>
+      <FlatList
+        style={styles.tabelaContainer}
+        data={listaMoto}
+        renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />}
+        keyExtractor={(item) => item.id.toString()}
+        ListEmptyComponent={<Text style={{color: 'white', textAlign: 'center', marginTop: 20}}>Nenhuma moto cadastrada.</Text>}
+      />
     </View>
   );
 };

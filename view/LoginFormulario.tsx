@@ -1,43 +1,38 @@
-import { ParamListBase, NavigationProp } from "@react-navigation/native"
+import { NavigationProp, ParamListBase } from "@react-navigation/native"
 import { useState } from "react"
-import { Pressable, Text, TextInput, View } from "react-native"
-import { styles } from "./estilos"
-import { BotaoProps } from "./model/Botao";
+import { Button, Pressable, Text, TextInput, View } from "react-native"
+import { styles } from "../styles/estilos"
+import { BotaoProps } from "../model/Botao";
 
-interface CadastroProps {
+
+interface LoginProps {
     navigation: NavigationProp<ParamListBase>;
-    onCadastro: (nome: string, email: string, senha: string) => void;
+    onLogin : (nome : string, senha: string) => Promise<void>
 }
 
-const Cadastro = (props: CadastroProps) : React.ReactElement => {
+const Login = (props: LoginProps) : React.ReactElement => {
     const [nome, setNome] = useState("")
-    const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     return (
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.tituloAutenticacao}>Cadastro</Text>
+                <Text style={styles.tituloAutenticacao}>Login</Text>
             </View>
-            <View style={{flex: 3, width: '50%'}}>
+            <View style={{flex: 3,width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Nome" value={nome} onChangeText={setNome}/>
-                </View>
-                <View style={styles.viewInputAutenticacao}>    
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
                 </View>
                 <View style={styles.viewInputAutenticacao}>
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
                 </View>
-                <View style={{alignItems: 'center'}}>
-                    <Botao title="Cadastrar" onPress={()=>{
-                        props.onCadastro(nome, email, senha)
-                        props.navigation.navigate("Login")
-                    }} />
-                </View>
+                <Botao title="Entrar" onPress={async ()=>{
+                    await props.onLogin(nome, senha)
+                }} />
             </View>
         </View>
     )
 }
+
 
 
 function Botao( props : BotaoProps ) { 
@@ -52,4 +47,5 @@ function Botao( props : BotaoProps ) {
     );
 }
 
-export { Cadastro };
+
+export { Login };

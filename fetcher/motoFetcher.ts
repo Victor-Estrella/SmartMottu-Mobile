@@ -1,48 +1,36 @@
 import { Moto } from "../model/Moto";
 import axios from 'axios';
 
-const apiBase = axios.create({
-  baseURL: "https://tdsph-ad96c-default-rtdb.firebaseio.com",
+const apiLocal = axios.create({
+  baseURL: "http://192.168.0.24:8080",
 });
 
-interface MotoSalvarCallback {
-  (sucesso: boolean, mensagem: string, key?: string): void;
+// Cria uma nova moto
+export async function criarMoto(data: Moto) {
+  const resp = await apiLocal.post('/motos', data);
+  return resp.data;
 }
 
-interface MotoListarCallback {
-  (sucesso: boolean, dados?: Moto[] | null, mensagem?: string): void;
+// Retorna todas as motos
+export async function listarMotos() {
+  const resp = await apiLocal.get('/motos');
+  return resp.data;
 }
 
-const motoFetcherSalvar = (moto: Moto, callback: MotoSalvarCallback): void => {
-  apiBase
-    .post('/motos.json', moto)
-    .then((resp) => callback(true, '', resp.data && resp.data.name ? resp.data.name : undefined))
-    .catch((err: any) => callback(false, err.message || String(err)));
-};
+// Retorna uma moto específica
+export async function buscarMoto(idMoto: number) {
+  const resp = await apiLocal.get(`/motos/${idMoto}`);
+  return resp.data;
+}
 
-const motoFetcherListar = (callback: MotoListarCallback): void => {
-  apiBase
-    .get('/motos.json')
-    .then((resp) => {
-      const data = resp.data || {};
-      const lista: Moto[] = Object.keys(data).map((k) => ({ ...(data[k] as Moto), id: (data[k] as any).id || k } as Moto));
-      callback(true, lista);
-    })
-    .catch((err: any) => callback(false, null, err.message || String(err)));
-};
+// Atualiza uma moto específica
+export async function atualizarMoto(idMoto: number, data: Moto) {
+  const resp = await apiLocal.put(`/motos/${idMoto}`, data);
+  return resp.data;
+}
 
-const motoFetcherAtualizar = (key: string, moto: Moto, callback: MotoSalvarCallback): void => {
-  apiBase
-    .put(`/motos/${key}.json`, moto)
-    .then(() => callback(true, ''))
-    .catch((err: any) => callback(false, err.message || String(err)));
-};
-
-const motoFetcherDeletar = (key: string, callback: (sucesso: boolean, mensagem: string) => void): void => {
-  apiBase
-    .delete(`/motos/${key}.json`)
-    .then(() => callback(true, ''))
-    .catch((err: any) => callback(false, err.message || String(err)));
-};
-
-export { motoFetcherSalvar, MotoSalvarCallback, motoFetcherListar, MotoListarCallback, motoFetcherAtualizar, motoFetcherDeletar };
+// Deleta uma moto específica
+export async function deletarMoto(idMoto: number) {
+  const resp = await apiLocal.delete(`/motos/${idMoto}`);
+  return resp.status === 200;
+}

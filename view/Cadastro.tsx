@@ -1,18 +1,19 @@
 import { ParamListBase, NavigationProp } from "@react-navigation/native"
 import { useState } from "react"
+import { useCadastroControl } from '../control/cadastroControl';
 import { Pressable, Text, TextInput, View } from "react-native"
-import { styles } from "../estilos"
+import { styles } from "../styles/estilos"
 import { BotaoProps } from "../model/Botao";
 
 interface CadastroProps {
     navigation: NavigationProp<ParamListBase>;
-    onCadastro: (nome: string, email: string, senha: string) => void;
 }
 
 const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [nome, setNome] = useState("")
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
+    const { salvar, loading, mensagem } = useCadastroControl();
     return (
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -29,22 +30,28 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
                 </View>
                 <View style={{alignItems: 'center'}}>
-                    <Botao title="Cadastrar" onPress={()=>{
-                        props.onCadastro(nome, email, senha)
+                    <Botao title={loading ? "Salvando..." : "Cadastrar"} onPress={async ()=>{
+                        await salvar(nome, email, senha);
                         props.navigation.navigate("Login")
                     }} />
+                    {mensagem && <Text style={{color: 'white', marginTop: 10}}>{mensagem}</Text>}
                 </View>
             </View>
         </View>
     )
 }
 
-const Botao = ({ title, onPress }: BotaoProps) => {
+
+function Botao( props : BotaoProps ) { 
     return (
-        <Pressable onPress={onPress} style={styles.botao}>
-            <Text style={styles.botaoTexto}>{title}</Text>
+        <Pressable onPress={props.onPress}>
+            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
+                <Text style={styles.buttonTextAutenticacao}>
+                    {props.title}
+                </Text>
+            </View>
         </Pressable>
     );
-};
+}
 
 export { Cadastro };
