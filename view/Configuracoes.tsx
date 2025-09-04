@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, Pressable, Text, TextInput, View } from 'react-native';
 import { styles } from '../styles/estilos';
+import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
 
 const Configuracoes = (): React.ReactElement => {
     const [nome, setNome] = React.useState('');
@@ -40,12 +41,6 @@ const Configuracoes = (): React.ReactElement => {
     );
 };
 
-
-interface BotaoPropsConfig {
-    title: string
-    color: string 
-    onPress: () => void
-}
 
 function Botao(props: BotaoPropsConfig) {
     return (
