@@ -14,6 +14,7 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     const { salvar, loading, mensagem } = useCadastroControl();
+    const [mensagemSenha, setMensagemSenha] = useState<string | null>(null);
     return (
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -27,14 +28,41 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
                 </View>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
+                    <TextInput
+                        style={styles.inputAutenticacao}
+                        placeholderTextColor='white'
+                        placeholder="Senha"
+                        value={senha}
+                        onChangeText={text => {
+                            setSenha(text);
+                            if (text.length > 0 && text.length < 8) {
+                                setMensagemSenha('A senha deve ter pelo menos 8 caracteres.');
+                            } else if (text.length > 15) {
+                                setMensagemSenha('A senha deve ter no máximo 15 caracteres.');
+                            } else {
+                                setMensagemSenha(null);
+                            }
+                        }}
+                        secureTextEntry
+                    />
+                    {mensagemSenha && <Text style={{ color: 'orange', marginTop: 4 }}>{mensagemSenha}</Text>}
                 </View>
                 <View style={{alignItems: 'center'}}>
                     <Botao title={loading ? "Salvando..." : "Cadastrar"} onPress={async ()=>{
+                        if (senha.length < 8) {
+                            setMensagemSenha('A senha deve ter pelo menos 8 caracteres.');
+                            return;
+                        }
+                        if (senha.length > 15) {
+                            setMensagemSenha('A senha deve ter no máximo 15 caracteres.');
+                            return;
+                        }
                         await salvar(nome, email, senha);
-                        props.navigation.navigate("Login")
+                        if (mensagem && mensagem.includes('sucesso')) {
+                            props.navigation.navigate("Login")
+                        }
                     }} />
-                    {mensagem && <Text style={{color: 'white', marginTop: 10}}>{mensagem}</Text>}
+                    {mensagem && <Text style={{color: mensagem.includes('sucesso') ? 'green' : 'red', marginTop: 10}}>{mensagem}</Text>}
                 </View>
             </View>
         </View>

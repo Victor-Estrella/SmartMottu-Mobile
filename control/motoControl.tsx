@@ -30,7 +30,15 @@ const useMotoControl = () => {
       const result = await motoServicoSalvar(moto);
       setListaMoto(prev => [...prev, { ...moto, id: result.id || id }]);
     } catch (err: any) {
-      console.warn('Erro ao salvar moto:', err.message || String(err));
+      let msg = 'Erro desconhecido ao tentar cadastrar moto.';
+      if (err?.response?.status === 400) {
+        msg = 'Dados inválidos. Verifique os campos e tente novamente.';
+      } else if (err?.response?.status === 409) {
+        msg = 'Já existe uma moto com este identificador.';
+      } else if (err?.response?.status === 500) {
+        msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+      }
+      alert(msg);
     } finally {
       setLoading(false);
     }

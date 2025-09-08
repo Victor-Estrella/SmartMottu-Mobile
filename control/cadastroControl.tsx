@@ -16,7 +16,15 @@ const useCadastroControl = () => {
       setMensagem('Cadastro gravado com sucesso');
       setCadastro(obj);
     } catch (err: any) {
-      setMensagem('Erro ao gravar cadastro => ' + (err.message || String(err)));
+      let msg = 'Erro desconhecido ao tentar cadastrar.';
+      if (err?.response?.status === 400) {
+        msg = 'Dados inválidos. Verifique os campos e tente novamente.';
+      } else if (err?.response?.status === 409) {
+        msg = 'Já existe um usuário com este email.';
+      } else if (err?.response?.status === 500) {
+        msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+      }
+      setMensagem(msg);
     } finally {
       setLoading(false);
     }

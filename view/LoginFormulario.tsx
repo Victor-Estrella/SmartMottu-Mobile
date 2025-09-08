@@ -16,15 +16,27 @@ const Login = (props: LoginProps) : React.ReactElement => {
     const { autenticar, loading, mensagem } = useLoginControl();
 
     const onLogin = async () => {
-        const result = await autenticar(email, senha);
-        if (result && result.token) {
-            await AsyncStorage.setItem('TOKEN', result.token);
-            props.onLogin(email, senha);
-        } else if (mensagem && mensagem.includes('sucesso')) {
-            props.onLogin(email, senha);
+        try {
+            const result = await autenticar(email, senha);
+            if (result && result.token) {
+                await AsyncStorage.setItem('TOKEN', result.token);
+                props.onLogin(email, senha);
+            } else if (mensagem && mensagem.includes('sucesso')) {
+                props.onLogin(email, senha);
+            }
+        } catch (err: any) {
+            let msg = 'Erro desconhecido ao tentar logar.';
+            if (err?.response?.status === 400) {
+                msg = 'Usuário ou senha inválidos.';
+            } else if (err?.response?.status === 401) {
+                msg = 'Não autorizado. Verifique suas credenciais.';
+            } else if (err?.response?.status === 500) {
+                msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+            }
+            alert(msg);
         }
     };
-
+    
     return (
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
