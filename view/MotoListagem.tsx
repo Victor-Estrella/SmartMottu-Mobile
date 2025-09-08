@@ -3,6 +3,7 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { styles } from "../styles/estilos";
+import { useMoto } from '../control/MotoContext';
 
 interface MotoPropsExtra {
   item: Moto;
@@ -20,20 +21,8 @@ const MotoProps = ({ item, navigation }: MotoPropsExtra): React.ReactElement => 
   );
 };
 
-function Botao(props: BotaoProps) {
-  return (
-    <Pressable onPress={props.onPress} style={styles.pressableDetalhesTabela}>
-      <View style={styles.botaoDetalhes}>
-        <Text style={styles.botaoTextoDetalhes}>{props.title}</Text>
-      </View>
-    </Pressable>
-  );
-}
-
-import { useMotoControl } from '../control/motoControl';
-
 const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement => {
-  const { listaMoto } = useMotoControl();
+  const { listaMoto } = useMoto();
   return (
     <View style={{ backgroundColor: "black", flex: 1 }}>
       <Text style={styles.tituloTabela}>Listagem de Motos</Text>
@@ -47,11 +36,21 @@ const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement =
         style={styles.tabelaContainer}
         data={listaMoto}
         renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />}
+        keyExtractor={item => String(item.idMoto ?? item.nmChassi ?? Math.random())}
         ListEmptyComponent={<Text style={{color: 'white', textAlign: 'center', marginTop: 20}}>Nenhuma moto cadastrada.</Text>}
       />
     </View>
   );
 };
 
+function Botao(props: BotaoProps) {
+  return (
+    <Pressable onPress={props.onPress} style={styles.pressableDetalhesTabela}>
+      <View style={styles.botaoDetalhes}>
+        <Text style={styles.botaoTextoDetalhes}>{props.title}</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export { ListagemMoto };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesome} from '@expo/vector-icons';
 import { styles } from '../styles/estilos';
-import { Login } from './LoginFormulario';
+import { Login } from './Login';
 import { loginUsuario } from '../fetcher/loginFetcher';
 import { Cadastro } from './Cadastro';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';

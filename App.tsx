@@ -15,7 +15,7 @@ export default function App() {
   const [login, setLogin] = useState<boolean>(false);
 
   useEffect(() => {
-    AsyncStorage.getItem("LOGIN").then((data) => {
+    AsyncStorage.getItem("TOKEN").then((data) => {
       if (data) setLogin(true);
     });
   }, []);

@@ -15,6 +15,7 @@ const useCadastroControl = () => {
       await cadastroServicoSalvar(obj);
       setMensagem('Cadastro gravado com sucesso');
       setCadastro(obj);
+      return true;
     } catch (err: any) {
       let msg = 'Erro desconhecido ao tentar cadastrar.';
       if (err?.response?.status === 400) {
@@ -25,6 +26,7 @@ const useCadastroControl = () => {
         msg = 'Erro interno do servidor. Tente novamente mais tarde.';
       }
       setMensagem(msg);
+      return false;
     } finally {
       setLoading(false);
     }

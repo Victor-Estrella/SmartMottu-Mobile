@@ -9,78 +9,67 @@ import { ListagemMoto } from './MotoListagem';
 import MotoDetalhes from './MotoDetalhes';
 import { MapaPatio } from './Mapa';
 import Configuracoes from './Configuracoes';
-import { useMotoControl } from '../control/motoControl';
+import { MotoProvider } from '../control/MotoContext';
 
 const Tab = createBottomTabNavigator();
 
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
-    const { listaMoto, gravar, setListaMoto } = useMotoControl();
-
-    const deslogar = () => {
-        AsyncStorage.removeItem("LOGIN")
-        .then(() => {
-            console.log("Deslogando");
-            SucessoLogout();
-        })
-        .catch(() => {
-            console.log("Erro ao deslogar");
-        });
-    }
-
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: 'black', zIndex: 2 }}>
-                <Botao title="Sair" onPress={deslogar} />
-            </View>
-
-            <View style={{ flex: 1, }}>
-                <Tab.Navigator screenOptions={{ headerShown: false }}>
-                    <Tab.Screen name="MotoFormulario" options={{
-                        title: 'Formulario',
-                        tabBarIcon: (screenProps: any): ReactNode => (
-                            <Feather name="clipboard" size={screenProps.size} color={screenProps.color} />
-                        ),
+        <MotoProvider>
+            <View style={{ flex: 1 }}>
+                <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: 'black', zIndex: 2 }}>
+                    <Botao title="Sair" onPress={() => {
+                        AsyncStorage.removeItem("LOGIN")
+                            .then(() => SucessoLogout())
+                            .catch(() => console.log("Erro ao deslogar"));
+                    }} />
+                </View>
+                <View style={{ flex: 1, }}>
+                    <Tab.Navigator screenOptions={{ headerShown: false }}>
+                        <Tab.Screen name="MotoFormulario" options={{
+                            title: 'Formulario',
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <Feather name="clipboard" size={screenProps.size} color={screenProps.color} />
+                            ),
                         }}>
-                        {(navProps: any) => ( <FormularioMoto onGravar={gravar} SucessoLogout={SucessoLogout} {...navProps} /> )}
-                    </Tab.Screen>
-                    <Tab.Screen name="Mapa" options={{  
-                        title: 'Mapa',
-                        tabBarIcon: (screenProps: any): ReactNode => (
-                            <Feather name="map" size={screenProps.size} color={screenProps.color} />
-                        ),
+                            {(navProps: any) => ( <FormularioMoto SucessoLogout={SucessoLogout} {...navProps} /> )}
+                        </Tab.Screen>
+                        <Tab.Screen name="Mapa" options={{  
+                            title: 'Mapa',
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <Feather name="map" size={screenProps.size} color={screenProps.color} />
+                            ),
                         }}>
-                        {(navProps: any) => ( <MapaPatio listaMoto={listaMoto} {...navProps} /> )}
-                    </Tab.Screen>
-                    <Tab.Screen name="Listagem" options={{
-                        title: 'Listagem',
-                        tabBarIcon: (screenProps: any): ReactNode => (
-                            <Feather name="list" size={screenProps.size} color={screenProps.color} />
-                        ),
+                            {(navProps: any) => ( <MapaPatio {...navProps} /> )}
+                        </Tab.Screen>
+                        <Tab.Screen name="Listagem" options={{
+                            title: 'Listagem',
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <Feather name="list" size={screenProps.size} color={screenProps.color} />
+                            ),
                         }}>
-                        {({ navigation }: { navigation: any }) => ( <ListagemMoto navigation={navigation} />)}
-                    </Tab.Screen>
-                    {listaMoto.length > 0 ? (
+                            {({ navigation }: { navigation: any }) => ( <ListagemMoto navigation={navigation} />)}
+                        </Tab.Screen>
                         <Tab.Screen name="MotoDetalhes" options={{
                             title: 'Detalhes',
                             tabBarIcon: (screenProps: any): ReactNode => (
-                            <Feather name="info" size={screenProps.size} color={screenProps.color} />
+                                <Feather name="info" size={screenProps.size} color={screenProps.color} />
                             ),
                         }}>
-                        {(navProps: any) => <MotoDetalhes listaMoto={listaMoto} setListaMoto={setListaMoto}  {...navProps} />} 
+                            {(navProps: any) => <MotoDetalhes {...navProps} />} 
                         </Tab.Screen>
-                        ) : null
-                    }
-                    <Tab.Screen name="Configurações" options={{
-                        title: 'Configurações',
-                        tabBarIcon: (screenProps: any): ReactNode => (
-                            <Feather name="settings" size={screenProps.size} color={screenProps.color} />
-                        ),
+                        <Tab.Screen name="Configurações" options={{
+                            title: 'Configurações',
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <Feather name="settings" size={screenProps.size} color={screenProps.color} />
+                            ),
                         }}>
-                        {(navProps: any) => ( <Configuracoes {...navProps} /> )}
-                    </Tab.Screen>
-                </Tab.Navigator>
+                            {(navProps: any) => ( <Configuracoes {...navProps} /> )}
+                        </Tab.Screen>
+                    </Tab.Navigator>
+                </View>
             </View>
-        </View>
+        </MotoProvider>
     )
 }
 

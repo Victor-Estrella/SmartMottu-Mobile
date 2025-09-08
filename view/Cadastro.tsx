@@ -1,13 +1,9 @@
-import { ParamListBase, NavigationProp } from "@react-navigation/native"
 import { useState } from "react"
 import { useCadastroControl } from '../control/cadastroControl';
 import { Pressable, Text, TextInput, View } from "react-native"
 import { styles } from "../styles/estilos"
 import { BotaoProps } from "../model/Botao";
-
-interface CadastroProps {
-    navigation: NavigationProp<ParamListBase>;
-}
+import CadastroProps from "../model/CadastroProps";
 
 const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [nome, setNome] = useState("")
@@ -28,11 +24,7 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                     <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
                 </View>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput
-                        style={styles.inputAutenticacao}
-                        placeholderTextColor='white'
-                        placeholder="Senha"
-                        value={senha}
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha}
                         onChangeText={text => {
                             setSenha(text);
                             if (text.length > 0 && text.length < 8) {
@@ -57,9 +49,10 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                             setMensagemSenha('A senha deve ter no máximo 15 caracteres.');
                             return;
                         }
-                        await salvar(nome, email, senha);
-                        if (mensagem && mensagem.includes('sucesso')) {
-                            props.navigation.navigate("Login")
+                        const result = await salvar(nome, email, senha);
+                        // Se não houve erro, navega imediatamente
+                        if (result === true) {
+                            props.navigation.navigate("Login");
                         }
                     }} />
                     {mensagem && <Text style={{color: mensagem.includes('sucesso') ? 'green' : 'red', marginTop: 10}}>{mensagem}</Text>}

@@ -3,7 +3,10 @@ import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-na
 import { styles } from '../styles/estilos';
 import { Moto } from '../model/Moto';
 
-export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
+import { useMoto } from '../control/MotoContext';
+
+export function MapaPatio() {
+    const { listaMoto } = useMoto();
     const { width } = useWindowDimensions();
     const itemWidth = 90;
     const colunas = Math.max(1, Math.floor(width / itemWidth));

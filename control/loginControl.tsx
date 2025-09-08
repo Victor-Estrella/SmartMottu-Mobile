@@ -17,7 +17,15 @@ const useLoginControl = () => {
             setLogin(obj);
             return result;
         } catch (err: any) {
-            setMensagem('Erro ao realizar login => ' + (err.message || String(err)));
+            let msg = 'Erro desconhecido ao tentar logar.';
+            if (err?.response?.status === 400) {
+                msg = 'Usuário ou senha inválidos.';
+            } else if (err?.response?.status === 401) {
+                msg = 'Não autorizado. Verifique suas credenciais.';
+            } else if (err?.response?.status === 500) {
+                msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+            }
+            setMensagem(msg);
             return null;
         } finally {
             setLoading(false);

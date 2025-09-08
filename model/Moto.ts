@@ -2,7 +2,6 @@ import * as yup from 'yup';
 import { object, string } from 'yup';
 
 const motoSchema: yup.ObjectSchema<any, any> = object({
-  id: string().required("Por favor preencha o id"),
   modelo: string().required("Por favor preencha o modelo"),
   unidade: string().required("Por favor preencha a unidade"),
   status: string().required("Por favor preencha o status"),
@@ -11,6 +10,6 @@ const motoSchema: yup.ObjectSchema<any, any> = object({
   nmChassi: string().required("Por favor preencha o chassi").min(17, "O chassi deve ter 17 caracteres").max(17, "O chassi deve ter 17 caracteres"),
 });
 
-type Moto = yup.InferType<typeof motoSchema>;
+type Moto = yup.InferType<typeof motoSchema> & { idMoto?: number };
 
 export { Moto, motoSchema };

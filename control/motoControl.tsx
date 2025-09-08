@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Moto } from '../model/Moto';
 import { motoServicoSalvar, motoServicoListar, motoServicoAtualizar, motoServicoDeletar } from '../service/motoService';
 
-type GravarMotoFn = (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, nmChassi: string) => void;
+type GravarMotoFn = (setor: string, modelo: string, unidade: string, status: string, placa: string, nmChassi: string) => void;
 
 const useMotoControl = () => {
   const [listaMoto, setListaMoto] = useState<Moto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [mensagem, setMensagem] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMotos = async () => {
@@ -23,12 +24,14 @@ const useMotoControl = () => {
     fetchMotos();
   }, []);
 
-  const gravar: GravarMotoFn = async (setor, id, modelo, unidade, status, placa, nmChassi) => {
+  const gravar: GravarMotoFn = async (setor, modelo, unidade, status, placa, nmChassi) => {
     setLoading(true);
-    const moto: Moto = { setor, id, modelo, unidade, status, placa, nmChassi };
+    setMensagem(null);
+    const moto: Moto = { setor, modelo, unidade, status, placa, nmChassi };
     try {
       const result = await motoServicoSalvar(moto);
-      setListaMoto(prev => [...prev, { ...moto, id: result.id || id }]);
+      setListaMoto(prev => [...prev, result]);
+      setMensagem('Moto cadastrada com sucesso!');
     } catch (err: any) {
       let msg = 'Erro desconhecido ao tentar cadastrar moto.';
       if (err?.response?.status === 400) {
@@ -38,7 +41,7 @@ const useMotoControl = () => {
       } else if (err?.response?.status === 500) {
         msg = 'Erro interno do servidor. Tente novamente mais tarde.';
       }
-      alert(msg);
+      setMensagem(msg);
     } finally {
       setLoading(false);
     }
@@ -47,8 +50,8 @@ const useMotoControl = () => {
   const atualizar = async (key: string, motoAtualizada: Moto) => {
     setLoading(true);
     try {
-      await motoServicoAtualizar(key, motoAtualizada);
-      setListaMoto(prev => prev.map(m => (m.id === key ? motoAtualizada : m)));
+      const result = await motoServicoAtualizar(key, motoAtualizada);
+      setListaMoto(prev => prev.map(m => (String(m.idMoto) === String(key) ? result : m)));
     } catch (err: any) {
       console.warn('Erro ao atualizar moto:', err.message || String(err));
     } finally {
@@ -60,7 +63,7 @@ const useMotoControl = () => {
     setLoading(true);
     try {
       await motoServicoDeletar(key);
-      setListaMoto(prev => prev.filter(m => m.id !== key));
+      setListaMoto(prev => prev.filter(m => String(m.idMoto) !== String(key)));
     } catch (err: any) {
       console.warn('Erro ao deletar moto:', err.message || String(err));
     } finally {
@@ -70,7 +73,7 @@ const useMotoControl = () => {
 
   const limpar = () => setListaMoto([]);
 
-  return { listaMoto, gravar, deletar, atualizar, limpar, setListaMoto, loading };
+  return { listaMoto, gravar, deletar, atualizar, limpar, setListaMoto, loading, mensagem, setMensagem };
 };
 
 export { useMotoControl };

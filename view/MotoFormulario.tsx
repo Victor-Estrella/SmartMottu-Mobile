@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMotoControl } from '../control/motoControl';
+import { useMoto } from '../control/MotoContext';
 import { Pressable, Text, TextInput, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { styles } from "../styles/estilos";
@@ -13,9 +13,8 @@ const FormularioMoto = (): React.ReactElement => {
   const [status, setStatus] = useState("");
   const [placa, setPlaca] = useState("");
   const [nmChassi, setNmChassi] = useState("");
-  const [id, setId] = useState("");
 
-  const { gravar, loading } = useMotoControl();
+  const { gravar, loading, mensagem, setMensagem } = useMoto();
   const limparFormulario = () => {
     setSetorSelecionado("Pendencia");
     setModelo("Mottu Pop");
@@ -23,7 +22,7 @@ const FormularioMoto = (): React.ReactElement => {
     setStatus("");
     setPlaca("");
     setNmChassi("");
-    setId("");
+    setMensagem && setMensagem(null);
   };
 
   return (
@@ -43,10 +42,6 @@ const FormularioMoto = (): React.ReactElement => {
             <Picker.Item label="Minha Mottu" value="Minha Mottu" />
             <Picker.Item label="Outro" value="Outro" />
           </Picker>
-        </View>
-        <View style={styles.viewInputFormulario}>
-          <Text style={styles.labelFormulario}>Id</Text>
-          <TextInput value={id} onChangeText={setId} style={styles.input} placeholderTextColor="white" />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Modelo</Text>
@@ -72,10 +67,13 @@ const FormularioMoto = (): React.ReactElement => {
           <Text style={styles.labelFormulario}>Chassi</Text>
           <TextInput value={nmChassi} onChangeText={setNmChassi} style={styles.input} placeholderTextColor="white" maxLength={17} />
         </View>
+        {mensagem && (
+          <Text style={{ color: mensagem.includes('sucesso') ? 'green' : 'red', marginBottom: 8, textAlign: 'center' }}>{mensagem}</Text>
+        )}
         <View style={{ alignItems: "center" }}>
           <Botao title={loading ? "Salvando..." : "Gravar"} onPress={async () => {
-            await gravar(setorSelecionado, id, modelo, unidade, status, placa, nmChassi);
-            limparFormulario();
+            await gravar(setorSelecionado, modelo, unidade, status, placa, nmChassi);
+            // Não limpar imediatamente, deixa o usuário ver a mensagem
           }} />
         </View>
       </View>
