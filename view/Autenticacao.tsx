@@ -2,8 +2,7 @@ import React from 'react';
 import { FontAwesome} from '@expo/vector-icons';
 import { styles } from '../styles/estilos';
 import { Login } from './LoginFormulario';
-import { useCadastroControl } from '../control/cadastroControl';
-import { loginUsuario } from '../fetcher/cadastroFetcher';
+import { loginUsuario } from '../fetcher/loginFetcher';
 import { Cadastro } from './Cadastro';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
@@ -13,19 +12,14 @@ import { StatusBar } from 'expo-status-bar';
 const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => void }) {
-    const { salvar, loading, mensagem } = useCadastroControl();
 
-    const logar = async (nome: string, senha: string) => {
+    const logar = async (email: string, senha: string) => {
         try {
-            await loginUsuario({ nome, senha });
+            await loginUsuario({ email, senha });
             SucessoLogin();
         } catch (err) {
             console.log("Erro ao realizar login", err);
         }
-    };
-
-    const cadastrar = async (nome: string, email: string, senha: string) => {
-        await salvar(nome, email, senha);
     };
 
     return (

@@ -60,7 +60,7 @@ export function MapaPatio({ listaMoto }: { listaMoto: Moto[] }) {
 
                     return (
                         <View key={index} style={{ position: "absolute", left: posX, top: posY, width: 75, height: 75, backgroundColor: cor, borderRadius: 5, justifyContent: "center", alignItems: "center", }}>
-                            <Text style={{ color: "black", fontSize: 15, textAlign: "center", flexShrink: 1, }} numberOfLines={2}>{moto.placa || moto.chassi}</Text>
+                            <Text style={{ color: "black", fontSize: 15, textAlign: "center", flexShrink: 1, }} numberOfLines={2}>{moto.placa || moto.nmChassi}</Text>
                         </View>
                     );
                 })}

@@ -17,7 +17,7 @@ const MotoDetalhes = ({ navigation, listaMoto, setListaMoto }: MotoDetalhesProps
         const { moto } = route.params as { moto: Moto };
 
         const deletarMoto = () => {
-            const novaLista = listaMoto.filter(item => item.id !== moto.id);
+            const novaLista = listaMoto.filter(item => item.idMoto !== moto.idMoto);
             setListaMoto(novaLista);
             Alert.alert("Sucesso", "Moto deletada com sucesso!");
             navigation.navigate("Listagem");
@@ -27,12 +27,12 @@ const MotoDetalhes = ({ navigation, listaMoto, setListaMoto }: MotoDetalhesProps
                 <Text style={{ fontSize: 32, fontWeight: 'bold', color: 'green', marginTop: 30 }}>Detalhes da Moto</Text>
                 <View style={{ marginTop: 20, backgroundColor: 'black' }}>
                     <Text style={{color: 'white'}}>Setor: {moto.setor}</Text>
-                    <Text style={{color: 'white'}}>ID: {moto.id}</Text>
+                    <Text style={{color: 'white'}}>ID: {moto.idMoto}</Text>
                     <Text style={{color: 'white'}}>Modelo: {moto.modelo}</Text>
                     <Text style={{color: 'white'}}>Unidade: {moto.unidade}</Text>
                     <Text style={{color: 'white'}}>Status: {moto.status}</Text>
                     <Text style={{color: 'white'}}>Placa: {moto.placa}</Text>
-                    <Text style={{color: 'white'}}>Chassi: {moto.chassi}</Text>
+                    <Text style={{color: 'white'}}>Chassi: {moto.nmChassi}</Text>
                     <View style={{ marginTop: 20 }}>
                         <Botao title="Atualizar" onPress={() => navigation.navigate("MotoAtualizar", { moto })} />
                     </View>

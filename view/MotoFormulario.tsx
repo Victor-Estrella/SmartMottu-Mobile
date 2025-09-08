@@ -12,7 +12,7 @@ const FormularioMoto = (): React.ReactElement => {
   const [unidade, setUnidade] = useState("");
   const [status, setStatus] = useState("");
   const [placa, setPlaca] = useState("");
-  const [chassi, setChassi] = useState("");
+  const [nmChassi, setNmChassi] = useState("");
   const [id, setId] = useState("");
 
   const { gravar, loading } = useMotoControl();
@@ -22,7 +22,7 @@ const FormularioMoto = (): React.ReactElement => {
     setUnidade("");
     setStatus("");
     setPlaca("");
-    setChassi("");
+    setNmChassi("");
     setId("");
   };
 
@@ -66,15 +66,15 @@ const FormularioMoto = (): React.ReactElement => {
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Placa</Text>
-          <TextInput value={placa} onChangeText={setPlaca} style={styles.input} placeholderTextColor="white" />
+          <TextInput value={placa} onChangeText={setPlaca} style={styles.input} placeholderTextColor="white" maxLength={7} />
         </View>
         <View style={styles.viewInputFormulario}>
           <Text style={styles.labelFormulario}>Chassi</Text>
-          <TextInput value={chassi} onChangeText={setChassi} style={styles.input} placeholderTextColor="white" />
+          <TextInput value={nmChassi} onChangeText={setNmChassi} style={styles.input} placeholderTextColor="white" maxLength={17} />
         </View>
         <View style={{ alignItems: "center" }}>
           <Botao title={loading ? "Salvando..." : "Gravar"} onPress={async () => {
-            await gravar(setorSelecionado, id, modelo, unidade, status, placa, chassi);
+            await gravar(setorSelecionado, id, modelo, unidade, status, placa, nmChassi);
             limparFormulario();
           }} />
         </View>

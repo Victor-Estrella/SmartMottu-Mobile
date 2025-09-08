@@ -14,7 +14,7 @@ import { useMotoControl } from '../control/motoControl';
 const Tab = createBottomTabNavigator();
 
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
-    const { listaMoto, gravar, deletar, atualizar, limpar, setListaMoto } = useMotoControl();
+    const { listaMoto, gravar, setListaMoto } = useMotoControl();
 
     const deslogar = () => {
         AsyncStorage.removeItem("LOGIN")
@@ -86,7 +86,7 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
 
 function Botao(props: BotaoProps) {
     return (
-        <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10, marginTop: 20  }}>
+        <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10, marginTop: 40  }}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Sair</Text>
         </Pressable>
     );

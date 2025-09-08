@@ -1,5 +1,5 @@
 import { Moto } from "../model/Moto";
-import { FlatList, Pressable, Text, View, ScrollView } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { styles } from "../styles/estilos";
@@ -13,7 +13,7 @@ const MotoProps = ({ item, navigation }: MotoPropsExtra): React.ReactElement => 
   return (
     <View style={styles.linhaTabela}>
       <Text style={styles.objetosTabela}>{item.setor}</Text>
-      <Text style={styles.objetosTabela}>{item.id}</Text>
+      <Text style={styles.objetosTabela}>{item.idMoto}</Text>
       <Text style={styles.objetosTabela}>{item.modelo}</Text>
       <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { moto: item })} />
     </View>
@@ -47,7 +47,6 @@ const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement =
         style={styles.tabelaContainer}
         data={listaMoto}
         renderItem={({ item }) => <MotoProps item={item} navigation={navigation} />}
-        keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text style={{color: 'white', textAlign: 'center', marginTop: 20}}>Nenhuma moto cadastrada.</Text>}
       />
     </View>

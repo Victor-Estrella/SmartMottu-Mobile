@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ListaCadastro, ListaLogin } from "../model/Cadastro";
+import { ListaCadastro } from "../model/Cadastro";
 
 const apiLocal = axios.create({
   baseURL: "http://192.168.0.24:8080",
@@ -9,12 +9,6 @@ const apiLocal = axios.create({
 // Cria um novo usuário tipado
 export async function criarUsuario(data: ListaCadastro) {
   const resp = await apiLocal.post('/usuarios', data);
-  return resp.data;
-}
-
-// Realiza login
-export async function loginUsuario(login: ListaLogin) {
-  const resp = await apiLocal.post('/usuarios/login', login);
   return resp.data;
 }
 

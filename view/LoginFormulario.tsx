@@ -1,18 +1,30 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native"
-import { useState } from "react"
-import { Button, Pressable, Text, TextInput, View } from "react-native"
-import { styles } from "../styles/estilos"
-import { BotaoProps } from "../model/Botao";
-
+import { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { styles } from "../styles/estilos";
+import { useLoginControl } from "../control/loginControl";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface LoginProps {
     navigation: NavigationProp<ParamListBase>;
-    onLogin : (nome : string, senha: string) => Promise<void>
+    onLogin: (email: string, senha: string) => Promise<void>;
 }
 
 const Login = (props: LoginProps) : React.ReactElement => {
-    const [nome, setNome] = useState("")
-    const [senha, setSenha] = useState("")
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const { autenticar, loading, mensagem } = useLoginControl();
+
+    const onLogin = async () => {
+        const result = await autenticar(email, senha);
+        if (result && result.token) {
+            await AsyncStorage.setItem('TOKEN', result.token);
+            props.onLogin(email, senha);
+        } else if (mensagem && mensagem.includes('sucesso')) {
+            props.onLogin(email, senha);
+        }
+    };
+
     return (
         <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -20,14 +32,13 @@ const Login = (props: LoginProps) : React.ReactElement => {
             </View>
             <View style={{flex: 3,width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Nome" value={nome} onChangeText={setNome}/>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
                 </View>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha}/>
+                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry/>
                 </View>
-                <Botao title="Entrar" onPress={async ()=>{
-                    await props.onLogin(nome, senha)
-                }} />
+                {mensagem ? <Text style={{ color: mensagem.includes('sucesso') ? 'green' : 'red', marginBottom: 8 }}>{mensagem}</Text> : null}
+                <Botao title={loading ? "Entrando..." : "Entrar"} onPress={onLogin} />
             </View>
         </View>
     )
@@ -35,7 +46,7 @@ const Login = (props: LoginProps) : React.ReactElement => {
 
 
 
-function Botao( props : BotaoProps ) { 
+function Botao( props : { title: string, onPress: () => void } ) { 
     return (
         <Pressable onPress={props.onPress}>
             <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
@@ -46,6 +57,5 @@ function Botao( props : BotaoProps ) {
         </Pressable>
     );
 }
-
 
 export { Login };

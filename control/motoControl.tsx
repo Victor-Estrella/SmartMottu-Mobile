@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Moto } from '../model/Moto';
 import { motoServicoSalvar, motoServicoListar, motoServicoAtualizar, motoServicoDeletar } from '../service/motoService';
 
-type GravarMotoFn = (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, chassi: string) => void;
+type GravarMotoFn = (setor: string, id: string, modelo: string, unidade: string, status: string, placa: string, nmChassi: string) => void;
 
 const useMotoControl = () => {
   const [listaMoto, setListaMoto] = useState<Moto[]>([]);
@@ -23,9 +23,9 @@ const useMotoControl = () => {
     fetchMotos();
   }, []);
 
-  const gravar: GravarMotoFn = async (setor, id, modelo, unidade, status, placa, chassi) => {
+  const gravar: GravarMotoFn = async (setor, id, modelo, unidade, status, placa, nmChassi) => {
     setLoading(true);
-    const moto: Moto = { setor, id, modelo, unidade, status, placa, chassi };
+    const moto: Moto = { setor, id, modelo, unidade, status, placa, nmChassi };
     try {
       const result = await motoServicoSalvar(moto);
       setListaMoto(prev => [...prev, { ...moto, id: result.id || id }]);

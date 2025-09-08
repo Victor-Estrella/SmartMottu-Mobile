@@ -9,12 +9,5 @@ const cadastroSchema: yup.ObjectSchema<any, any> = object({
 
 type ListaCadastro = yup.InferType<typeof cadastroSchema>;
 
-const loginSchema: yup.ObjectSchema<any, any> = object({
-  nome: string().required("Por favor preencha o nome"),
-  senha: string().required("Por favor preencha a senha"),
-});
 
-type ListaLogin = yup.InferType<typeof loginSchema>;
-
-
-export { ListaCadastro, ListaLogin, cadastroSchema, loginSchema };
+export { ListaCadastro, cadastroSchema };
