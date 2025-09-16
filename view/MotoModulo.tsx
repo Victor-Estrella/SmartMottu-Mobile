@@ -10,14 +10,17 @@ import MotoDetalhes from './MotoDetalhes';
 import { MapaPatio } from './Mapa';
 import Configuracoes from './Configuracoes';
 import { MotoProvider } from '../control/MotoContext';
+import { useThemeGlobal } from '../styles/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
+    const { theme } = useThemeGlobal();
+
     return (
         <MotoProvider>
             <View style={{ flex: 1 }}>
-                <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: 'black', zIndex: 2 }}>
+                <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: theme.background, zIndex: 2 }}>
                     <Botao title="Sair" onPress={() => {
                         AsyncStorage.removeItem("LOGIN")
                             .then(() => SucessoLogout())
@@ -75,7 +78,7 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
 
 function Botao(props: BotaoProps) {
     return (
-        <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10, marginTop: 40  }}>
+        <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10  }}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Sair</Text>
         </Pressable>
     );

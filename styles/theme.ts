@@ -1,25 +1,33 @@
 import { useColorScheme } from 'react-native';
 
 export const lightTheme = {
-  background: '#fff',
-  text: '#000',
+  background: '#f5f5f5', // fundo geral das telas de motos
   primary: '#00b131',
-  secondary: '#333',
+  text: '#222',          // texto geral das telas de motos
+  secondary: '#e0e0e0',  // fundo de inputs/cards nas telas de motos
   border: '#ccc',
-  card: '#eee',
+  card: '#fff',
   button: 'green',
   buttonText: '#fff',
+  // Específicos para login/cadastro
+  formBackground: '#f5f5f5',
+  formText: '#222',
+  formInputBackground: '#e0e0e0'
 };
 
 export const darkTheme = {
-  background: '#000',
-  text: '#fff',
+  background: '#181818',
+  text: '#eee',
   primary: '#00b131',
-  secondary: '#fff',
-  border: '#ccc',
-  card: '#333',
+  secondary: '#232323',
+  border: '#333',
+  card: '#232323',
   button: 'green',
   buttonText: '#fff',
+  // Específicos para login/cadastro
+  formBackground: '#181818',
+  formText: '#fff',
+  formInputBackground: '#333',
 };
 
 export function useTheme() {

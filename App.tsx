@@ -55,7 +55,7 @@ function AppWithTheme({ login, setLogin }: { login: boolean, setLogin: (v: boole
 
 function ThemeSwitch({ onPress, isDark }: { onPress: () => void, isDark: boolean }) {
   return (
-    <Pressable onPress={onPress} style={{ padding: 8, borderRadius: 20, backgroundColor: isDark ? '#222' : '#eee', marginRight: 8, marginTop: 15 }}>
+    <Pressable onPress={onPress} style={{ padding: 8, borderRadius: 20, backgroundColor: isDark ? '#222' : '#eee', marginRight: 8, marginTop: 30 }}>
       <Text style={{ color: isDark ? '#fff' : '#222', fontWeight: 'bold' }}>{isDark ? '🌙 Escuro' : '☀️ Claro'}</Text>
     </Pressable>
   );

@@ -4,7 +4,7 @@ import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { styles } from "../styles/estilos";
 import { useMoto } from '../control/MotoContext';
-import { useTheme } from '../styles/theme';
+import { useThemeGlobal } from '../styles/ThemeContext';
 
 interface MotoPropsExtra {
   item: Moto;
@@ -12,21 +12,21 @@ interface MotoPropsExtra {
 }
 
 const MotoProps = ({ item, navigation }: MotoPropsExtra): React.ReactElement => {
-  const theme = useTheme();
+  const { theme } = useThemeGlobal();
   return (
     <View style={[styles.linhaTabela, {backgroundColor: theme.card}]}> 
       <Text style={[styles.objetosTabela, {color: theme.text}]}>{item.setor}</Text>
       <Text style={[styles.objetosTabela, {color: theme.text}]}>{item.idMoto}</Text>
       <Text style={[styles.objetosTabela, {color: theme.text}]}>{item.modelo}</Text>
       {/* Passa apenas o idMoto para a tela de detalhes */}
-      <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { idMoto: item.idMoto })} />
+      <Botao title="Detalhes" onPress={() => navigation.navigate("MotoDetalhes", { idMoto: item.idMoto })} theme={theme} />
     </View>
   );
 };
 
 const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement => {
   const { listaMoto } = useMoto();
-  const theme = useTheme();
+  const { theme } = useThemeGlobal();
   return (
     <View style={{ backgroundColor: theme.background, flex: 1 }}>
       <Text style={[styles.tituloTabela, {color: theme.primary}]}>Listagem de Motos</Text>
@@ -47,12 +47,11 @@ const ListagemMoto = ({ navigation }: { navigation: any }): React.ReactElement =
   );
 };
 
-function Botao(props: BotaoProps) {
-  const theme = useTheme();
+function Botao(props: BotaoProps & { theme: any }) {
   return (
     <Pressable onPress={props.onPress} style={styles.pressableDetalhesTabela}>
-      <View style={[styles.botaoDetalhes, {backgroundColor: theme.button}]}> 
-        <Text style={[styles.botaoTextoDetalhes, {color: theme.buttonText}]}>{props.title}</Text>
+      <View style={[styles.botaoDetalhes, {backgroundColor: props.theme.button}]}> 
+        <Text style={[styles.botaoTextoDetalhes, {color: props.theme.buttonText}]}>{props.title}</Text>
       </View>
     </Pressable>
   );

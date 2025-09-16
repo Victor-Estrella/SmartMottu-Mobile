@@ -4,13 +4,13 @@ import { styles } from "../styles/estilos";
 import { useLoginControl } from "../control/loginControl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginProps from "../model/LoginProps";
-import { useTheme } from "../styles/theme";
+import { useThemeGlobal } from "../styles/ThemeContext";
 
 const Login = (props: LoginProps) : React.ReactElement => {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const { autenticar, loading, mensagem } = useLoginControl();
-    const theme = useTheme();
+    const { theme } = useThemeGlobal();
 
     const onLogin = async () => {
         try {
@@ -34,19 +34,22 @@ const Login = (props: LoginProps) : React.ReactElement => {
     };
     
     return (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background}}>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.formBackground}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={[styles.tituloAutenticacao, {color: theme.primary}]}>Login</Text>
             </View>
-            <View style={{flex: 3,width: '50%'}}>
+            <View style={{flex: 3, width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Email" value={email} onChangeText={setEmail}/>
+                    <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]}
+                        placeholderTextColor={theme.formText} placeholder="Email" value={email} onChangeText={setEmail}
+                    />
                 </View>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={styles.inputAutenticacao} placeholderTextColor='white' placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry/>
+                    <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]}
+                        placeholderTextColor={theme.formText} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry/>
                 </View>
-                {mensagem ? <Text style={{ color: mensagem.includes('sucesso') ? 'green' : 'red', marginBottom: 8 }}>{mensagem}</Text> : null}
-                <Botao title={loading ? "Entrando..." : "Entrar"} onPress={onLogin} />
+                {mensagem ? <Text style={{ color: mensagem.includes('sucesso') ? theme.primary : 'red', marginBottom: 8 }}>{mensagem}</Text> : null}
+                <Botao title={loading ? "Entrando..." : "Entrar"} onPress={onLogin} theme={theme} />
             </View>
         </View>
     )
@@ -54,11 +57,11 @@ const Login = (props: LoginProps) : React.ReactElement => {
 
 
 
-function Botao( props : { title: string, onPress: () => void } ) { 
+function Botao( props : { title: string, onPress: () => void, theme: any } ) { 
     return (
         <Pressable onPress={props.onPress}>
-            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: 'green'}} >
-                <Text style={styles.buttonTextAutenticacao}>
+            <View style={{borderRadius: 16, marginTop: 42, backgroundColor: props.theme.button}} >
+                <Text style={[styles.buttonTextAutenticacao, {color: props.theme.buttonText}]}>
                     {props.title}
                 </Text>
             </View>
