@@ -4,12 +4,13 @@ import { styles } from "../styles/estilos";
 import { useLoginControl } from "../control/loginControl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginProps from "../model/LoginProps";
-
+import { useTheme } from "../styles/theme";
 
 const Login = (props: LoginProps) : React.ReactElement => {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const { autenticar, loading, mensagem } = useLoginControl();
+    const theme = useTheme();
 
     const onLogin = async () => {
         try {
@@ -33,9 +34,9 @@ const Login = (props: LoginProps) : React.ReactElement => {
     };
     
     return (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'}}>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background}}>
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.tituloAutenticacao}>Login</Text>
+                <Text style={[styles.tituloAutenticacao, {color: theme.primary}]}>Login</Text>
             </View>
             <View style={{flex: 3,width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
