@@ -25,10 +25,6 @@ const Configuracoes = (): React.ReactElement => {
         Alert.alert(
             'Deletar Conta',
             'Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.',
-    const deletarConta = () => {
-        Alert.alert(
-            'Deletar Conta',
-            'Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.',
             [
                 { text: 'Cancelar', style: 'cancel' },
                 {
@@ -44,6 +40,10 @@ const Configuracoes = (): React.ReactElement => {
             ]
         );
     };
+
+    return (
+        <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
+            <Text style={[styles.tituloConfig, { color: theme.primary }]}>Configurações da Conta</Text>
             <TextInput 
                 style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
                 placeholder="Nome" 

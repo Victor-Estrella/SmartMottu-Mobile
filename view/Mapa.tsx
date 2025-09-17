@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-native';
 import { styles } from '../styles/estilos';
 
-import { useMoto } from '../control/MotoContext';
+import { useMoto } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
 
 export function MapaPatio() {

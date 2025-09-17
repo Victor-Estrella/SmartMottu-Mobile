@@ -12,24 +12,28 @@ const Login = (props: LoginProps) : React.ReactElement => {
     const { autenticar, loading, mensagem } = useLoginControl();
     const { theme } = useThemeGlobal();
 
+    const [erroLogin, setErroLogin] = useState<string | null>(null);
     const onLogin = async () => {
+        setErroLogin(null);
         try {
             const result = await autenticar(email, senha);
             if (result && result.token) {
                 await AsyncStorage.setItem('TOKEN', result.token);
                 props.onLogin(email, senha); 
                 return;
+            } else {
+                setErroLogin('Não foi possível autenticar. Verifique seu e-mail e senha.');
             }
         } catch (err: any) {
-            let msg = 'Erro desconhecido ao tentar logar.';
+            let msg = 'Ocorreu um erro inesperado ao tentar fazer login.';
             if (err?.response?.status === 400) {
-                msg = 'Usuário ou senha inválidos.';
+                msg = 'E-mail ou senha incorretos. Por favor, tente novamente.';
             } else if (err?.response?.status === 401) {
-                msg = 'Não autorizado. Verifique suas credenciais.';
+                msg = 'Acesso não autorizado. Confira suas credenciais.';
             } else if (err?.response?.status === 500) {
                 msg = 'Erro interno do servidor. Tente novamente mais tarde.';
             }
-            alert(msg);
+            setErroLogin(msg);
         }
     };
     
@@ -48,7 +52,11 @@ const Login = (props: LoginProps) : React.ReactElement => {
                     <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]}
                         placeholderTextColor={theme.formText} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry/>
                 </View>
-                {mensagem ? <Text style={{ color: mensagem.includes('sucesso') ? theme.primary : 'red', marginBottom: 8 }}>{mensagem}</Text> : null}
+                {erroLogin ? (
+                    <Text style={{ color: 'red', marginBottom: 8 }}>{erroLogin}</Text>
+                ) : mensagem ? (
+                    <Text style={{ color: mensagem.includes('sucesso') ? theme.primary : 'red', marginBottom: 8 }}>{mensagem}</Text>
+                ) : null}
                 <Botao title={loading ? "Entrando..." : "Entrar"} onPress={onLogin} theme={theme} />
             </View>
         </View>

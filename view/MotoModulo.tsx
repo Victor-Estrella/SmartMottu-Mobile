@@ -9,7 +9,7 @@ import { ListagemMoto } from './MotoListagem';
 import MotoDetalhes from './MotoDetalhes';
 import { MapaPatio } from './Mapa';
 import Configuracoes from './Configuracoes';
-import { MotoProvider } from '../control/MotoContext';
+import { MotoProvider } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
 
 const Tab = createBottomTabNavigator();

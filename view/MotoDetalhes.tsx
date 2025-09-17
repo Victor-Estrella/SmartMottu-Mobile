@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { BotaoProps } from '../model/Botao';
 import { styles } from '../styles/estilos';
 import { Moto } from '../model/Moto';
-import { useMoto } from '../control/MotoContext';
+import { useMoto } from '../contexto/MotoContext';
 import { useTheme } from '../styles/theme';
 import { useThemeGlobal } from '../styles/ThemeContext';
 
