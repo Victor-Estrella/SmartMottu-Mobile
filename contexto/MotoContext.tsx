@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useMotoControl } from './motoControl';
+import { useMotoControl } from '../control/motoControl';
 
 const MotoContext = createContext<ReturnType<typeof useMotoControl> | null>(null);
 

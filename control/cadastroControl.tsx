@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ListaCadastro } from '../model/Cadastro';
-import { cadastroServicoSalvar } from '../service/cadastroService';
+import { cadastroServicoAtualizar, cadastroServicoSalvar, usuarioServicoDeletar } from '../service/cadastroService';
 
 const useCadastroControl = () => {
   const [cadastro, setCadastro] = useState<ListaCadastro | null>(null);
@@ -32,7 +32,40 @@ const useCadastroControl = () => {
     }
   };
 
-  return { cadastro, setCadastro, salvar, loading, mensagem };
+    const atualizar = async (key: string, usuarioAtualizado: ListaCadastro) => {
+    setLoading(true);
+    try {
+      const result = await cadastroServicoAtualizar(key, usuarioAtualizado);
+      setCadastro((prev: ListaCadastro[]) => prev.map(m => (String(m.idCadastro) === String(key) ? result : m)));
+    } catch (err: any) {
+      console.warn('Erro ao atualizar moto:', err.message || String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deletar = async (key: string) => {
+    setLoading(true);
+    try {
+      await usuarioServicoDeletar(key);
+      setCadastro(null);
+      setMensagem('Cadastro deletado com sucesso');
+    } catch (err: any) {
+      let msg = 'Erro ao deletar cadastro.';
+      if (err?.response?.status === 404) {
+        msg = 'Cadastro não encontrado.';
+      } else if (err?.response?.status === 500) {
+        msg = 'Erro interno do servidor ao deletar.';
+      }
+      setMensagem(msg);
+      console.warn('Erro ao deletar cadastro:', err.message || String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  return { cadastro, setCadastro, salvar, atualizar, deletar, loading, mensagem };
 };
 
 export { useCadastroControl };

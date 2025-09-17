@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useMoto } from '../control/MotoContext';
 import { Pressable, Text, TextInput, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { styles } from "../styles/estilos";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import { useThemeGlobal } from '../styles/ThemeContext';
+import { useMoto } from "../contexto/MotoContext";
 
 const FormularioMoto = (): React.ReactElement => {
   const [setorSelecionado, setSetorSelecionado] = useState("Pendencia");
@@ -15,17 +15,8 @@ const FormularioMoto = (): React.ReactElement => {
   const [placa, setPlaca] = useState("");
   const [nmChassi, setNmChassi] = useState("");
 
-  const { gravar, loading, mensagem, setMensagem } = useMoto();
+  const { gravar, loading, mensagem } = useMoto();
   const { theme } = useThemeGlobal();
-  const limparFormulario = () => {
-    setSetorSelecionado("Pendencia");
-    setModelo("Mottu Pop");
-    setUnidade("");
-    setStatus("");
-    setPlaca("");
-    setNmChassi("");
-    setMensagem && setMensagem(null);
-  };
 
   return (
     <ScrollView contentContainerStyle={{ minHeight: "100%", alignItems: "center", justifyContent: "center", backgroundColor: theme.background }}>

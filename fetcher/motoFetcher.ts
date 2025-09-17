@@ -2,7 +2,7 @@ import { Moto } from "../model/Moto";
 import axios from 'axios';
 
 const apiLocal = axios.create({
-  baseURL: "http://192.168.0.24:8080",
+  baseURL: "http://localhost:8080",
 });
 
 // Cria uma nova moto

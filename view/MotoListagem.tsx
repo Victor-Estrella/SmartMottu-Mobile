@@ -3,8 +3,8 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { BotaoProps } from "../model/Botao";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { styles } from "../styles/estilos";
-import { useMoto } from '../control/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
+import { useMoto } from "../contexto/MotoContext";
 
 interface MotoPropsExtra {
   item: Moto;
