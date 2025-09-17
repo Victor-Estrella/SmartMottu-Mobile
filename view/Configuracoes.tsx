@@ -2,10 +2,12 @@ import React from 'react';
 import { Alert, Pressable, Text, TextInput, View } from 'react-native';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
+import { useThemeGlobal } from '../styles/ThemeContext';
 
 const Configuracoes = (): React.ReactElement => {
     const [nome, setNome] = React.useState('');
     const [email, setEmail] = React.useState('');
+    const { theme }= useThemeGlobal();
 
     const atualizarConta = () => {
         // Código para atualizar os dados do usuário
@@ -29,18 +31,31 @@ const Configuracoes = (): React.ReactElement => {
     };
 
     return (
-        <View style={styles.containerConfig}>
-            <Text style={styles.tituloConfig}>Configurações da Conta</Text>
-            <TextInput style={styles.inputConfig} placeholder="Nome" value={nome} onChangeText={setNome} placeholderTextColor="white" />
-            <TextInput style={styles.inputConfig} placeholder="E-mail" value={email} onChangeText={setEmail} placeholderTextColor="white" keyboardType="email-address" autoCapitalize="none" />
+        <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
+            <Text style={[styles.tituloConfig, { color: theme.primary }]}>Configurações da Conta</Text>
+            <TextInput 
+                style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                placeholder="Nome" 
+                value={nome} 
+                onChangeText={setNome} 
+                placeholderTextColor={theme.formText} 
+            />
+            <TextInput 
+                style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                placeholder="E-mail" 
+                value={email} 
+                onChangeText={setEmail} 
+                placeholderTextColor={theme.formText} 
+                keyboardType="email-address" 
+                autoCapitalize="none" 
+            />
             <View style={styles.deleteConfig}>
-                <Botao title="Atualizar Conta" color='#0CB0E7FF' onPress={atualizarConta} />
-                <Botao title="Deletar Conta" color='#d9534f' onPress={deletarConta} />
+                <Botao title="Atualizar Conta" color={theme.button} onPress={atualizarConta} />
+                <Botao title="Deletar Conta" color="#d9534f" onPress={deletarConta} />
             </View>
         </View>
     );
 };
-
 
 function Botao(props: BotaoPropsConfig) {
     return (

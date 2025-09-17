@@ -7,13 +7,14 @@ import { styles } from '../styles/estilos';
 import { Moto } from '../model/Moto';
 import { useMoto } from '../control/MotoContext';
 import { useTheme } from '../styles/theme';
+import { useThemeGlobal } from '../styles/ThemeContext';
 
 const MotoDetalhes = ({ navigation }: { navigation: any }) => {
     const { deletar, atualizar, loading, listaMoto } = useMoto();
     const route = useRoute();
     const [modalVisible, setModalVisible] = useState(false);
     const [editMoto, setEditMoto] = useState<Moto | null>(null);
-    const theme = useTheme();
+    const { theme } = useThemeGlobal();
 
     // Busca o idMoto dos parâmetros de navegação
     const idMotoParam = route.params && (route.params as any).idMoto;
@@ -49,16 +50,16 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
     };
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: theme.background}}>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: theme.formBackground}}>
             <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.primary, marginTop: 30 }}>Detalhes da Moto</Text>
-            <View style={{ marginTop: 20, backgroundColor: theme.background }}>
-                <Text style={{color: theme.text}}>Setor: {motoExibir.setor}</Text>
-                <Text style={{color: theme.text}}>ID: {motoExibir.idMoto || motoExibir.id}</Text>
-                <Text style={{color: theme.text}}>Modelo: {motoExibir.modelo}</Text>
-                <Text style={{color: theme.text}}>Unidade: {motoExibir.unidade}</Text>
-                <Text style={{color: theme.text}}>Status: {motoExibir.status}</Text>
-                <Text style={{color: theme.text}}>Placa: {motoExibir.placa}</Text>
-                <Text style={{color: theme.text}}>Chassi: {motoExibir.nmChassi}</Text>
+            <View style={{ marginTop: 20, backgroundColor: theme.formBackground }}>
+                <Text style={{color: theme.formText}}>Setor: {motoExibir.setor}</Text>
+                <Text style={{color: theme.formText}}>ID: {motoExibir.idMoto || motoExibir.id}</Text>
+                <Text style={{color: theme.formText}}>Modelo: {motoExibir.modelo}</Text>
+                <Text style={{color: theme.formText}}>Unidade: {motoExibir.unidade}</Text>
+                <Text style={{color: theme.formText}}>Status: {motoExibir.status}</Text>
+                <Text style={{color: theme.formText}}>Placa: {motoExibir.placa}</Text>
+                <Text style={{color: theme.formText}}>Chassi: {motoExibir.nmChassi}</Text>
                 <View style={{ marginTop: 20 }}>
                     <Botao title={loading ? "Atualizando..." : "Atualizar"} onPress={abrirModalAtualizar} />
                 </View>
@@ -68,10 +69,10 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
             </View>
             <Modal visible={modalVisible} animationType="slide" transparent={true}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.8)' }}>
-                    <View style={{ backgroundColor: theme.card, padding: 20, borderRadius: 10, width: '80%' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 10, color: theme.text }}>Editar Moto</Text>
-                        <Text style={{ fontWeight: 'bold', marginBottom: 4, color: theme.text }}>Setor</Text>
-                        <Picker selectedValue={editMoto?.setor || ''} onValueChange={v => setEditMoto((e: Moto) => ({...e!, setor: v}))} style={{ marginBottom: 8, color: theme.text }}>
+                    <View style={{ backgroundColor: theme.formBackground, padding: 20, borderRadius: 10, width: '80%' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 10, color: theme.formText }}>Editar Moto</Text>
+                        <Text style={{ fontWeight: 'bold', marginBottom: 4, color: theme.formText }}>Setor</Text>
+                        <Picker selectedValue={editMoto?.setor || ''} onValueChange={v => setEditMoto((e: Moto) => ({...e!, setor: v}))} style={{ marginBottom: 8, color: theme.formText }}>
                             <Picker.Item label="Pendência" value="Pendencia" />
                             <Picker.Item label="Reparo Simples" value="Reparo Simples" />
                             <Picker.Item label="Danos Estruturais Graves" value="Danos Estruturais Graves" />
@@ -82,16 +83,16 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
                             <Picker.Item label="Minha Mottu" value="Minha Mottu" />
                             <Picker.Item label="Outro" value="Outro" />
                         </Picker>
-                        <Text style={{ fontWeight: 'bold', marginBottom: 4, color: theme.text }}>Modelo</Text>
-                        <Picker selectedValue={editMoto?.modelo || ''} onValueChange={v => setEditMoto((e: Moto) => ({...e!, modelo: v}))} style={{ marginBottom: 8, color: theme.text }}>
+                        <Text style={{ fontWeight: 'bold', marginBottom: 4, color: theme.formText }}>Modelo</Text>
+                        <Picker selectedValue={editMoto?.modelo || ''} onValueChange={v => setEditMoto((e: Moto) => ({...e!, modelo: v}))} style={{ marginBottom: 8, color: theme.formText }}>
                             <Picker.Item label="Mottu Pop" value="Mottu Pop" />
                             <Picker.Item label="Mottu Sport" value="Mottu Sport" />
                             <Picker.Item label="Mottu-E" value="Mottu-E" />
                         </Picker>
-                        <TextInput value={editMoto?.unidade || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, unidade: v}))} placeholder="Unidade" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.text, borderColor: theme.border }} />
-                        <TextInput value={editMoto?.status || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, status: v}))} placeholder="Status" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.text, borderColor: theme.border }} />
-                        <TextInput value={editMoto?.placa || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, placa: v}))} placeholder="Placa" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.text, borderColor: theme.border }} />
-                        <TextInput value={editMoto?.nmChassi || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, nmChassi: v}))} placeholder="Chassi" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.text, borderColor: theme.border }} />
+                        <TextInput value={editMoto?.unidade || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, unidade: v}))} placeholder="Unidade" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }} placeholderTextColor={theme.formText} />
+                        <TextInput value={editMoto?.status || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, status: v}))} placeholder="Status" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }} placeholderTextColor={theme.formText} />
+                        <TextInput value={editMoto?.placa || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, placa: v}))} placeholder="Placa" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }} placeholderTextColor={theme.formText} />
+                        <TextInput value={editMoto?.nmChassi || ''} onChangeText={v => setEditMoto((e: Moto) => ({...e!, nmChassi: v}))} placeholder="Chassi" style={{ borderBottomWidth: 1, marginBottom: 8, color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }} placeholderTextColor={theme.formText} />
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }}>
                             <Botao title="Salvar" onPress={salvarAtualizacao} />
                             <Botao title="Cancelar" onPress={() => setModalVisible(false)} />

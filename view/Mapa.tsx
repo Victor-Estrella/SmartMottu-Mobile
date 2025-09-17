@@ -32,7 +32,7 @@ export function MapaPatio() {
         { setor: "pronta para aluguel", cor: "darkgreen", label: "Pronta para Aluguel" },
         { setor: "sem placa", cor: "pink", label: "Sem Placa" },
         { setor: "minha mottu", cor: "lightgreen", label: "Minha Mottu" },
-        { setor: "outro", cor: theme.card, label: "Outro" },
+        { setor: "outro", cor: theme.outro, label: "Outro" },
     ];
 
     const [filtro, setFiltro] = React.useState<string | null>(null);
@@ -60,11 +60,11 @@ export function MapaPatio() {
                     const posX = coluna * itemWidth + 10;
                     const posY = linha * itemWidth + 10;
 
-                    const cor = corPorSetor[moto.setor.toLowerCase()] || theme.card;
+                    const cor = corPorSetor[moto.setor.toLowerCase()] || theme.outro;
 
                     return (
                         <View key={index} style={{ position: "absolute", left: posX, top: posY, width: 75, height: 75, backgroundColor: cor, borderRadius: 5, justifyContent: "center", alignItems: "center", }}>
-                            <Text style={{ color: theme.text, fontSize: 15, textAlign: "center", flexShrink: 1, }} numberOfLines={2}>{moto.placa || moto.nmChassi}</Text>
+                            <Text style={{ color: theme.mapaTexto, fontSize: 15, textAlign: "center", flexShrink: 1, }} numberOfLines={2}>{moto.placa || moto.nmChassi}</Text>
                         </View>
                     );
                 })}

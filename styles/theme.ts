@@ -12,7 +12,11 @@ export const lightTheme = {
   // Específicos para login/cadastro
   formBackground: '#f5f5f5',
   formText: '#222',
-  formInputBackground: '#e0e0e0'
+  formInputBackground: '#e0e0e0',
+
+  //Mapa
+  outro: '#000',
+  mapaTexto: "#c1c1c1ff",
 };
 
 export const darkTheme = {
@@ -24,10 +28,16 @@ export const darkTheme = {
   card: '#232323',
   button: 'green',
   buttonText: '#fff',
+
+  
   // Específicos para login/cadastro
   formBackground: '#181818',
   formText: '#fff',
   formInputBackground: '#333',
+
+  //Mapa
+  outro: '#fff',
+  mapaTexto: "#000",
 };
 
 export function useTheme() {

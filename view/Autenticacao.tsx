@@ -30,14 +30,14 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
                     tabBarIcon: (screenProps: any) =>
                         <FontAwesome name='wpforms' size={screenProps.size} color={screenProps.color}/>
                     }}>
-                    {({ navigation }: { navigation: any }) => ( <Cadastro navigation={navigation} />)}
+                    {({ navigation } : { navigation: any }) => ( <Cadastro navigation={navigation} />)}
                 </Screen>
                 <Screen name='Login' options={{
                     headerShown: false,
                     tabBarIcon: (screenProps: any) => 
                         <FontAwesome name='motorcycle' size={screenProps.size} color={screenProps.color}/>
                     }}>
-                    {({navigation}:{navigation:any}) => ( <Login onLogin={logar} navigation={navigation} />)}
+                    {({ navigation } : { navigation:any }) => ( <Login onLogin={logar} navigation={navigation} />)}
                 </Screen> 
             </Navigator>
             <StatusBar style="auto" />
