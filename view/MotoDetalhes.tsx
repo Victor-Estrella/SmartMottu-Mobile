@@ -51,6 +51,7 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: theme.formBackground}}>
+            <Botao title='Voltar' onPress={()=>{navigation.navigate("MotoListagem");}}></Botao>
             <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.primary, marginTop: 30 }}>Detalhes da Moto</Text>
             <View style={{ marginTop: 20, backgroundColor: theme.formBackground }}>
                 <Text style={{color: theme.formText}}>Setor: {motoExibir.setor}</Text>

@@ -1,16 +1,15 @@
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 import { BotaoProps } from '../model/Botao';
 import { FormularioMoto } from './MotoFormulario';
-import { ListagemMoto } from './MotoListagem';
-import MotoDetalhes from './MotoDetalhes';
 import { MapaPatio } from './Mapa';
 import Configuracoes from './Configuracoes';
 import { MotoProvider } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
+import MotoLista from './MotoLista';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,21 +44,13 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                         }}>
                             {(navProps: any) => ( <MapaPatio {...navProps} /> )}
                         </Tab.Screen>
-                        <Tab.Screen name="Listagem" options={{
-                            title: 'Listagem',
+                        <Tab.Screen name="Moto Informações" options={{
+                            title: 'Moto Informações',
                             tabBarIcon: (screenProps: any): ReactNode => (
-                                <Feather name="list" size={screenProps.size} color={screenProps.color} />
+                                <AntDesign name="info-circle" size={screenProps.size} color={screenProps.color} />
                             ),
                         }}>
-                            {({ navigation }: { navigation: any }) => ( <ListagemMoto navigation={navigation} />)}
-                        </Tab.Screen>
-                        <Tab.Screen name="MotoDetalhes" options={{
-                            title: 'Detalhes',
-                            tabBarIcon: (screenProps: any): ReactNode => (
-                                <Feather name="info" size={screenProps.size} color={screenProps.color} />
-                            ),
-                        }}>
-                            {(navProps: any) => <MotoDetalhes {...navProps} />} 
+                            {(navProps: any) => ( <MotoLista {...navProps} /> )}
                         </Tab.Screen>
                         <Tab.Screen name="Configurações" options={{
                             title: 'Configurações',
