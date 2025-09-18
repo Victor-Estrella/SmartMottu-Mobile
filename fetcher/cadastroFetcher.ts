@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ListaCadastro } from "../model/Cadastro";
 
 const apiLocal = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: process.env.API_URL || "http://localhost:8080",
 });
 
 
