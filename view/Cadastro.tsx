@@ -5,6 +5,7 @@ import { styles } from "../styles/estilos"
 import { BotaoProps } from "../model/Botao";
 import CadastroProps from "../model/CadastroProps";
 import { useThemeGlobal } from "../styles/ThemeContext";
+import { validarEmail } from '../utils/email';
 
 const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [nome, setNome] = useState("")
@@ -49,6 +50,10 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                         }
                         if (senha.length > 15) {
                             setMensagemSenha('A senha deve ter no máximo 15 caracteres.');
+                            return;
+                        }
+                        if (!validarEmail(email)) {
+                            setMensagemSenha('Digite um e-mail válido.');
                             return;
                         }
                         const result = await salvar(nome, email, senha);

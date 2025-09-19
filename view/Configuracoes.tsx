@@ -7,6 +7,7 @@ import { useThemeGlobal } from '../styles/ThemeContext';
 import { useCadastroControl } from '../control/cadastroControl';
 import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
 import CadastroProps from '../model/CadastroProps';
+import { validarEmail } from '../utils/email';
 
 type ConfiguracoesProps = CadastroProps & {
     SucessoLogout?: () => void;
@@ -24,9 +25,7 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const { theme } = useThemeGlobal();
     const { atualizar, deletar, loading } = useCadastroControl();
 
-    function validarEmail(email: string) {
-        return /^\S+@\S+\.\S+$/.test(email);
-    }
+
 
     // Ao montar, pega o email do AsyncStorage e busca o id do usuário
     const [emailOriginal, setEmailOriginal] = React.useState<string>('');

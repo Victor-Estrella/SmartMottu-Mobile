@@ -5,6 +5,7 @@ import { useLoginControl } from "../control/loginControl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginProps from "../model/LoginProps";
 import { useThemeGlobal } from "../styles/ThemeContext";
+import { validarEmail } from '../utils/email';
 
 const Login = (props: LoginProps) : React.ReactElement => {
     const [email, setEmail] = useState("");
@@ -15,6 +16,10 @@ const Login = (props: LoginProps) : React.ReactElement => {
     const [erroLogin, setErroLogin] = useState<string | null>(null);
     const onLogin = async () => {
         setErroLogin(null);
+        if (!validarEmail(email)) {
+            setErroLogin('Digite um e-mail válido.');
+            return;
+        }
         try {
             const result = await autenticar(email, senha);
             if (result && result.token) {
