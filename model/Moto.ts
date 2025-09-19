@@ -10,6 +10,6 @@ const motoSchema: yup.ObjectSchema<any, any> = object({
   nmChassi: string().required("Por favor preencha o chassi").min(17, "O chassi deve ter 17 caracteres").max(17, "O chassi deve ter 17 caracteres"),
 });
 
-type Moto = yup.InferType<typeof motoSchema> & { idMoto?: number };
+type Moto = yup.InferType<typeof motoSchema> & { idMoto?: number, qrcode?: string };
 
 export { Moto, motoSchema };

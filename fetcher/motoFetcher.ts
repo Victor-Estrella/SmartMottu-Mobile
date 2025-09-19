@@ -7,7 +7,10 @@ const apiLocal = axios.create({
 
 // Cria uma nova moto
 export async function criarMoto(data: Moto) {
-  const resp = await apiLocal.post('/motos', data);
+  // Gera string para QRCode (pode ser customizada)
+  const qrString = `ID: ${data.idMoto ?? ''}\nModelo: ${data.modelo}\nPlaca: ${data.placa}`;
+  const dataComQr = { ...data, qrcode: qrString };
+  const resp = await apiLocal.post('/motos', dataComQr);
   return resp.data;
 }
 

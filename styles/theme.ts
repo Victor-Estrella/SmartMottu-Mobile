@@ -16,7 +16,7 @@ export const lightTheme = {
 
   //Mapa
   outro: '#000',
-  mapaTexto: "#a6a5a5ff",
+  mapaTexto: "rgba(157, 154, 154, 1)",
 };
 
 export const darkTheme = {

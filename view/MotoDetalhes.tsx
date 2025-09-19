@@ -1,3 +1,4 @@
+
 import { useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, Pressable, Text, View, TextInput, Modal } from 'react-native';
@@ -8,6 +9,9 @@ import { Moto } from '../model/Moto';
 import { useMoto } from '../contexto/MotoContext';
 import { useTheme } from '../styles/theme';
 import { useThemeGlobal } from '../styles/ThemeContext';
+import QRCode from 'react-native-qrcode-svg';
+import AntDesign from '@expo/vector-icons/AntDesign';
+
 
 const MotoDetalhes = ({ navigation }: { navigation: any }) => {
     const { deletar, atualizar, loading, listaMoto } = useMoto();
@@ -25,7 +29,7 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
                 <Text style={{ color: theme.text, fontSize: 18, marginBottom: 30 }}>Nenhuma moto selecionada</Text>
-                <Botao title="Voltar" onPress={() => navigation.navigate("Listagem")} />
+                <Botao title="Voltar" onPress={() => navigation.navigate("MotoListagem")} />
             </View>
         );
     }
@@ -33,7 +37,7 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
     const deletarMoto = async () => {
         await deletar(motoExibir.id || motoExibir.idMoto);
         Alert.alert("Sucesso", "Moto deletada com sucesso!");
-        navigation.navigate("Listagem");
+        navigation.navigate("MotoListagem");
     };
 
     const abrirModalAtualizar = () => {
@@ -51,8 +55,17 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: theme.formBackground}}>
-            <Botao title='Voltar' onPress={()=>{navigation.navigate("MotoListagem");}}></Botao>
+            <View style={{alignSelf: 'flex-start', marginLeft: 10}}>
+                <BotaoVoltar title='Voltar' onPress={()=>{navigation.navigate("MotoListagem");}}></BotaoVoltar>
+            </View>
             <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.primary, marginTop: 30 }}>Detalhes da Moto</Text>
+            {/* QRCode da moto */}
+            {motoExibir.qrcode && (
+                <View style={{ marginVertical: 24, alignItems: 'center' }}>
+                    <QRCode value={motoExibir.qrcode} size={180} />
+                    <Text style={{color: theme.formText, marginTop: 8, fontSize: 12}}>QRCode da moto</Text>
+                </View>
+            )}
             <View style={{ marginTop: 20, backgroundColor: theme.formBackground }}>
                 <Text style={{color: theme.formText}}>Setor: {motoExibir.setor}</Text>
                 <Text style={{color: theme.formText}}>ID: {motoExibir.idMoto || motoExibir.id}</Text>
@@ -113,6 +126,18 @@ function Botao(props: BotaoProps) {
                 <Text style={[styles.botaoTexto, {color: theme.buttonText}]}>
                     {props.title}
                 </Text>
+            </View>
+        </Pressable>
+    );
+}
+
+function BotaoVoltar(props: BotaoProps) {
+    const theme = useTheme();
+    return (
+        <Pressable onPress={props.onPress}>
+            <View style={{ borderRadius: 16, backgroundColor: theme.button, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 10, paddingVertical: 6 }}>
+                <AntDesign name="arrow-left" size={24} color="white" />
+                <Text style={[styles.botaoTexto, {color: theme.buttonText}]}>{props.title}</Text>
             </View>
         </Pressable>
     );
