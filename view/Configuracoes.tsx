@@ -1,11 +1,18 @@
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
 import { useThemeGlobal } from '../styles/ThemeContext';
 import { useCadastroControl } from '../control/cadastroControl';
+import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
+import CadastroProps from '../model/CadastroProps';
 
-const Configuracoes = (): React.ReactElement => {
+type ConfiguracoesProps = CadastroProps & {
+    SucessoLogout?: () => void;
+};
+
+const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const [nome, setNome] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [senha, setSenha] = React.useState('');
@@ -13,12 +20,36 @@ const Configuracoes = (): React.ReactElement => {
     const [erroEmail, setErroEmail] = React.useState('');
     const [erroSenha, setErroSenha] = React.useState('');
     const [mensagem, setMensagem] = React.useState<{ texto: string, tipo: 'sucesso' | 'erro' | '' }>({ texto: '', tipo: '' });
+    const [idUsuario, setIdUsuario] = React.useState<number | null>(null);
     const { theme } = useThemeGlobal();
     const { atualizar, deletar, loading } = useCadastroControl();
 
     function validarEmail(email: string) {
         return /^\S+@\S+\.\S+$/.test(email);
     }
+
+    // Ao montar, pega o email do AsyncStorage e busca o id do usuário
+    const [emailOriginal, setEmailOriginal] = React.useState<string>('');
+    React.useEffect(() => {
+        const fetchEmailAndId = async () => {
+            try {
+                const emailStorage = await AsyncStorage.getItem('email');
+                if (emailStorage) {
+                    setEmail(emailStorage);
+                    setEmailOriginal(emailStorage);
+                    // Busca o usuário pelo email original
+                    const usuario = await buscarUsuarioPorEmail(emailStorage);
+                    if (usuario && usuario.idUsuario) {
+                        setIdUsuario(usuario.idUsuario);
+                        setNome(usuario.nome || '');
+                    }
+                }
+            } catch (e) {
+                setMensagem({ texto: 'Erro ao carregar dados do usuário.', tipo: 'erro' });
+            }
+        };
+        fetchEmailAndId();
+    }, []);
 
     const atualizarConta = async () => {
         setErroNome('');
@@ -42,9 +73,19 @@ const Configuracoes = (): React.ReactElement => {
             erro = true;
         }
         if (erro) return;
+        if (!idUsuario) {
+            setMensagem({ texto: 'ID do usuário não encontrado.', tipo: 'erro' });
+            return;
+        }
         const usuarioAtualizado: any = { nome, email };
         if (senha && senha.length >= 8) usuarioAtualizado.senha = senha;
-        const resultado = await atualizar(email, usuarioAtualizado);
+        // Atualiza usando o id do usuário buscado pelo email original
+        const resultado = await atualizar(String(idUsuario), usuarioAtualizado);
+        // Se o email foi alterado com sucesso, atualize o email salvo no AsyncStorage
+        if (resultado.sucesso && email !== emailOriginal) {
+            await AsyncStorage.setItem('email', email);
+            setEmailOriginal(email);
+        }
         if (resultado.sucesso) {
             setMensagem({ texto: resultado.mensagem, tipo: 'sucesso' });
             setSenha('');
@@ -53,17 +94,31 @@ const Configuracoes = (): React.ReactElement => {
         }
     };
 
-    const deletarConta = () => {
+    const deletarConta = async () => {
         setErroEmail('');
         setMensagem({ texto: '', tipo: '' });
-        if (!email.trim()) {
-            setErroEmail('O e-mail é obrigatório para deletar a conta.');
-            return;
-        } else if (!validarEmail(email)) {
-            setErroEmail('Digite um e-mail válido.');
-            return;
+        // Busca o idUsuario pelo email original do login
+        try {
+            if (!emailOriginal || !validarEmail(emailOriginal)) {
+                setErroEmail('Email original inválido. Faça login novamente.');
+                return;
+            }
+            const usuario = await buscarUsuarioPorEmail(emailOriginal);
+            if (!usuario || !usuario.idUsuario) {
+                setMensagem({ texto: 'ID do usuário não encontrado para exclusão.', tipo: 'erro' });
+                return;
+            }
+            await deletar(String(usuario.idUsuario));
+            setMensagem({ texto: 'Conta deletada com sucesso!', tipo: 'sucesso' });
+            await AsyncStorage.removeItem('email');
+            await AsyncStorage.removeItem('TOKEN');
+            // Chama SucessoLogout igual ao botão de sair do MotoModulo
+            if (props.SucessoLogout && typeof props.SucessoLogout === 'function') {
+                props.SucessoLogout();
+            }
+        } catch (e) {
+            setMensagem({ texto: 'Erro ao deletar conta.', tipo: 'erro' });
         }
-        // ...pode manter o Alert para confirmação...
     };
 
     return (
@@ -72,31 +127,23 @@ const Configuracoes = (): React.ReactElement => {
             {mensagem.texto ? (
                 <Text style={{ color: mensagem.tipo === 'sucesso' ? theme.primary : 'red', marginBottom: 10, marginLeft: 10, fontWeight: 'bold', }}>{mensagem.texto}</Text>
             ) : null}
-            <TextInput
-                style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="Nome"
-                value={nome}
-                onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                placeholder="Nome" value={nome} onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
                 placeholderTextColor={theme.formText}
             />
             {erroNome ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroNome}</Text> : null}
-            <TextInput
-                style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="E-mail"
-                value={email}
-                onChangeText={text => { setEmail(text); if (erroEmail) setErroEmail(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
-                placeholderTextColor={theme.formText}
-                keyboardType="email-address"
-                autoCapitalize="none"
+            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                placeholder="E-mail" value={email} onChangeText={text => {
+                    setEmail(text);
+                    if (erroEmail) setErroEmail('');
+                    if (mensagem.texto) setMensagem({ texto: '', tipo: '' });
+                }}
+                placeholderTextColor={theme.formText} keyboardType="email-address" autoCapitalize="none"
             />
             {erroEmail ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroEmail}</Text> : null}
-            <TextInput
-                style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="Nova senha (opcional)"
-                value={senha}
-                onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
-                placeholderTextColor={theme.formText}
-                secureTextEntry
+            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                placeholder="Nova senha (opcional)" value={senha} onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+                placeholderTextColor={theme.formText} secureTextEntry
             />
             {erroSenha ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroSenha}</Text> : null}
             <View style={styles.deleteConfig}>

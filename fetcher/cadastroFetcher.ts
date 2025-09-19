@@ -1,6 +1,6 @@
-// Busca usuário por e-mail
+// Busca usuário por e-mail (agora usando query param)
 export async function buscarUsuarioPorEmail(email: string) {
-  const resp = await apiLocal.get(`/usuarios/email/${encodeURIComponent(email)}`);
+  const resp = await apiLocal.get(`/usuarios/email`, { params: { email } });
   return resp.data;
 }
 import axios from 'axios';
@@ -9,8 +9,7 @@ import { ListaCadastro } from "../model/Cadastro";
 const apiLocal = axios.create({
   baseURL: process.env.API_URL || "http://localhost:8080",
 });
-
-
+  
 // Cria um novo usuário tipado
 export async function criarUsuario(data: ListaCadastro) {
   const resp = await apiLocal.post('/usuarios', data);

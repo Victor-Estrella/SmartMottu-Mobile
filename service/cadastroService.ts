@@ -15,8 +15,6 @@ export async function cadastroServicoAtualizar(idCadastro: string, cadastro: Atu
   return await atualizarUsuario(Number(idCadastro), cadastro);
 }
 
-
-
 export async function usuarioServicoDeletar(idCadastro: string) {
   return await deletarUsuario(Number(idCadastro));
 }

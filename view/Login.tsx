@@ -19,6 +19,11 @@ const Login = (props: LoginProps) : React.ReactElement => {
             const result = await autenticar(email, senha);
             if (result && result.token) {
                 await AsyncStorage.setItem('TOKEN', result.token);
+                if (result.email) {
+                    await AsyncStorage.setItem('email', result.email);
+                } else {
+                    await AsyncStorage.setItem('email', email);
+                }
                 props.onLogin(email, senha); 
                 return;
             } else {

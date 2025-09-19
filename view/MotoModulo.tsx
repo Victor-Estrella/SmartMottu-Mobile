@@ -16,15 +16,21 @@ const Tab = createBottomTabNavigator();
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
     const { theme } = useThemeGlobal();
 
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem("TOKEN");
+            await AsyncStorage.removeItem("email");
+            SucessoLogout();
+        } catch (e) {
+            console.log("Erro ao deslogar", e);
+        }
+    };
+
     return (
         <MotoProvider>
             <View style={{ flex: 1 }}>
                 <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: theme.background, zIndex: 2 }}>
-                    <Botao title="Sair" onPress={() => {
-                        AsyncStorage.removeItem("LOGIN")
-                            .then(() => SucessoLogout())
-                            .catch(() => console.log("Erro ao deslogar"));
-                    }} />
+                    <Botao title="Sair" onPress={handleLogout} />
                 </View>
                 <View style={{ flex: 1, }}>
                     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -58,7 +64,7 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                                 <Feather name="settings" size={screenProps.size} color={screenProps.color} />
                             ),
                         }}>
-                            {(navProps: any) => ( <Configuracoes {...navProps} /> )}
+                            {(navProps: any) => ( <Configuracoes {...navProps} SucessoLogout={SucessoLogout} /> )}
                         </Tab.Screen>
                     </Tab.Navigator>
                 </View>

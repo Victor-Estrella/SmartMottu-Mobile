@@ -2,23 +2,12 @@ import { useState, useEffect } from 'react';
 import { ListaCadastro } from '../model/Cadastro';
 import { cadastroServicoAtualizar, cadastroServicoSalvar, usuarioServicoDeletar } from '../service/cadastroService';
 import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useCadastroControl = () => {
   const [cadastro, setCadastro] = useState<ListaCadastro | null>(null);
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [mensagem, setMensagem] = useState<string | null>(null);
-
-  // Carrega o idUsuario salvo ao iniciar
-  useEffect(() => {
-    (async () => {
-      const id = await AsyncStorage.getItem('idUsuario');
-      if (id) setIdUsuario(Number(id));
-    })();
-  }, []);
 
   const salvar = async (nome: string, email: string, senha: string) => {
     setLoading(true);
@@ -49,22 +38,27 @@ const useCadastroControl = () => {
       setLoading(true);
       setMensagem(null);
       try {
-        let id = idUsuario;
-        if (!id) {
-          // Tenta buscar do AsyncStorage se não estiver no estado
-          const idStr = await AsyncStorage.getItem('idUsuario');
-          if (idStr) id = Number(idStr);
+        // Busca o id do usuário pelo email salvo no AsyncStorage (sempre atualizado)
+        const email = await AsyncStorage.getItem('email');
+        let id = null;
+        if (email) {
+          try {
+            const usuario = await buscarUsuarioPorEmail(email);
+            if (usuario && usuario.idUsuario) id = usuario.idUsuario;
+          } catch (e) {
+            id = null;
+          }
         }
         if (!id) {
           setMensagem('ID do usuário não encontrado. Faça login novamente.');
           return { sucesso: false, mensagem: 'ID do usuário não encontrado. Faça login novamente.' };
         }
-  const result = await cadastroServicoAtualizar(String(id), usuarioAtualizado);
+        const result = await cadastroServicoAtualizar(String(id), usuarioAtualizado);
         setCadastro(result);
         setMensagem('Conta atualizada com sucesso!');
-        // Se o usuário mudou o e-mail, pode ser interessante atualizar o AsyncStorage também
+        // Se o usuário mudou o e-mail, atualize o AsyncStorage
         if (usuarioAtualizado.email) {
-          await AsyncStorage.setItem('emailUsuario', usuarioAtualizado.email);
+          await AsyncStorage.setItem('email', usuarioAtualizado.email);
         }
         return { sucesso: true, mensagem: 'Conta atualizada com sucesso!' };
       } catch (err: any) {
