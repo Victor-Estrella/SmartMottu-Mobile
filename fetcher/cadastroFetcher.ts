@@ -1,3 +1,8 @@
+// Busca usuário por e-mail
+export async function buscarUsuarioPorEmail(email: string) {
+  const resp = await apiLocal.get(`/usuarios/email/${encodeURIComponent(email)}`);
+  return resp.data;
+}
 import axios from 'axios';
 import { ListaCadastro } from "../model/Cadastro";
 
