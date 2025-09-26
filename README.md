@@ -1,64 +1,89 @@
 # SmartMottu
 
+Aplicativo mobile para gestão de pátios da Mottu, com autenticação, cadastro e gestão de motos, geração de QR Code por moto, mapa do pátio e alternância de tema claro/escuro.
+
 ## Integrantes
-- Julia Monteiro - RM:557023 - Turma: 2TDSPV
-- Sofia Andrade Petruk - RM:556585 - Turma: 2TDSPV
-- Victor Henrique Estrella Carracci - RM:556206 - Turma: 2TDSPH
+- Julia Monteiro — RM: 557023 — Turma: 2TDSPV
+- Sofia Andrade Petruk — RM: 556585 — Turma: 2TDSPV
+- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH
 
-## Objetivo
-O objetivo deste projeto é resolver o principal problema interno da Mottu: a dificuldade de localizar motos nos pátios, especialmente quando estão paradas sem placas, com o chassi encoberto ou quando o GPS entra em modo de hibernação. Esse problema gera confusão, retrabalho, atrasos e impacta diretamente na produtividade e satisfação dos clientes.
+## Proposta e funcionalidades
+Objetivo: resolver a dificuldade de localizar motos nos pátios, especialmente quando sem placa ou com chassi encoberto, garantindo controle, rastreabilidade e produtividade.
 
-## Solução
-A solução proposta é uma plataforma inteligente de gestão de pátios que integra **visão computacional**, **IoT** e **QR Code** para localizar motos em tempo real, mesmo quando não possuem placas ou o chassi está encoberto.
+Funcionalidades principais (todas integradas à API Java com validações, mensagens e carregamento):
+- Autenticação: Cadastro, Login, Logout (persistência de token e e-mail com AsyncStorage)
+- Configurações da conta: atualizar dados e deletar conta (com logout automático)
+- Gestão de motos: CRUD completo (Create, Read, Update, Delete)
+- QR Code por moto: gerado ao criar a moto e exibido em detalhes
+- Mapa do pátio: visão geral com filtro por setor
+- Tema claro/escuro com alternância global
 
-### Como Funciona:
-1. **Instalação de Câmeras 360°**: Câmeras são instaladas nos pátios para capturar imagens contínuas do ambiente.
-2. **Processamento de Imagens com Visão Computacional**: As imagens capturadas são processadas por um sistema de visão computacional treinado com fotos cadastradas das motos. Isso permite a identificação visual das unidades, mesmo sem placas.
-3. **QR Code Exclusivo**: Cada moto tem um QR Code exclusivo gerado e fixado. Ao escanear o QR Code com o app, o operador pode visualizar o histórico e status da moto, além de registrar movimentações.
-4. **Mapeamento em Tempo Real**: O sistema utiliza **React Native** e **React Native Maps** para criar um mapa interativo que exibe a localização das motos em tempo real.
-5. **Busca e Identificação Visual**: O operador pode buscar por uma moto utilizando imagens capturadas pelas câmeras e o sistema de visão computacional (baseado em **TensorFlow** ou **PyTorch**). O sistema indicará a localização exata da moto, convertendo coordenadas de imagem para pontos no mapa digital.
+## Estrutura de pastas
+```
+assets/
+contexto/           # Contextos globais (ex.: MotoContext)
+control/            # Hooks de controle (regras de negócio do app)
+fetcher/            # Acesso HTTP (axios) à API
+model/              # Tipos e Schemas (Yup)
+service/            # Orquestração e validação antes do fetcher
+styles/             # Temas, estilos globais e ThemeContext
+utils/              # Utilitários (ex.: validação de e-mail)
+view/               # Telas (UI) — sem lógica de negócio
+App.tsx             # Navegação raiz e ThemeProvider
+```
 
-## Tecnologias Utilizadas:
-- **React Native** com **Expo**
-- **React Navigation** para navegação entre telas
-- **AsyncStorage** para persistência de dados localmente
-- **React Native Maps** para exibição do mapa interativo.
-- **Expo Barcode Scanner** para leitura do QR Code.
-- **TensorFlow** ou **PyTorch** para a implementação de visão computacional.
+## Tecnologias utilizadas
+- React Native (Expo)
+- React Navigation (Stack/Tab)
+- TypeScript + Yup
+- AsyncStorage
+- Axios
+- react-native-qrcode-svg
 
-## Como Rodar o Projeto
+## Como rodar
 
-### Pré-requisitos
-- **Node.js** instalado
-- **Expo CLI** instalado: 
+Pré‑requisitos
+- Node.js LTS
+- Expo (sem necessidade de instalar globalmente no Expo SDK 54+)
+- Emulador Android/iOS ou app Expo Go no dispositivo
 
-    ```bash
-    npm install -g expo-cli
-    ```
-- **React Native** configurado no seu ambiente de desenvolvimento
+Clonar e instalar
+```powershell
+git clone https://github.com/AntonioCarvalhoFIAP/challenge-3-Victor-Estrella.git
+cd challenge-3-Victor-Estrella
+npm install
+```
 
-### Instruções
-1. Clone o repositório e entre no diretório do projeto:
+Executar (Metro bundler)
+```powershell
+npm run start
+```
 
-    ```bash
-    git clone https://github.com/jliamonteiro/challenge-mobile.git
-    cd challenge-mobile
-    ```
+Executar no navegador (web)
+```powershell
+npm run web
+```
 
-2. Instale as dependências:
-    ```bash
-    npm install
-    ```
+Back-end
+- A API Java deve estar rodando em `http://localhost:8080` (padrão já usado no app).
+- Opcionalmente, defina outra URL antes de iniciar (PowerShell):
+```powershell
+$env:API_URL = "http://seu-servidor:8080"; npm run start
+```
 
-3. Rode o projeto:
-    - Para emulador ou Expo Go:
-        
-        ```
-        npm run start
-        ```
+## Critérios atendidos (guia da sprint)
+- Telas funcionais com API: CRUD de usuários e motos com validações, feedback e loaders
+- Sistema de login: telas de Login/Cadastro, token/e-mail no AsyncStorage e logout funcional
+- Tema: alternância claro/escuro global via ThemeContext
+- Arquitetura: separação por camadas (view/control/service/fetcher/contexto/model/styles/utils), código limpo e tipado
+- Documentação: este README cobre nome, proposta, funcionalidades e estrutura de pastas; seção de vídeo abaixo
 
-    - Para navegador (modo web):
+## Vídeo de demonstração
 
-        ```bash
-        npm run web
-        ```
+
+---
+
+## Notas técnicas
+- As validações de formulário são feitas com Yup e validações de e‑mail centralizadas em `utils/email.ts`.
+- O QR Code é gerado com `react-native-qrcode-svg` e o texto fonte é definido ao criar a moto.
+- O fluxo de exclusão de conta dispara o mesmo logout do botão "Sair" para consistência de UX.
