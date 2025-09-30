@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ListaLogin } from '../model/Login';
 
 const apiLocal = axios.create({
-    baseURL: process.env.API_URL || "http://localhost:8080",
+    baseURL: process.env.API_URL || "https://smartmottu-api.onrender.com",
 });
 
 export async function loginUsuario(login: ListaLogin) {

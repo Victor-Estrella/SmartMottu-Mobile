@@ -65,8 +65,8 @@ npm run web
 ```
 
 Back-end
-- A API Java deve estar rodando em `http://localhost:8080` (padrão já usado no app).
-- Opcionalmente, defina outra URL antes de iniciar (PowerShell):
+- Endpoint padrão de produção: `https://smartmottu-api.onrender.com`.
+- É possível sobrescrever via variável de ambiente (PowerShell):
 ```powershell
 $env:API_URL = "http://seu-servidor:8080"; npm run start
 ```

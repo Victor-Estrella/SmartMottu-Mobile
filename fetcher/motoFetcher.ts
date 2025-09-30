@@ -2,7 +2,7 @@ import { Moto } from "../model/Moto";
 import axios from 'axios';
 
 const apiLocal = axios.create({
-  baseURL: process.env.API_URL || "http://localhost:8080",
+  baseURL: process.env.API_URL || "https://smartmottu-api.onrender.com",
 });
 
 // Cria uma nova moto

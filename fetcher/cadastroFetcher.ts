@@ -7,7 +7,7 @@ import axios from 'axios';
 import { ListaCadastro } from "../model/Cadastro";
 
 const apiLocal = axios.create({
-  baseURL: process.env.API_URL || "http://localhost:8080",
+  baseURL: process.env.API_URL || "https://smartmottu-api.onrender.com",
 });
   
 // Cria um novo usuário tipado
