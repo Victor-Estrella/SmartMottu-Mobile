@@ -5,8 +5,7 @@ Aplicativo mobile para gestão de pátios da Mottu, com autenticação, cadastro
 ## Integrantes
 - Julia Monteiro — RM: 557023 — Turma: 2TDSPV
 - Sofia Andrade Petruk — RM: 556585 — Turma: 2TDSPV
-- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH
-
+- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH 
 ## Proposta e funcionalidades
 Objetivo: resolver a dificuldade de localizar motos nos pátios, especialmente quando sem placa ou com chassi encoberto, garantindo controle, rastreabilidade e produtividade.
 
@@ -71,19 +70,7 @@ Back-end
 $env:API_URL = "http://seu-servidor:8080"; npm run start
 ```
 
-## Critérios atendidos (guia da sprint)
-- Telas funcionais com API: CRUD de usuários e motos com validações, feedback e loaders
-- Sistema de login: telas de Login/Cadastro, token/e-mail no AsyncStorage e logout funcional
-- Tema: alternância claro/escuro global via ThemeContext
-- Arquitetura: separação por camadas (view/control/service/fetcher/contexto/model/styles/utils), código limpo e tipado
-- Documentação: este README cobre nome, proposta, funcionalidades e estrutura de pastas; seção de vídeo abaixo
 
 ## Vídeo de demonstração
 
-
----
-
-## Notas técnicas
-- As validações de formulário são feitas com Yup e validações de e‑mail centralizadas em `utils/email.ts`.
-- O QR Code é gerado com `react-native-qrcode-svg` e o texto fonte é definido ao criar a moto.
-- O fluxo de exclusão de conta dispara o mesmo logout do botão "Sair" para consistência de UX.
+**Link do vídeo:** https://youtu.be/31pi_rCvIFM
