@@ -1,0 +1,39 @@
+import { Moto } from "../model/Moto";
+import axios from 'axios';
+
+const apiLocal = axios.create({
+  baseURL: process.env.API_URL || "https://smartmottu-api.onrender.com",
+});
+
+// Cria uma nova moto
+export async function criarMoto(data: Moto) {
+  // Gera string para QRCode (pode ser customizada)
+  const qrString = `ID: ${data.idMoto ?? ''}\nModelo: ${data.modelo}\nPlaca: ${data.placa}`;
+  const dataComQr = { ...data, qrcode: qrString };
+  const resp = await apiLocal.post('/motos', dataComQr);
+  return resp.data;
+}
+
+// Retorna todas as motos
+export async function listarMotos() {
+  const resp = await apiLocal.get('/motos');
+  return resp.data;
+}
+
+// Retorna uma moto específica
+export async function buscarMoto(idMoto: number) {
+  const resp = await apiLocal.get(`/motos/${idMoto}`);
+  return resp.data;
+}
+
+// Atualiza uma moto específica
+export async function atualizarMoto(idMoto: number, data: Moto) {
+  const resp = await apiLocal.put(`/motos/${idMoto}`, data);
+  return resp.data;
+}
+
+// Deleta uma moto específica
+export async function deletarMoto(idMoto: number) {
+  const resp = await apiLocal.delete(`/motos/${idMoto}`);
+  return resp.status === 200;
+}
