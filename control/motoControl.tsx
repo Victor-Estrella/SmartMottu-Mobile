@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Moto } from '../model/Moto';
 import { motoServicoSalvar, motoServicoListar, motoServicoAtualizar, motoServicoDeletar } from '../service/motoService';
+import { useNotification } from '../contexto/NotificationContext';
 
 type GravarMotoFn = (setor: string, modelo: string, unidade: string, status: string, placa: string, nmChassi: string) => void;
 
@@ -8,6 +9,7 @@ const useMotoControl = () => {
   const [listaMoto, setListaMoto] = useState<Moto[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [mensagem, setMensagem] = useState<string | null>(null);
+  const { sendPushNotificationAsync } = useNotification();
 
   useEffect(() => {
     const fetchMotos = async () => {
@@ -32,6 +34,15 @@ const useMotoControl = () => {
       const result = await motoServicoSalvar(moto);
       setListaMoto(prev => [...prev, result]);
       setMensagem('Moto cadastrada com sucesso!');
+      await sendPushNotificationAsync({
+        title: 'Nova moto cadastrada',
+        body: `${result.modelo ?? 'Moto'} adicionada ao setor ${result.setor ?? 'N/D'}.`,
+        data: {
+          type: 'moto-created',
+          motoId: result.idMoto ?? result.id ?? null,
+          setor: result.setor ?? null,
+        },
+      });
     } catch (err: any) {
       let msg = 'Erro desconhecido ao tentar cadastrar moto.';
       if (err?.response?.status === 400) {
@@ -50,8 +61,25 @@ const useMotoControl = () => {
   const atualizar = async (key: string, motoAtualizada: Moto) => {
     setLoading(true);
     try {
+      const previous = listaMoto.find(m => String(m.idMoto) === String(key));
       const result = await motoServicoAtualizar(key, motoAtualizada);
       setListaMoto(prev => prev.map(m => (String(m.idMoto) === String(key) ? result : m)));
+      const setorAlterado = previous && previous.setor !== result.setor;
+      const statusAlterado = previous && previous.status !== result.status;
+      if (setorAlterado || statusAlterado) {
+        await sendPushNotificationAsync({
+          title: 'Atualização de moto',
+          body: `A moto ${result.idMoto ?? result.placa ?? 'sem identificação'} agora está em ${result.setor ?? 'N/D'} (${result.status ?? 'sem status'}).`,
+          data: {
+            type: 'moto-updated',
+            motoId: result.idMoto ?? key,
+            previousSetor: previous?.setor ?? null,
+            newSetor: result.setor ?? null,
+            previousStatus: previous?.status ?? null,
+            newStatus: result.status ?? null,
+          },
+        });
+      }
     } catch (err: any) {
       console.warn('Erro ao atualizar moto:', err.message || String(err));
     } finally {

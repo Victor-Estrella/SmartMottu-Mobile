@@ -1,6 +1,7 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
 import { useThemeGlobal } from '../styles/ThemeContext';
@@ -8,6 +9,7 @@ import { useCadastroControl } from '../control/cadastroControl';
 import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
 import CadastroProps from '../model/CadastroProps';
 import { validarEmail } from '../utils/email';
+import { useNotification } from '../contexto/NotificationContext';
 
 type ConfiguracoesProps = CadastroProps & {
     SucessoLogout?: () => void;
@@ -24,11 +26,34 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const [idUsuario, setIdUsuario] = React.useState<number | null>(null);
     const { theme } = useThemeGlobal();
     const { atualizar, deletar, loading } = useCadastroControl();
+    const { sendPushNotificationAsync, scheduleLocalNotification, lastNotification } = useNotification();
 
 
 
     // Ao montar, pega o email do AsyncStorage e busca o id do usuário
     const [emailOriginal, setEmailOriginal] = React.useState<string>('');
+    const [nomeOriginal, setNomeOriginal] = React.useState<string>('');
+    const [statusAgendamento, setStatusAgendamento] = React.useState<string | null>(null);
+
+    const enviarNotificacaoTeste = React.useCallback(() => {
+        setStatusAgendamento(null);
+        scheduleLocalNotification({
+            title: 'Notificação do SmartMottu',
+            body: 'Disparamos uma notificação local para você conferir o comportamento.',
+            seconds: 5,
+            data: { type: 'local-test' },
+        }).then(id => {
+            if (id) {
+                const message = `Notificação ${id} programada. Coloque o app em segundo plano para ver o banner.`;
+                setStatusAgendamento(message);
+                Alert.alert('Agendado', message);
+            } else {
+                const message = 'Não foi possível agendar a notificação. Verifique as permissões do sistema.';
+                setStatusAgendamento(message);
+                Alert.alert('Permissão necessária', message);
+            }
+        });
+    }, [scheduleLocalNotification]);
     React.useEffect(() => {
         const fetchEmailAndId = async () => {
             try {
@@ -41,6 +66,7 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
                     if (usuario && usuario.idUsuario) {
                         setIdUsuario(usuario.idUsuario);
                         setNome(usuario.nome || '');
+                        setNomeOriginal(usuario.nome || '');
                     }
                 }
             } catch (e) {
@@ -78,16 +104,37 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         }
         const usuarioAtualizado: any = { nome, email };
         if (senha && senha.length >= 8) usuarioAtualizado.senha = senha;
+        const nomeAlterado = nome !== nomeOriginal;
+        const emailAlterado = email !== emailOriginal;
+        const senhaAlterada = Boolean(usuarioAtualizado.senha);
         // Atualiza usando o id do usuário buscado pelo email original
         const resultado = await atualizar(String(idUsuario), usuarioAtualizado);
-        // Se o email foi alterado com sucesso, atualize o email salvo no AsyncStorage
-        if (resultado.sucesso && email !== emailOriginal) {
-            await AsyncStorage.setItem('email', email);
-            setEmailOriginal(email);
-        }
         if (resultado.sucesso) {
+            if (emailAlterado) {
+                await AsyncStorage.setItem('email', email);
+                setEmailOriginal(email);
+            }
             setMensagem({ texto: resultado.mensagem, tipo: 'sucesso' });
             setSenha('');
+            const camposAlterados = [
+                nomeAlterado ? 'nome' : null,
+                emailAlterado ? 'e-mail' : null,
+                senhaAlterada ? 'senha' : null,
+            ].filter(Boolean);
+            if (camposAlterados.length) {
+                const descricaoAlteracoes = camposAlterados.join(', ');
+                await sendPushNotificationAsync({
+                    title: 'Conta atualizada',
+                    body: `Alteramos seu ${descricaoAlteracoes}.`,
+                    data: {
+                        type: 'account-updated',
+                        updatedFields: camposAlterados,
+                    },
+                });
+            }
+            if (nomeAlterado) {
+                setNomeOriginal(nome);
+            }
         } else {
             setMensagem({ texto: resultado.mensagem, tipo: 'erro' });
         }
@@ -109,6 +156,11 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
             }
             await deletar(String(usuario.idUsuario));
             setMensagem({ texto: 'Conta deletada com sucesso!', tipo: 'sucesso' });
+            await sendPushNotificationAsync({
+                title: 'Conta removida',
+                body: 'Sua conta foi excluída deste dispositivo.',
+                data: { type: 'account-deleted', userEmail: emailOriginal },
+            });
             await AsyncStorage.removeItem('email');
             await AsyncStorage.removeItem('TOKEN');
             // Chama SucessoLogout igual ao botão de sair do MotoModulo
@@ -149,9 +201,119 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
                 <Botao title={loading ? "Atualizando..." : "Atualizar Conta"} color={theme.button} onPress={atualizarConta} />
                 <Botao title="Deletar Conta" color="#d9534f" onPress={deletarConta} />
             </View>
+            <NotificationTester
+                themeColors={{
+                    background: theme.background,
+                    card: theme.formInputBackground,
+                    primary: theme.primary,
+                    subtitle: theme.formText,
+                    buttonBackground: '#38bdf8',
+                    buttonLabel: '#0f172a',
+                }}
+                onSchedule={enviarNotificacaoTeste}
+                statusMessage={statusAgendamento}
+                lastNotification={lastNotification}
+            />
         </View>
     );
 };
+
+const notificationStyles = StyleSheet.create({
+    wrapper: {
+        marginTop: 32,
+        width: '100%',
+        paddingHorizontal: 16,
+    },
+    card: {
+        borderRadius: 24,
+        paddingVertical: 32,
+        paddingHorizontal: 24,
+        borderWidth: 1,
+        borderColor: 'rgba(56, 189, 248, 0.25)',
+        shadowColor: '#020617',
+        shadowOffset: { width: 0, height: 18 },
+        shadowOpacity: 0.25,
+        shadowRadius: 32,
+        elevation: 10,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '700',
+        textAlign: 'center',
+        marginBottom: 8,
+    },
+    subtitle: {
+        fontSize: 15,
+        textAlign: 'center',
+        lineHeight: 22,
+        marginBottom: 28,
+    },
+    button: {
+        paddingVertical: 14,
+        borderRadius: 16,
+    },
+    buttonLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        textAlign: 'center',
+    },
+    logBox: {
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 20,
+    },
+    logTitle: {
+        fontWeight: '600',
+        marginBottom: 6,
+        textAlign: 'center',
+    },
+    logMessage: {
+        textAlign: 'center',
+    },
+    statusMessage: {
+        marginTop: 16,
+        textAlign: 'center',
+        fontSize: 14,
+    },
+});
+
+interface NotificationTesterProps {
+    themeColors: {
+        background: string;
+        card: string;
+        primary: string;
+        subtitle: string;
+        buttonBackground: string;
+        buttonLabel: string;
+    };
+    onSchedule: () => void;
+    statusMessage: string | null;
+    lastNotification: Notifications.Notification | null;
+}
+
+function NotificationTester({ themeColors, onSchedule, statusMessage, lastNotification }: NotificationTesterProps) {
+    return (
+        <View style={notificationStyles.wrapper}>
+            <View style={[notificationStyles.card, { backgroundColor: themeColors.card }]}> 
+                <Text style={[notificationStyles.title, { color: themeColors.primary }]}>Teste de Notificação</Text>
+                <Text style={[notificationStyles.subtitle, { color: themeColors.subtitle }]}>Dispare uma notificação local para validar o fluxo do aplicativo.</Text>
+                {lastNotification ? (
+                    <View style={[notificationStyles.logBox, { backgroundColor: 'rgba(56, 189, 248, 0.08)' }]}> 
+                        <Text style={[notificationStyles.logTitle, { color: '#38bdf8' }]}>Última notificação recebida</Text>
+                        <Text style={[notificationStyles.logMessage, { color: themeColors.subtitle }]}>{lastNotification.request.content.title}</Text>
+                        <Text style={[notificationStyles.logMessage, { color: themeColors.subtitle }]}>{lastNotification.request.content.body}</Text>
+                    </View>
+                ) : null}
+                <TouchableOpacity activeOpacity={0.85} onPress={onSchedule} style={[notificationStyles.button, { backgroundColor: themeColors.buttonBackground }]}> 
+                    <Text style={[notificationStyles.buttonLabel, { color: themeColors.buttonLabel }]}>Notificar em 5 segundos</Text>
+                </TouchableOpacity>
+                {statusMessage ? (
+                    <Text style={[notificationStyles.statusMessage, { color: statusMessage.includes('não foi') || statusMessage.includes('Não foi') ? 'red' : themeColors.primary }]}>{statusMessage}</Text>
+                ) : null}
+            </View>
+        </View>
+    );
+}
 
 function Botao(props: BotaoPropsConfig) {
     return (

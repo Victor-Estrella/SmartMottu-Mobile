@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MotoModulo } from './view/MotoModulo';
 import Autenticacao from './view/Autenticacao';
 import { ThemeProvider, useThemeGlobal } from './styles/ThemeContext';
+import { NotificationProvider } from './contexto/NotificationContext';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -22,7 +23,9 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <AppWithTheme login={login} setLogin={setLogin} />
+      <NotificationProvider>
+        <AppWithTheme login={login} setLogin={setLogin} />
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
