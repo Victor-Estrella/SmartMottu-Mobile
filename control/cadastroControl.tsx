@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ListaCadastro } from '../model/Cadastro';
 import { cadastroServicoAtualizar, cadastroServicoSalvar, usuarioServicoDeletar } from '../service/cadastroService';
 import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../i18n';
 
 const useCadastroControl = () => {
   const [cadastro, setCadastro] = useState<ListaCadastro | null>(null);
@@ -15,17 +16,17 @@ const useCadastroControl = () => {
     const obj: ListaCadastro = { nome, email, senha };
     try {
       await cadastroServicoSalvar(obj);
-      setMensagem('Cadastro gravado com sucesso');
+      setMensagem(i18n.t('cadastro.messages.saveSuccess'));
       setCadastro(obj);
       return true;
     } catch (err: any) {
-      let msg = 'Erro desconhecido ao tentar cadastrar.';
+      let msg = i18n.t('cadastro.messages.unknown');
       if (err?.response?.status === 400) {
-        msg = 'Dados inválidos. Verifique os campos e tente novamente.';
+        msg = i18n.t('cadastro.messages.invalidData');
       } else if (err?.response?.status === 409) {
-        msg = 'Já existe um usuário com este email.';
+        msg = i18n.t('cadastro.messages.duplicate');
       } else if (err?.response?.status === 500) {
-        msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+        msg = i18n.t('cadastro.messages.serverError');
       }
       setMensagem(msg);
       return false;
@@ -50,27 +51,29 @@ const useCadastroControl = () => {
           }
         }
         if (!id) {
-          setMensagem('ID do usuário não encontrado. Faça login novamente.');
-          return { sucesso: false, mensagem: 'ID do usuário não encontrado. Faça login novamente.' };
+          const notFoundMsg = i18n.t('validation.userIdMissing');
+          setMensagem(notFoundMsg);
+          return { sucesso: false, mensagem: notFoundMsg };
         }
         const result = await cadastroServicoAtualizar(String(id), usuarioAtualizado);
         setCadastro(result);
-        setMensagem('Conta atualizada com sucesso!');
+        const successMsg = i18n.t('settings.messages.updateSuccess');
+        setMensagem(successMsg);
         // Se o usuário mudou o e-mail, atualize o AsyncStorage
         if (usuarioAtualizado.email) {
           await AsyncStorage.setItem('email', usuarioAtualizado.email);
         }
-        return { sucesso: true, mensagem: 'Conta atualizada com sucesso!' };
+        return { sucesso: true, mensagem: successMsg };
       } catch (err: any) {
-        let msg = 'Erro desconhecido ao atualizar.';
+        let msg = i18n.t('settings.messages.updateError');
         if (err?.response?.status === 400) {
-          msg = 'Dados inválidos. Verifique os campos e tente novamente.';
+          msg = i18n.t('cadastro.messages.invalidData');
         } else if (err?.response?.status === 404) {
-          msg = 'Usuário não encontrado.';
+          msg = i18n.t('cadastro.messages.userNotFound');
         } else if (err?.response?.status === 409) {
-          msg = 'Já existe um usuário com este email.';
+          msg = i18n.t('cadastro.messages.emailInUse');
         } else if (err?.response?.status === 500) {
-          msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+          msg = i18n.t('cadastro.messages.serverError');
         }
         setMensagem(msg);
         return { sucesso: false, mensagem: msg };
@@ -84,13 +87,13 @@ const useCadastroControl = () => {
     try {
       await usuarioServicoDeletar(key);
       setCadastro(null);
-      setMensagem('Cadastro deletado com sucesso');
+      setMensagem(i18n.t('cadastro.messages.deleteSuccess'));
     } catch (err: any) {
-      let msg = 'Erro ao deletar cadastro.';
+      let msg = i18n.t('cadastro.messages.deleteError');
       if (err?.response?.status === 404) {
-        msg = 'Cadastro não encontrado.';
+        msg = i18n.t('cadastro.messages.deleteNotFound');
       } else if (err?.response?.status === 500) {
-        msg = 'Erro interno do servidor ao deletar.';
+        msg = i18n.t('cadastro.messages.deleteServerError');
       }
       setMensagem(msg);
       console.warn('Erro ao deletar cadastro:', err.message || String(err));

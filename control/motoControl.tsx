@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Moto } from '../model/Moto';
 import { motoServicoSalvar, motoServicoListar, motoServicoAtualizar, motoServicoDeletar } from '../service/motoService';
 import { useNotification } from '../contexto/NotificationContext';
+import i18n from '../i18n';
 
 type GravarMotoFn = (setor: string, modelo: string, unidade: string, status: string, placa: string, nmChassi: string) => void;
 
@@ -33,10 +34,13 @@ const useMotoControl = () => {
     try {
       const result = await motoServicoSalvar(moto);
       setListaMoto(prev => [...prev, result]);
-      setMensagem('Moto cadastrada com sucesso!');
+      setMensagem(i18n.t('moto.messages.createSuccess'));
       await sendPushNotificationAsync({
-        title: 'Nova moto cadastrada',
-        body: `${result.modelo ?? 'Moto'} adicionada ao setor ${result.setor ?? 'N/D'}.`,
+        title: i18n.t('notifications.moto.createdTitle'),
+        body: i18n.t('notifications.moto.createdBody', {
+          model: result.modelo ?? i18n.t('moto.details.labels.model'),
+          sector: result.setor ?? i18n.t('moto.sectors.Outro'),
+        }),
         data: {
           type: 'moto-created',
           motoId: result.idMoto ?? result.id ?? null,
@@ -44,13 +48,13 @@ const useMotoControl = () => {
         },
       });
     } catch (err: any) {
-      let msg = 'Erro desconhecido ao tentar cadastrar moto.';
+      let msg = i18n.t('moto.messages.unknownError');
       if (err?.response?.status === 400) {
-        msg = 'Dados inválidos. Verifique os campos e tente novamente.';
+        msg = i18n.t('moto.messages.invalidData');
       } else if (err?.response?.status === 409) {
-        msg = 'Já existe uma moto com este identificador.';
+        msg = i18n.t('moto.messages.duplicate');
       } else if (err?.response?.status === 500) {
-        msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+        msg = i18n.t('moto.messages.serverError');
       }
       setMensagem(msg);
     } finally {
@@ -68,8 +72,12 @@ const useMotoControl = () => {
       const statusAlterado = previous && previous.status !== result.status;
       if (setorAlterado || statusAlterado) {
         await sendPushNotificationAsync({
-          title: 'Atualização de moto',
-          body: `A moto ${result.idMoto ?? result.placa ?? 'sem identificação'} agora está em ${result.setor ?? 'N/D'} (${result.status ?? 'sem status'}).`,
+          title: i18n.t('notifications.moto.updatedTitle'),
+          body: i18n.t('notifications.moto.updatedBody', {
+            identifier: result.idMoto ?? result.placa ?? i18n.t('moto.details.labels.id'),
+            sector: result.setor ?? i18n.t('moto.sectors.Outro'),
+            status: result.status ?? '-',
+          }),
           data: {
             type: 'moto-updated',
             motoId: result.idMoto ?? key,

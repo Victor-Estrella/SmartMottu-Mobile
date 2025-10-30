@@ -1,0 +1,238 @@
+{
+  "theme": {
+    "light": "☀️ Claro",
+    "dark": "🌙 Oscuro"
+  },
+  "navigation": {
+    "tabs": {
+      "signup": "Registro",
+      "login": "Iniciar sesión",
+      "form": "Formulario",
+      "map": "Mapa",
+      "info": "Información de la moto",
+      "settings": "Configuración"
+    }
+  },
+  "common": {
+    "appName": "SmartMottu",
+    "actions": {
+      "back": "Volver",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "update": "Actualizar",
+      "logout": "Cerrar sesión",
+      "details": "Detalles"
+    },
+    "feedback": {
+      "success": "Éxito",
+      "error": "Error"
+    }
+  },
+  "validation": {
+    "nameRequired": "El nombre es obligatorio.",
+    "emailRequired": "El correo electrónico es obligatorio.",
+    "emailInvalid": "Introduce un correo electrónico válido.",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordMax": "La contraseña debe tener como máximo 15 caracteres.",
+    "passwordConfirm": "No fue posible autenticar. Verifica tu correo y contraseña.",
+    "userIdMissing": "ID de usuario no encontrado. Inicia sesión nuevamente.",
+    "systemPermission": "Necesitamos tu permiso para mostrar notificaciones.",
+    "systemPermissionSettings": "Activa las notificaciones en la configuración del sistema.",
+    "schedulePermission": "No fue posible programar la notificación. Verifica los permisos del sistema."
+  },
+  "auth": {
+    "signup": {
+      "title": "Registro",
+      "placeholders": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "password": "Contraseña"
+      },
+      "button": "Registrar",
+      "buttonLoading": "Guardando..."
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "placeholders": {
+        "email": "Correo electrónico",
+        "password": "Contraseña"
+      },
+      "button": "Iniciar sesión",
+      "buttonLoading": "Iniciando...",
+      "errors": {
+        "unknown": "Se produjo un error inesperado al intentar iniciar sesión.",
+        "badCredentials": "Correo o contraseña incorrectos. Inténtalo nuevamente.",
+        "unauthorized": "Acceso no autorizado. Verifica tus credenciales.",
+        "server": "Error interno del servidor. Inténtalo más tarde."
+      }
+    }
+  },
+  "settings": {
+    "title": "Configuración de la Cuenta",
+    "placeholders": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Nueva contraseña (opcional)"
+    },
+    "buttons": {
+      "update": "Actualizar cuenta",
+      "updateLoading": "Actualizando...",
+      "delete": "Eliminar cuenta",
+      "deleteLoading": "Eliminando..."
+    },
+    "messages": {
+      "loadError": "Error al cargar los datos del usuario.",
+      "updateSuccess": "¡Cuenta actualizada con éxito!",
+      "deleteSuccess": "¡Cuenta eliminada con éxito!",
+      "deleteError": "Error al eliminar la cuenta.",
+      "userNotFound": "ID de usuario no encontrado para la eliminación.",
+      "deleteForbidden": "Correo original inválido. Inicia sesión nuevamente.",
+      "updateError": "Error desconocido al actualizar."
+    },
+    "language": {
+      "label": "Idioma"
+    },
+    "notifications": {
+      "accountUpdatedTitle": "Cuenta actualizada",
+      "accountUpdated": "Actualizamos tu {{fields}}.",
+      "accountDeletedTitle": "Cuenta eliminada",
+      "accountDeleted": "Tu cuenta fue eliminada de este dispositivo.",
+      "updatedFields": {
+        "name": "nombre",
+        "email": "correo",
+        "password": "contraseña"
+      }
+    }
+  },
+  "moto": {
+    "module": {
+      "logout": "Cerrar sesión"
+    },
+    "list": {
+      "title": "Listado de Motos",
+      "headers": {
+        "sector": "Sector",
+        "id": "Id",
+        "model": "Modelo",
+        "action": "Acción"
+      },
+      "empty": "No hay motos registradas.",
+      "details": "Detalles"
+    },
+    "form": {
+      "title": "Formulario de Registro de la Moto",
+      "fields": {
+        "sector": "Sector",
+        "model": "Modelo",
+        "unit": "Unidad",
+        "status": "Estado",
+        "plate": "Placa",
+        "chassi": "Chasis"
+      },
+      "button": "Guardar",
+      "buttonLoading": "Guardando..."
+    },
+    "details": {
+      "title": "Detalles de la Moto",
+      "noSelection": "Ninguna moto seleccionada",
+      "qr": "Código QR de la moto",
+      "labels": {
+        "sector": "Sector",
+        "id": "ID",
+        "model": "Modelo",
+        "unit": "Unidad",
+        "status": "Estado",
+        "plate": "Placa",
+        "chassi": "Chasis"
+      },
+      "buttons": {
+        "back": "Volver",
+        "update": "Actualizar",
+        "updateLoading": "Actualizando...",
+        "delete": "Eliminar",
+        "deleteLoading": "Eliminando...",
+        "save": "Guardar"
+      },
+      "modalTitle": "Editar moto",
+      "success": {
+        "updated": "¡Moto actualizada con éxito!",
+        "deleted": "¡Moto eliminada con éxito!"
+      }
+    },
+    "sectors": {
+      "Pendencia": "Pendiente",
+      "Reparo Simples": "Reparación simple",
+      "Danos Estruturais Graves": "Daños estructurales graves",
+      "Motor Defeituoso": "Motor defectuoso",
+      "Agendada Para Manutencao": "Programada para mantenimiento",
+      "Pronta Para Aluguel": "Lista para alquiler",
+      "Sem Placa": "Sin placa",
+      "Minha Mottu": "Mi Mottu",
+      "Outro": "Otro"
+    },
+    "messages": {
+      "createSuccess": "Moto registrada con éxito.",
+      "duplicate": "Ya existe una moto con este identificador.",
+      "invalidData": "Datos inválidos. Verifica los campos e inténtalo nuevamente.",
+      "serverError": "Error interno del servidor. Inténtalo más tarde.",
+      "unknownError": "Error desconocido al intentar registrar la moto.",
+      "updateError": "Error al actualizar la moto.",
+      "deleteError": "Error al eliminar la moto."
+    }
+  },
+  "map": {
+    "title": "Mapa del Patio",
+    "legend": {
+      "Pendencia": "Pendiente",
+      "Reparo Simples": "Reparación simple",
+      "Danos Estruturais Graves": "Daños estructurales graves",
+      "Motor Defeituoso": "Motor defectuoso",
+      "Agendada Para Manutencao": "Programada para mantenimiento",
+      "Pronta Para Aluguel": "Lista para alquiler",
+      "Sem Placa": "Sin placa",
+      "Minha Mottu": "Mi Mottu",
+      "Outro": "Otro"
+    }
+  },
+  "alerts": {
+    "success": "Éxito"
+  },
+  "cadastro": {
+    "messages": {
+      "saveSuccess": "Registro guardado con éxito",
+      "duplicate": "Ya existe un usuario con este correo.",
+      "invalidData": "Datos inválidos. Verifica los campos e inténtalo nuevamente.",
+      "serverError": "Error interno del servidor. Inténtalo más tarde.",
+      "unknown": "Error desconocido al intentar registrar.",
+      "updateSuccess": "¡Cuenta actualizada con éxito!",
+      "updateUnknown": "Error desconocido al actualizar.",
+      "userNotFound": "Usuario no encontrado.",
+      "emailInUse": "Ya existe un usuario con este correo.",
+      "deleteSuccess": "Registro eliminado con éxito",
+      "deleteError": "Error al eliminar el registro.",
+      "deleteNotFound": "Registro no encontrado.",
+      "deleteServerError": "Error interno del servidor al eliminar." 
+    }
+  },
+  "login": {
+    "messages": {
+      "success": "Inicio de sesión realizado con éxito",
+      "invalid": "Usuario o contraseña inválidos.",
+      "unauthorized": "No autorizado. Verifica tus credenciales.",
+      "serverError": "Error interno del servidor. Inténtalo más tarde.",
+      "unknown": "Error desconocido al intentar iniciar sesión."
+    }
+  },
+  "notifications": {
+    "permissionRequired": "Necesitamos tu permiso para mostrar notificaciones.",
+    "systemSettings": "Activa las notificaciones en la configuración del sistema.",
+    "scheduled": "Notificación {{id}} programada. Pon la app en segundo plano para ver el banner.",
+    "moto": {
+      "createdTitle": "Nueva moto registrada",
+      "createdBody": "{{model}} agregada al sector {{sector}}.",
+      "updatedTitle": "Actualización de moto",
+      "updatedBody": "La moto {{identifier}} ahora está en {{sector}} ({{status}})."
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
 import { useThemeGlobal } from '../styles/ThemeContext';
@@ -9,6 +10,8 @@ import { buscarUsuarioPorEmail } from '../fetcher/cadastroFetcher';
 import CadastroProps from '../model/CadastroProps';
 import { validarEmail } from '../utils/email';
 import { useNotification } from '../contexto/NotificationContext';
+import { useTranslation } from 'react-i18next';
+import i18n, { changeLanguage, supportedLanguages } from '../i18n';
 
 type ConfiguracoesProps = CadastroProps & {
     SucessoLogout?: () => void;
@@ -26,6 +29,8 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const { theme } = useThemeGlobal();
     const { atualizar, deletar, loading } = useCadastroControl();
     const { sendPushNotificationAsync } = useNotification();
+    const { t } = useTranslation();
+    const [language, setLanguage] = React.useState<'pt' | 'es'>(() => (i18n.language.startsWith('es') ? 'es' : 'pt'));
 
 
 
@@ -48,11 +53,28 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
                     }
                 }
             } catch (e) {
-                setMensagem({ texto: 'Erro ao carregar dados do usuário.', tipo: 'erro' });
+                setMensagem({ texto: t('settings.messages.loadError'), tipo: 'erro' });
             }
         };
         fetchEmailAndId();
     }, []);
+
+    React.useEffect(() => {
+        const handleLanguageChange = (lng: string) => {
+            if (lng === 'pt' || lng === 'es') {
+                setLanguage(lng);
+            }
+        };
+        i18n.on('languageChanged', handleLanguageChange);
+        return () => {
+            i18n.off('languageChanged', handleLanguageChange);
+        };
+    }, []);
+
+    const handleLanguageSelection = async (value: 'pt' | 'es') => {
+        setLanguage(value);
+        await changeLanguage(value);
+    };
 
     const atualizarConta = async () => {
         setErroNome('');
@@ -61,23 +83,23 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         setMensagem({ texto: '', tipo: '' });
         let erro = false;
         if (!nome.trim()) {
-            setErroNome('O nome é obrigatório.');
+            setErroNome(t('validation.nameRequired'));
             erro = true;
         }
         if (!email.trim()) {
-            setErroEmail('O e-mail é obrigatório.');
+            setErroEmail(t('validation.emailRequired'));
             erro = true;
         } else if (!validarEmail(email)) {
-            setErroEmail('Digite um e-mail válido.');
+            setErroEmail(t('validation.emailInvalid'));
             erro = true;
         }
         if (senha && senha.length > 0 && senha.length < 8) {
-            setErroSenha('A senha deve ter pelo menos 8 caracteres.');
+            setErroSenha(t('validation.passwordMin'));
             erro = true;
         }
         if (erro) return;
         if (!idUsuario) {
-            setMensagem({ texto: 'ID do usuário não encontrado.', tipo: 'erro' });
+            setMensagem({ texto: t('validation.userIdMissing'), tipo: 'erro' });
             return;
         }
         const usuarioAtualizado: any = { nome, email };
@@ -94,19 +116,28 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
             }
             setMensagem({ texto: resultado.mensagem, tipo: 'sucesso' });
             setSenha('');
-            const camposAlterados = [
-                nomeAlterado ? 'nome' : null,
-                emailAlterado ? 'e-mail' : null,
-                senhaAlterada ? 'senha' : null,
-            ].filter(Boolean);
+            const updatedFieldKeys: string[] = [];
+            const camposAlterados = [] as string[];
+            if (nomeAlterado) {
+                updatedFieldKeys.push('name');
+                camposAlterados.push(t('settings.notifications.updatedFields.name'));
+            }
+            if (emailAlterado) {
+                updatedFieldKeys.push('email');
+                camposAlterados.push(t('settings.notifications.updatedFields.email'));
+            }
+            if (senhaAlterada) {
+                updatedFieldKeys.push('password');
+                camposAlterados.push(t('settings.notifications.updatedFields.password'));
+            }
             if (camposAlterados.length) {
                 const descricaoAlteracoes = camposAlterados.join(', ');
                 await sendPushNotificationAsync({
-                    title: 'Conta atualizada',
-                    body: `Alteramos seu ${descricaoAlteracoes}.`,
+                    title: t('settings.notifications.accountUpdatedTitle'),
+                    body: t('settings.notifications.accountUpdated', { fields: descricaoAlteracoes }),
                     data: {
                         type: 'account-updated',
-                        updatedFields: camposAlterados,
+                        updatedFields: updatedFieldKeys,
                     },
                 });
             }
@@ -124,19 +155,19 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         // Busca o idUsuario pelo email original do login
         try {
             if (!emailOriginal || !validarEmail(emailOriginal)) {
-                setErroEmail('Email original inválido. Faça login novamente.');
+                setErroEmail(t('settings.messages.deleteForbidden'));
                 return;
             }
             const usuario = await buscarUsuarioPorEmail(emailOriginal);
             if (!usuario || !usuario.idUsuario) {
-                setMensagem({ texto: 'ID do usuário não encontrado para exclusão.', tipo: 'erro' });
+                setMensagem({ texto: t('settings.messages.userNotFound'), tipo: 'erro' });
                 return;
             }
             await deletar(String(usuario.idUsuario));
-            setMensagem({ texto: 'Conta deletada com sucesso!', tipo: 'sucesso' });
+            setMensagem({ texto: t('settings.messages.deleteSuccess'), tipo: 'sucesso' });
             await sendPushNotificationAsync({
-                title: 'Conta removida',
-                body: 'Sua conta foi excluída deste dispositivo.',
+                title: t('settings.notifications.accountDeletedTitle'),
+                body: t('settings.notifications.accountDeleted'),
                 data: { type: 'account-deleted', userEmail: emailOriginal },
             });
             await AsyncStorage.removeItem('email');
@@ -146,23 +177,23 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
                 props.SucessoLogout();
             }
         } catch (e) {
-            setMensagem({ texto: 'Erro ao deletar conta.', tipo: 'erro' });
+            setMensagem({ texto: t('settings.messages.deleteError'), tipo: 'erro' });
         }
     };
 
     return (
         <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
-            <Text style={[styles.tituloConfig, { color: theme.primary }]}>Configurações da Conta</Text>
+            <Text style={[styles.tituloConfig, { color: theme.primary }]}>{t('settings.title')}</Text>
             {mensagem.texto ? (
                 <Text style={{ color: mensagem.tipo === 'sucesso' ? theme.primary : 'red', marginBottom: 10, marginLeft: 10, fontWeight: 'bold', }}>{mensagem.texto}</Text>
             ) : null}
             <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="Nome" value={nome} onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+                placeholder={t('settings.placeholders.name')} value={nome} onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
                 placeholderTextColor={theme.formText}
             />
             {erroNome ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroNome}</Text> : null}
             <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="E-mail" value={email} onChangeText={text => {
+                placeholder={t('settings.placeholders.email')} value={email} onChangeText={text => {
                     setEmail(text);
                     if (erroEmail) setErroEmail('');
                     if (mensagem.texto) setMensagem({ texto: '', tipo: '' });
@@ -171,13 +202,26 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
             />
             {erroEmail ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroEmail}</Text> : null}
             <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder="Nova senha (opcional)" value={senha} onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+                placeholder={t('settings.placeholders.password')} value={senha} onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
                 placeholderTextColor={theme.formText} secureTextEntry
             />
             {erroSenha ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroSenha}</Text> : null}
+            <View style={{ width: '100%', marginTop: 16 }}>
+                <Text style={{ color: theme.text, marginLeft: 8, marginBottom: 4 }}>{t('settings.language.label')}</Text>
+                <Picker
+                    selectedValue={language}
+                    onValueChange={(value: 'pt' | 'es') => handleLanguageSelection(value)}
+                    style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                    dropdownIconColor={theme.formText}
+                >
+                    {supportedLanguages.map(lang => (
+                        <Picker.Item key={lang.code} label={lang.label} value={lang.code as 'pt' | 'es'} color={theme.formText} />
+                    ))}
+                </Picker>
+            </View>
             <View style={styles.deleteConfig}>
-                <Botao title={loading ? "Atualizando..." : "Atualizar Conta"} color={theme.button} onPress={atualizarConta} />
-                <Botao title="Deletar Conta" color="#d9534f" onPress={deletarConta} />
+                <Botao title={loading ? t('settings.buttons.updateLoading') : t('settings.buttons.update')} color={theme.button} onPress={atualizarConta} />
+                <Botao title={t('settings.buttons.delete')} color="#d9534f" onPress={deletarConta} />
             </View>
         </View>
     );

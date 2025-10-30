@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ListaLogin } from '../model/Login';
 import { loginServico } from '../service/loginService';
+import i18n from '../i18n';
 
 const useLoginControl = () => {
     const [login, setLogin] = useState<ListaLogin | null>(null);
@@ -13,17 +14,17 @@ const useLoginControl = () => {
         const obj: ListaLogin = { email, senha };
         try {
             const result = await loginServico(obj);
-            setMensagem('Login realizado com sucesso');
+            setMensagem(i18n.t('login.messages.success'));
             setLogin(obj);
             return result;
         } catch (err: any) {
-            let msg = 'Erro desconhecido ao tentar logar.';
+            let msg = i18n.t('login.messages.unknown');
             if (err?.response?.status === 400) {
-                msg = 'Usuário ou senha inválidos.';
+                msg = i18n.t('login.messages.invalid');
             } else if (err?.response?.status === 401) {
-                msg = 'Não autorizado. Verifique suas credenciais.';
+                msg = i18n.t('login.messages.unauthorized');
             } else if (err?.response?.status === 500) {
-                msg = 'Erro interno do servidor. Tente novamente mais tarde.';
+                msg = i18n.t('login.messages.serverError');
             }
             setMensagem(msg);
             return null;

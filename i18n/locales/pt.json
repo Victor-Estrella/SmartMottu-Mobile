@@ -1,0 +1,238 @@
+{
+  "theme": {
+    "light": "☀️ Claro",
+    "dark": "🌙 Escuro"
+  },
+  "navigation": {
+    "tabs": {
+      "signup": "Cadastro",
+      "login": "Login",
+      "form": "Formulário",
+      "map": "Mapa",
+      "info": "Moto Informações",
+      "settings": "Configurações"
+    }
+  },
+  "common": {
+    "appName": "SmartMottu",
+    "actions": {
+      "back": "Voltar",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "delete": "Deletar",
+      "update": "Atualizar",
+      "logout": "Sair",
+      "details": "Detalhes"
+    },
+    "feedback": {
+      "success": "Sucesso",
+      "error": "Erro"
+    }
+  },
+  "validation": {
+    "nameRequired": "O nome é obrigatório.",
+    "emailRequired": "O e-mail é obrigatório.",
+    "emailInvalid": "Digite um e-mail válido.",
+    "passwordMin": "A senha deve ter pelo menos 8 caracteres.",
+    "passwordMax": "A senha deve ter no máximo 15 caracteres.",
+    "passwordConfirm": "Não foi possível autenticar. Verifique seu e-mail e senha.",
+    "userIdMissing": "ID do usuário não encontrado. Faça login novamente.",
+    "systemPermission": "Precisamos da sua permissão para mostrar notificações.",
+    "systemPermissionSettings": "Ative as notificações nas configurações do sistema.",
+    "schedulePermission": "Não foi possível agendar a notificação. Verifique as permissões do sistema."
+  },
+  "auth": {
+    "signup": {
+      "title": "Cadastro",
+      "placeholders": {
+        "name": "Nome",
+        "email": "Email",
+        "password": "Senha"
+      },
+      "button": "Cadastrar",
+      "buttonLoading": "Salvando..."
+    },
+    "login": {
+      "title": "Login",
+      "placeholders": {
+        "email": "Email",
+        "password": "Senha"
+      },
+      "button": "Entrar",
+      "buttonLoading": "Entrando...",
+      "errors": {
+        "unknown": "Ocorreu um erro inesperado ao tentar fazer login.",
+        "badCredentials": "E-mail ou senha incorretos. Por favor, tente novamente.",
+        "unauthorized": "Acesso não autorizado. Confira suas credenciais.",
+        "server": "Erro interno do servidor. Tente novamente mais tarde."
+      }
+    }
+  },
+  "settings": {
+    "title": "Configurações da Conta",
+    "placeholders": {
+      "name": "Nome",
+      "email": "E-mail",
+      "password": "Nova senha (opcional)"
+    },
+    "buttons": {
+      "update": "Atualizar Conta",
+      "updateLoading": "Atualizando...",
+      "delete": "Deletar Conta",
+      "deleteLoading": "Deletando..."
+    },
+    "messages": {
+      "loadError": "Erro ao carregar dados do usuário.",
+      "updateSuccess": "Conta atualizada com sucesso!",
+      "deleteSuccess": "Conta deletada com sucesso!",
+      "deleteError": "Erro ao deletar conta.",
+      "userNotFound": "ID do usuário não encontrado para exclusão.",
+      "deleteForbidden": "Email original inválido. Faça login novamente.",
+      "updateError": "Erro desconhecido ao atualizar."
+    },
+    "language": {
+      "label": "Idioma"
+    },
+    "notifications": {
+      "accountUpdatedTitle": "Conta atualizada",
+      "accountUpdated": "Alteramos seu {{fields}}.",
+      "accountDeletedTitle": "Conta removida",
+      "accountDeleted": "Sua conta foi excluída deste dispositivo.",
+      "updatedFields": {
+        "name": "nome",
+        "email": "e-mail",
+        "password": "senha"
+      }
+    }
+  },
+  "moto": {
+    "module": {
+      "logout": "Sair"
+    },
+    "list": {
+      "title": "Listagem de Motos",
+      "headers": {
+        "sector": "Setor",
+        "id": "Id",
+        "model": "Modelo",
+        "action": "Ação"
+      },
+      "empty": "Nenhuma moto cadastrada.",
+      "details": "Detalhes"
+    },
+    "form": {
+      "title": "Formulário de Cadastro da Moto",
+      "fields": {
+        "sector": "Setor",
+        "model": "Modelo",
+        "unit": "Unidade",
+        "status": "Status",
+        "plate": "Placa",
+        "chassi": "Chassi"
+      },
+      "button": "Gravar",
+      "buttonLoading": "Salvando..."
+    },
+    "details": {
+      "title": "Detalhes da Moto",
+      "noSelection": "Nenhuma moto selecionada",
+      "qr": "QRCode da moto",
+      "labels": {
+        "sector": "Setor",
+        "id": "ID",
+        "model": "Modelo",
+        "unit": "Unidade",
+        "status": "Status",
+        "plate": "Placa",
+        "chassi": "Chassi"
+      },
+      "buttons": {
+        "back": "Voltar",
+        "update": "Atualizar",
+        "updateLoading": "Atualizando...",
+        "delete": "Deletar",
+        "deleteLoading": "Deletando...",
+        "save": "Salvar"
+      },
+      "modalTitle": "Editar Moto",
+      "success": {
+        "updated": "Moto atualizada com sucesso!",
+        "deleted": "Moto deletada com sucesso!"
+      }
+    },
+    "sectors": {
+      "Pendencia": "Pendência",
+      "Reparo Simples": "Reparo Simples",
+      "Danos Estruturais Graves": "Danos Estruturais Graves",
+      "Motor Defeituoso": "Motor Defeituoso",
+      "Agendada Para Manutencao": "Agendada para Manutenção",
+      "Pronta Para Aluguel": "Pronta para Aluguel",
+      "Sem Placa": "Sem Placa",
+      "Minha Mottu": "Minha Mottu",
+      "Outro": "Outro"
+    },
+    "messages": {
+      "createSuccess": "Moto cadastrada com sucesso!",
+      "duplicate": "Já existe uma moto com este identificador.",
+      "invalidData": "Dados inválidos. Verifique os campos e tente novamente.",
+      "serverError": "Erro interno do servidor. Tente novamente mais tarde.",
+      "unknownError": "Erro desconhecido ao tentar cadastrar moto.",
+      "updateError": "Erro ao atualizar moto.",
+      "deleteError": "Erro ao deletar moto."
+    }
+  },
+  "map": {
+    "title": "Mapa do Pátio",
+    "legend": {
+      "Pendencia": "Pendência",
+      "Reparo Simples": "Reparo Simples",
+      "Danos Estruturais Graves": "Danos Estruturais Graves",
+      "Motor Defeituoso": "Motor Defeituoso",
+      "Agendada Para Manutencao": "Agendada para Manutenção",
+      "Pronta Para Aluguel": "Pronta para Aluguel",
+      "Sem Placa": "Sem Placa",
+      "Minha Mottu": "Minha Mottu",
+      "Outro": "Outro"
+    }
+  },
+  "alerts": {
+    "success": "Sucesso"
+  },
+  "cadastro": {
+    "messages": {
+      "saveSuccess": "Cadastro gravado com sucesso",
+      "duplicate": "Já existe um usuário com este email.",
+      "invalidData": "Dados inválidos. Verifique os campos e tente novamente.",
+      "serverError": "Erro interno do servidor. Tente novamente mais tarde.",
+      "unknown": "Erro desconhecido ao tentar cadastrar.",
+      "updateSuccess": "Conta atualizada com sucesso!",
+      "updateUnknown": "Erro desconhecido ao atualizar.",
+      "userNotFound": "Usuário não encontrado.",
+      "emailInUse": "Já existe um usuário com este email.",
+      "deleteSuccess": "Cadastro deletado com sucesso",
+      "deleteError": "Erro ao deletar cadastro.",
+      "deleteNotFound": "Cadastro não encontrado.",
+      "deleteServerError": "Erro interno do servidor ao deletar." 
+    }
+  },
+  "login": {
+    "messages": {
+      "success": "Login realizado com sucesso",
+      "invalid": "Usuário ou senha inválidos.",
+      "unauthorized": "Não autorizado. Verifique suas credenciais.",
+      "serverError": "Erro interno do servidor. Tente novamente mais tarde.",
+      "unknown": "Erro desconhecido ao tentar logar."
+    }
+  },
+  "notifications": {
+    "permissionRequired": "Precisamos da sua permissão para mostrar notificações.",
+    "systemSettings": "Ative as notificações nas configurações do sistema.",
+    "scheduled": "Notificação {{id}} programada. Coloque o app em segundo plano para ver o banner.",
+    "moto": {
+      "createdTitle": "Nova moto cadastrada",
+      "createdBody": "{{model}} adicionada ao setor {{sector}}.",
+      "updatedTitle": "Atualização de moto",
+      "updatedBody": "A moto {{identifier}} agora está em {{sector}} ({{status}})."
+    }
+  }
+}

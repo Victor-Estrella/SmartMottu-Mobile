@@ -4,11 +4,13 @@ import { styles } from '../styles/estilos';
 
 import { useMoto } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export function MapaPatio() {
     const { listaMoto } = useMoto();
     const { width } = useWindowDimensions();
     const { theme } = useThemeGlobal();
+    const { t } = useTranslation();
     const itemWidth = 90;
     const colunas = Math.max(1, Math.floor(width / itemWidth));
 
@@ -24,15 +26,15 @@ export function MapaPatio() {
     };
 
     const legenda: { setor: string; cor: string; label: string }[] = [
-        { setor: "pendencia", cor: "yellow", label: "Pendência" },
-        { setor: "reparo simples", cor: "blue", label: "Reparo Simples" },
-        { setor: "danos estruturais graves", cor: "orange", label: "Danos Estruturais Graves" },
-        { setor: "motor defeituoso", cor: "red", label: "Motor Defeituoso" },
-        { setor: "agendada para manutencao", cor: "lightgray", label: "Agendada para Manutenção" },
-        { setor: "pronta para aluguel", cor: "darkgreen", label: "Pronta para Aluguel" },
-        { setor: "sem placa", cor: "pink", label: "Sem Placa" },
-        { setor: "minha mottu", cor: "lightgreen", label: "Minha Mottu" },
-        { setor: "outro", cor: theme.outro, label: "Outro" },
+        { setor: "pendencia", cor: "yellow", label: t('map.legend.Pendencia') },
+        { setor: "reparo simples", cor: "blue", label: t('map.legend.Reparo Simples') },
+        { setor: "danos estruturais graves", cor: "orange", label: t('map.legend.Danos Estruturais Graves') },
+        { setor: "motor defeituoso", cor: "red", label: t('map.legend.Motor Defeituoso') },
+        { setor: "agendada para manutencao", cor: "lightgray", label: t('map.legend.Agendada Para Manutencao') },
+        { setor: "pronta para aluguel", cor: "darkgreen", label: t('map.legend.Pronta Para Aluguel') },
+        { setor: "sem placa", cor: "pink", label: t('map.legend.Sem Placa') },
+        { setor: "minha mottu", cor: "lightgreen", label: t('map.legend.Minha Mottu') },
+        { setor: "outro", cor: theme.outro, label: t('map.legend.Outro') },
     ];
 
     const [filtro, setFiltro] = React.useState<string | null>(null);
@@ -43,7 +45,7 @@ export function MapaPatio() {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
-            <Text style={[styles.tituloFormulario, {color: theme.primary}]}>Mapa do Pátio</Text>
+            <Text style={[styles.tituloFormulario, {color: theme.primary}]}>{t('map.title')}</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", margin: 10, justifyContent: "center" }}>
                 {legenda.map(item => (
                     <Pressable key={item.setor} onPress={() => setFiltro(filtro === item.setor ? null : item.setor)} style={{ flexDirection: "row", alignItems: "center", margin: 5, opacity: filtro && filtro !== item.setor ? 0.5 : 1, }}>
