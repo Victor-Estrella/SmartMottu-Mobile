@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Localization from 'expo-localization';
 import i18n, { LanguageDetectorAsyncModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
@@ -18,29 +17,26 @@ export type SupportedLanguageCode = typeof supportedLanguages[number]['code'];
 const languageDetector: LanguageDetectorAsyncModule = {
   type: 'languageDetector',
   async: true,
-  detect: async (callback: (lng: string) => void) => {
-    try {
-      const storedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
-      if (storedLanguage && supportedLanguages.some(lang => lang.code === storedLanguage)) {
-        return callback(storedLanguage);
+  detect: (callback: (lng: string) => void) => {
+    (async () => {
+      try {
+        const storedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
+        if (storedLanguage && supportedLanguages.some(lang => lang.code === storedLanguage)) {
+          callback(storedLanguage);
+          return;
+        }
+      } catch (error) {
+        console.warn('Failed to read stored language, falling back to system locale', error);
       }
-      const locales = Localization.getLocales();
-      const systemLocale = locales && locales.length > 0 ? locales[0].languageCode : undefined;
-      if (systemLocale && supportedLanguages.some(lang => lang.code === systemLocale)) {
-        return callback(systemLocale);
-      }
-    } catch (error) {
-      console.warn('Failed to detect language automatically', error);
-    }
-    callback('pt');
+
+      callback('pt');
+    })();
   },
   init: () => undefined,
-  cacheUserLanguage: async (language: string) => {
-    try {
-      await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-    } catch (error) {
+  cacheUserLanguage: (language: string) => {
+    AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, language).catch(error => {
       console.warn('Failed to persist language selection', error);
-    }
+    });
   },
 };
 

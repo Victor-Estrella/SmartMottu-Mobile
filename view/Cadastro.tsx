@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useCadastroControl } from '../control/cadastroControl';
-import { Pressable, Text, TextInput, View } from "react-native"
+import { Pressable, Text, TextInput, View, ActivityIndicator } from "react-native"
 import { styles } from "../styles/estilos"
 import { BotaoProps } from "../model/Botao";
 import CadastroProps from "../model/CadastroProps";
@@ -13,7 +13,9 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     const { salvar, loading, mensagem } = useCadastroControl();
-    const [mensagemSenha, setMensagemSenha] = useState<string | null>(null);
+        const [mensagemSenha, setMensagemSenha] = useState<string | null>(null);
+        const [erroNome, setErroNome] = useState<string | null>(null);
+        const [erroEmail, setErroEmail] = useState<string | null>(null);
     const { theme } = useThemeGlobal();
     const { t } = useTranslation();
     return (
@@ -23,10 +25,26 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
             </View>
             <View style={{flex: 3, width: '50%'}}>
                 <View style={styles.viewInputAutenticacao}>
-                    <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]} placeholderTextColor={theme.formText} placeholder={t('auth.signup.placeholders.name')} value={nome} onChangeText={setNome}/>
+                        <TextInput
+                            style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]}
+                            placeholderTextColor={theme.formText}
+                            placeholder={t('auth.signup.placeholders.name')}
+                            value={nome}
+                            onChangeText={(v)=>{ setNome(v); if (erroNome) setErroNome(null); }}
+                        />
+                        {erroNome && <Text style={{ color: 'red', marginTop: 4 }}>{erroNome}</Text>}
                 </View>
                 <View style={styles.viewInputAutenticacao}>    
-                    <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]} placeholderTextColor={theme.formText} placeholder={t('auth.signup.placeholders.email')} value={email} onChangeText={setEmail}/>
+                        <TextInput
+                            style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]}
+                            placeholderTextColor={theme.formText}
+                            placeholder={t('auth.signup.placeholders.email')}
+                            value={email}
+                            onChangeText={(v)=>{ setEmail(v); if (mensagem) if (erroEmail) setErroEmail(null); }}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                        />
+                        {erroEmail && <Text style={{ color: 'red', marginTop: 4 }}>{erroEmail}</Text>}
                 </View>
                 <View style={styles.viewInputAutenticacao}>
                     <TextInput style={[styles.inputAutenticacao, {color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary}]} placeholderTextColor={theme.formText} placeholder={t('auth.signup.placeholders.password')} value={senha}
@@ -46,24 +64,28 @@ const Cadastro = (props: CadastroProps) : React.ReactElement => {
                 </View>
                 <View style={{alignItems: 'center'}}>
                     <Botao title={loading ? t('auth.signup.buttonLoading') : t('auth.signup.button')} onPress={async () =>{
-                        if (senha.length < 8) {
+                            // validações do cliente
+                            let hasError = false;
+                            if (!nome.trim()) { setErroNome(t('validation.nameRequired')); hasError = true; }
+                            if (!email.trim()) { setErroEmail(t('validation.emailRequired')); hasError = true; }
+                            else if (!validarEmail(email)) { setErroEmail(t('validation.emailInvalid')); hasError = true; }
+                            if (senha.length === 0) { setMensagemSenha(t('validation.passwordRequired')); hasError = true; }
+                            else if (senha.length < 8) {
                             setMensagemSenha(t('validation.passwordMin'));
-                            return;
+                                hasError = true;
                         }
                         if (senha.length > 15) {
                             setMensagemSenha(t('validation.passwordMax'));
-                            return;
+                                hasError = true;
                         }
-                        if (!validarEmail(email)) {
-                            setMensagemSenha(t('validation.emailInvalid'));
-                            return;
-                        }
+                            if (hasError) return;
                         const result = await salvar(nome, email, senha);
                         // Se não houve erro, navega imediatamente
                         if (result === true) {
                             props.navigation.navigate("Login");
                         }
                     }} theme={theme} />
+                        {loading ? <ActivityIndicator style={{ marginTop: 12 }} color={theme.primary} /> : null}
                     {mensagem && (
                         <Text style={{color: mensagem === t('cadastro.messages.saveSuccess') ? theme.primary : 'red', marginTop: 10}}>
                             {mensagem}

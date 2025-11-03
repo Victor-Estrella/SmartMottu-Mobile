@@ -20,6 +20,22 @@ const useCadastroControl = () => {
       setCadastro(obj);
       return true;
     } catch (err: any) {
+      // Mapeia erros de validação (Yup)
+      if (err?.name === 'ValidationError') {
+        const path = err?.path as string | undefined;
+        let msg = i18n.t('cadastro.messages.unknown');
+        if (path === 'nome') msg = i18n.t('validation.nameRequired');
+        else if (path === 'email') msg = i18n.t('validation.emailInvalid');
+        else if (path === 'senha') {
+          // Validações de senha: required/min/max
+          const text: string = String(err.message || '');
+          if (text.includes('no máximo') || text.includes('max')) msg = i18n.t('validation.passwordMax');
+          else if (text.includes('pelo menos') || text.includes('min')) msg = i18n.t('validation.passwordMin');
+          else msg = i18n.t('validation.passwordRequired');
+        }
+        setMensagem(msg);
+        return false;
+      }
       let msg = i18n.t('cadastro.messages.unknown');
       if (err?.response?.status === 400) {
         msg = i18n.t('cadastro.messages.invalidData');
@@ -65,6 +81,20 @@ const useCadastroControl = () => {
         }
         return { sucesso: true, mensagem: successMsg };
       } catch (err: any) {
+        if (err?.name === 'ValidationError') {
+          const path = err?.path as string | undefined;
+          let msg = i18n.t('settings.messages.updateError');
+          if (path === 'nome') msg = i18n.t('validation.nameRequired');
+          else if (path === 'email') msg = i18n.t('validation.emailInvalid');
+          else if (path === 'senha') {
+            const text: string = String(err.message || '');
+            if (text.includes('no máximo') || text.includes('max')) msg = i18n.t('validation.passwordMax');
+            else if (text.includes('pelo menos') || text.includes('min')) msg = i18n.t('validation.passwordMin');
+            else msg = i18n.t('validation.passwordRequired');
+          }
+          setMensagem(msg);
+          return { sucesso: false, mensagem: msg };
+        }
         let msg = i18n.t('settings.messages.updateError');
         if (err?.response?.status === 400) {
           msg = i18n.t('cadastro.messages.invalidData');

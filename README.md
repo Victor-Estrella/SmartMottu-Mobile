@@ -5,7 +5,7 @@ Aplicativo mobile para gestão de pátios da Mottu, com autenticação, cadastro
 ## Integrantes
 - Julia Monteiro — RM: 557023 — Turma: 2TDSPV
 - Sofia Andrade Petruk — RM: 556585 — Turma: 2TDSPV
-- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH 
+- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH
 ## Proposta e funcionalidades
 Objetivo: resolver a dificuldade de localizar motos nos pátios, especialmente quando sem placa ou com chassi encoberto, garantindo controle, rastreabilidade e produtividade.
 

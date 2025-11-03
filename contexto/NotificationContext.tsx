@@ -1,6 +1,8 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 
 interface PushMessage {
   title: string;
@@ -21,6 +23,7 @@ interface NotificationContextValue {
   registerForPushNotificationsAsync: () => Promise<string | null>;
   sendPushNotificationAsync: (message: PushMessage) => Promise<boolean>;
   scheduleLocalNotification: (options: LocalNotificationRequest) => Promise<string | null>;
+  registrationError: string | null;
 }
 
 const NotificationContext = createContext<NotificationContextValue | null>(null);
@@ -35,8 +38,9 @@ Notifications.setNotificationHandler({
 });
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
-  const [expoPushToken] = useState<string | null>(null);
+  const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [permissionStatus, setPermissionStatus] = useState<Notifications.PermissionStatus | null>(null);
+  const [registrationError, setRegistrationError] = useState<string | null>(null);
 
   const ensureAndroidChannel = useCallback(async () => {
     if (Platform.OS === 'android') {
@@ -73,12 +77,45 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const registerForPushNotificationsAsync = useCallback(async (): Promise<string | null> => {
+    setRegistrationError(null);
     const currentStatus = await ensurePermissionsAsync();
     if (currentStatus !== 'granted') {
       console.warn('Push notification permission not granted.');
       return null;
     }
-    return null;
+    if (!Device.isDevice) {
+      console.warn('Push notifications require a physical device.');
+      return null;
+    }
+
+    const projectId =
+      Constants.expoConfig?.extra?.eas?.projectId ||
+      (Constants as any)?.easConfig?.projectId ||
+      undefined;
+
+    if (!projectId) {
+      console.warn('Expo projectId not found. Configure extra.eas.projectId to enable push tokens.');
+    }
+
+    try {
+      const tokenResponse = projectId
+        ? await Notifications.getExpoPushTokenAsync({ projectId })
+        : await Notifications.getExpoPushTokenAsync();
+      const token = tokenResponse.data ?? null;
+      if (token) {
+        setExpoPushToken(token);
+        setRegistrationError(null);
+        return token;
+      }
+      console.warn('Expo push token not returned.');
+      setRegistrationError('TokenUnavailable');
+      return null;
+    } catch (error) {
+      console.error('Failed to obtain Expo push token', error);
+      const message = error instanceof Error ? error.message : String(error);
+      setRegistrationError(message);
+      return null;
+    }
   }, [ensurePermissionsAsync]);
 
   const scheduleLocalNotification = useCallback(
@@ -189,6 +226,14 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     ensurePermissionsAsync();
   }, [ensurePermissionsAsync]);
 
+  useEffect(() => {
+    if (permissionStatus === 'granted' && !expoPushToken && Device.isDevice) {
+      registerForPushNotificationsAsync().catch(error => {
+        console.warn('Automatic push registration failed', error);
+      });
+    }
+  }, [permissionStatus, expoPushToken, registerForPushNotificationsAsync]);
+
   const value = useMemo(
     () => ({
       expoPushToken,
@@ -196,6 +241,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
       registerForPushNotificationsAsync,
       sendPushNotificationAsync,
       scheduleLocalNotification,
+      registrationError,
     }),
     [
       expoPushToken,
@@ -203,6 +249,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
       registerForPushNotificationsAsync,
       sendPushNotificationAsync,
       scheduleLocalNotification,
+      registrationError,
     ],
   );
 

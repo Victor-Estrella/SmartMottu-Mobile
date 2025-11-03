@@ -1,6 +1,8 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Pressable, Text, TextInput, View } from 'react-native';
+
+
+import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
@@ -11,7 +13,7 @@ import CadastroProps from '../model/CadastroProps';
 import { validarEmail } from '../utils/email';
 import { useNotification } from '../contexto/NotificationContext';
 import { useTranslation } from 'react-i18next';
-import i18n, { changeLanguage, supportedLanguages } from '../i18n';
+import i18n, { changeLanguage, supportedLanguages, SupportedLanguageCode } from '../i18n';
 
 type ConfiguracoesProps = CadastroProps & {
     SucessoLogout?: () => void;
@@ -25,12 +27,15 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const [erroEmail, setErroEmail] = React.useState('');
     const [erroSenha, setErroSenha] = React.useState('');
     const [mensagem, setMensagem] = React.useState<{ texto: string, tipo: 'sucesso' | 'erro' | '' }>({ texto: '', tipo: '' });
+    const [pushFeedback, setPushFeedback] = React.useState<{ texto: string, tipo: 'sucesso' | 'erro' | 'info' | '' }>({ texto: '', tipo: '' });
+    const [registeringPush, setRegisteringPush] = React.useState(false);
+    const [testingPush, setTestingPush] = React.useState(false);
     const [idUsuario, setIdUsuario] = React.useState<number | null>(null);
-    const { theme } = useThemeGlobal();
+    const { theme, isDark } = useThemeGlobal();
     const { atualizar, deletar, loading } = useCadastroControl();
-    const { sendPushNotificationAsync } = useNotification();
+    const { sendPushNotificationAsync, registerForPushNotificationsAsync, expoPushToken, permissionStatus, registrationError } = useNotification();
     const { t } = useTranslation();
-    const [language, setLanguage] = React.useState<'pt' | 'es'>(() => (i18n.language.startsWith('es') ? 'es' : 'pt'));
+    const [language, setLanguage] = React.useState<SupportedLanguageCode>(() => (i18n.language.startsWith('es') ? 'es' : 'pt'));
 
 
 
@@ -62,7 +67,7 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     React.useEffect(() => {
         const handleLanguageChange = (lng: string) => {
             if (lng === 'pt' || lng === 'es') {
-                setLanguage(lng);
+                setLanguage(lng as SupportedLanguageCode);
             }
         };
         i18n.on('languageChanged', handleLanguageChange);
@@ -71,7 +76,7 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         };
     }, []);
 
-    const handleLanguageSelection = async (value: 'pt' | 'es') => {
+    const handleLanguageSelection = async (value: SupportedLanguageCode) => {
         setLanguage(value);
         await changeLanguage(value);
     };
@@ -181,6 +186,71 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         }
     };
 
+    const handleRegisterPush = async () => {
+        setRegisteringPush(true);
+        setPushFeedback({ texto: '', tipo: '' });
+        try {
+            const token = await registerForPushNotificationsAsync();
+            if (token) {
+                setPushFeedback({ texto: t('settings.push.feedback.registered'), tipo: 'sucesso' });
+            } else {
+                const messageKey: 'fcmRequired' | 'missing' =
+                    registrationError && registrationError.toLowerCase().includes('firebaseapp')
+                        ? 'fcmRequired'
+                        : 'missing';
+                const message =
+                    messageKey === 'fcmRequired'
+                        ? t('settings.push.feedback.fcmRequired')
+                        : t('settings.push.feedback.missing');
+                setPushFeedback({ texto: message, tipo: 'erro' });
+            }
+        } catch (error) {
+            const messageKey: 'fcmRequired' | 'missing' =
+                registrationError && registrationError.toLowerCase().includes('firebaseapp')
+                    ? 'fcmRequired'
+                    : 'missing';
+            const message =
+                messageKey === 'fcmRequired'
+                    ? t('settings.push.feedback.fcmRequired')
+                    : t('settings.push.feedback.missing');
+            setPushFeedback({ texto: message, tipo: 'erro' });
+        } finally {
+            setRegisteringPush(false);
+        }
+    };
+
+    const handleTestPush = async () => {
+        setTestingPush(true);
+        setPushFeedback({ texto: '', tipo: '' });
+        try {
+            const delivered = await sendPushNotificationAsync({
+                title: t('settings.push.testTitle'),
+                body: t('settings.push.testBody'),
+                data: {
+                    type: 'test-notification',
+                    sentAt: new Date().toISOString(),
+                },
+            });
+            if (delivered) {
+                setPushFeedback({ texto: t('settings.push.feedback.testSent'), tipo: 'sucesso' });
+            } else {
+                setPushFeedback({ texto: t('settings.push.feedback.testScheduled'), tipo: 'info' });
+            }
+        } catch (error) {
+            setPushFeedback({ texto: t('settings.push.feedback.missing'), tipo: 'erro' });
+        } finally {
+            setTestingPush(false);
+        }
+    };
+
+    const knownPermissionStatuses = ['granted', 'denied', 'undetermined', 'provisional'] as const;
+    const permissionKey = knownPermissionStatuses.includes(permissionStatus as typeof knownPermissionStatuses[number])
+        ? (permissionStatus as typeof knownPermissionStatuses[number])
+        : 'unknown';
+    const permissionLabel = t(`settings.push.status.${permissionKey as 'granted' | 'denied' | 'undetermined' | 'provisional' | 'unknown'}`);
+    const tokenDisplay = expoPushToken ?? t('settings.push.tokenUnavailable');
+    const pickerTextColor = isDark ? theme.primary : theme.formText;
+
     return (
         <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
             <Text style={[styles.tituloConfig, { color: theme.primary }]}>{t('settings.title')}</Text>
@@ -210,19 +280,93 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
                 <Text style={{ color: theme.text, marginLeft: 8, marginBottom: 4 }}>{t('settings.language.label')}</Text>
                 <Picker
                     selectedValue={language}
-                    onValueChange={(value: 'pt' | 'es') => handleLanguageSelection(value)}
-                    style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                    dropdownIconColor={theme.formText}
+                    onValueChange={(value: SupportedLanguageCode) => handleLanguageSelection(value)}
+                    style={[styles.inputConfig, { backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                    dropdownIconColor={theme.primary}
+                    itemStyle={{ color: pickerTextColor }}
                 >
                     {supportedLanguages.map(lang => (
-                        <Picker.Item key={lang.code} label={lang.label} value={lang.code as 'pt' | 'es'} color={theme.formText} />
+                        <Picker.Item key={lang.code} label={lang.label} value={lang.code} color={pickerTextColor} />
                     ))}
                 </Picker>
             </View>
+            <View
+                style={{
+                    width: '100%',
+                    marginTop: 24,
+                    backgroundColor: theme.card,
+                    borderRadius: 12,
+                    padding: 16,
+                    borderColor: theme.primary,
+                    borderWidth: 1,
+                }}
+            >
+                <Text style={{ color: theme.primary, fontWeight: 'bold', fontSize: 18, marginBottom: 8 }}>
+                    {t('settings.push.title')}
+                </Text>
+                <Text style={{ color: theme.text, marginBottom: 4 }}>
+                    {t('settings.push.statusLabel')}: <Text style={{ fontWeight: 'bold' }}>{permissionLabel}</Text>
+                </Text>
+                <Text style={{ color: theme.text, marginBottom: 8 }}>
+                    {t('settings.push.tokenLabel')}:
+                </Text>
+                <View style={{ backgroundColor: theme.background, borderRadius: 8, padding: 12, borderWidth: 1, borderColor: theme.primary + '33' }}>
+                    <Text selectable style={{ color: theme.text, fontFamily: 'monospace' }}>{tokenDisplay}</Text>
+                </View>
+                {pushFeedback.texto ? (
+                    <Text
+                        style={{
+                            color:
+                                pushFeedback.tipo === 'sucesso'
+                                    ? theme.primary
+                                    : pushFeedback.tipo === 'erro'
+                                    ? '#d9534f'
+                                    : theme.text,
+                            marginTop: 12,
+                        }}
+                    >
+                        {pushFeedback.texto}
+                    </Text>
+                ) : null}
+                <Pressable
+                    onPress={handleRegisterPush}
+                    disabled={registeringPush}
+                    style={({ pressed }) => ({
+                        marginTop: 16,
+                        backgroundColor: theme.button,
+                        borderRadius: 16,
+                        paddingVertical: 12,
+                        opacity: registeringPush || pressed ? 0.7 : 1,
+                    })}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+                        {registeringPush ? t('settings.push.registerLoading') : t('settings.push.register')}
+                    </Text>
+                </Pressable>
+                <Pressable
+                    onPress={handleTestPush}
+                    disabled={testingPush}
+                    style={({ pressed }) => ({
+                        marginTop: 12,
+                        backgroundColor: theme.primary,
+                        borderRadius: 16,
+                        paddingVertical: 12,
+                        opacity: testingPush || pressed ? 0.7 : 1,
+                    })}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+                        {testingPush ? t('settings.push.testLoading') : t('settings.push.test')}
+                    </Text>
+                </Pressable>
+                <Text style={{ color: theme.text, fontSize: 12, marginTop: 12 }}>
+                    {t('settings.push.localFallbackNotice')}
+                </Text>
+            </View>
             <View style={styles.deleteConfig}>
                 <Botao title={loading ? t('settings.buttons.updateLoading') : t('settings.buttons.update')} color={theme.button} onPress={atualizarConta} />
-                <Botao title={t('settings.buttons.delete')} color="#d9534f" onPress={deletarConta} />
+                <Botao title={loading ? t('settings.buttons.deleteLoading') : t('settings.buttons.delete')} color="#d9534f" onPress={deletarConta} />
             </View>
+            {loading ? <ActivityIndicator style={{ marginTop: 12, alignSelf: 'center' }} color={theme.primary} /> : null}
         </View>
     );
 };

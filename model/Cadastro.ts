@@ -1,19 +1,23 @@
 import * as yup from 'yup';
 import { object, string } from 'yup';
+import i18n from '../i18n';
 
 
 // Schema para cadastro (senha obrigatória)
 const cadastroSchema: yup.ObjectSchema<any, any> = object({
-  nome: string().required("Por favor preencha o nome"),
-  email: string().email("Informe um email válido").required("Por favor preencha o email"),
-  senha: string().min(6, "A senha deve ter pelo menos 6 caracteres").required("Por favor preencha a senha"),
+  nome: string().required(i18n.t('validation.nameRequired')),
+  email: string().email(i18n.t('validation.emailInvalid')).required(i18n.t('validation.emailRequired')),
+  senha: string()
+    .min(8, i18n.t('validation.passwordMin'))
+    .max(15, i18n.t('validation.passwordMax'))
+    .required(i18n.t('validation.passwordRequired')),
 });
 
 // Schema para atualização (senha opcional)
 const atualizarSchema: yup.ObjectSchema<any, any> = object({
-  nome: string().required("Por favor preencha o nome"),
-  email: string().email("Informe um email válido").required("Por favor preencha o email"),
-  senha: string().min(6, "A senha deve ter pelo menos 6 caracteres").notRequired(),
+  nome: string().required(i18n.t('validation.nameRequired')),
+  email: string().email(i18n.t('validation.emailInvalid')).required(i18n.t('validation.emailRequired')),
+  senha: string().min(8, i18n.t('validation.passwordMin')).max(15, i18n.t('validation.passwordMax')).notRequired(),
 });
 
 

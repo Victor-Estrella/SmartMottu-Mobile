@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "826086963003",
+    "project_id": "challenge-ff289",
+    "storage_bucket": "challenge-ff289.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826086963003:android:a914b60803285b179c291e",
+        "android_client_info": {
+          "package_name": "com.smartMottu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtVSp3U36S-CcqfGkrX0g21ix2ZNANDs0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

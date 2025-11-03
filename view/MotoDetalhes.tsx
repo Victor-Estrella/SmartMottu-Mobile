@@ -37,9 +37,13 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
     }
 
     const deletarMoto = async () => {
-        await deletar(motoExibir.id || motoExibir.idMoto);
-        Alert.alert(t('alerts.success'), t('moto.details.success.deleted'));
-        navigation.navigate("MotoListagem");
+        const ok = await deletar(motoExibir.id || motoExibir.idMoto);
+        if (ok) {
+            Alert.alert(t('alerts.success'), t('moto.details.success.deleted'));
+            navigation.navigate("MotoListagem");
+        } else {
+            Alert.alert(t('common.feedback.error'), t('moto.messages.deleteError'));
+        }
     };
 
     const abrirModalAtualizar = () => {
@@ -49,9 +53,13 @@ const MotoDetalhes = ({ navigation }: { navigation: any }) => {
 
     const salvarAtualizacao = async () => {
         if (editMoto) {
-            await atualizar(editMoto.id || editMoto.idMoto, editMoto);
-            setModalVisible(false);
-            Alert.alert(t('alerts.success'), t('moto.details.success.updated'));
+            const ok = await atualizar(editMoto.id || editMoto.idMoto, editMoto);
+            if (ok) {
+                setModalVisible(false);
+                Alert.alert(t('alerts.success'), t('moto.details.success.updated'));
+            } else {
+                Alert.alert(t('common.feedback.error'), t('moto.messages.updateError'));
+            }
         }
     };
 

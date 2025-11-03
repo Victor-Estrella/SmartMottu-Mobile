@@ -20,6 +20,7 @@ const useMotoControl = () => {
         setListaMoto(dados);
       } catch (err: any) {
         console.warn('Erro ao listar motos:', err.message || String(err));
+        setMensagem(i18n.t('moto.messages.listError'));
       } finally {
         setLoading(false);
       }
@@ -48,6 +49,23 @@ const useMotoControl = () => {
         },
       });
     } catch (err: any) {
+      if (err?.name === 'ValidationError') {
+        const path = err?.path as string | undefined;
+        let msg = i18n.t('moto.messages.unknownError');
+        if (path === 'setor') msg = i18n.t('moto.validation.sectorRequired');
+        else if (path === 'modelo') msg = i18n.t('moto.validation.modelRequired');
+        else if (path === 'unidade') msg = i18n.t('moto.validation.unitRequired');
+        else if (path === 'status') msg = i18n.t('moto.validation.statusRequired');
+        else if (path === 'placa') {
+          const text: string = String(err.message || '');
+          if (text.includes('7')) msg = i18n.t('moto.validation.plateLength'); else msg = i18n.t('moto.validation.plateRequired');
+        } else if (path === 'nmChassi') {
+          const text: string = String(err.message || '');
+          if (text.includes('17')) msg = i18n.t('moto.validation.chassiLength'); else msg = i18n.t('moto.validation.chassiRequired');
+        }
+        setMensagem(msg);
+        return;
+      }
       let msg = i18n.t('moto.messages.unknownError');
       if (err?.response?.status === 400) {
         msg = i18n.t('moto.messages.invalidData');
@@ -62,7 +80,7 @@ const useMotoControl = () => {
     }
   };
 
-  const atualizar = async (key: string, motoAtualizada: Moto) => {
+  const atualizar = async (key: string, motoAtualizada: Moto): Promise<boolean> => {
     setLoading(true);
     try {
       const previous = listaMoto.find(m => String(m.idMoto) === String(key));
@@ -88,20 +106,26 @@ const useMotoControl = () => {
           },
         });
       }
+      return true;
     } catch (err: any) {
       console.warn('Erro ao atualizar moto:', err.message || String(err));
+      setMensagem(i18n.t('moto.messages.updateError'));
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const deletar = async (key: string) => {
+  const deletar = async (key: string): Promise<boolean> => {
     setLoading(true);
     try {
       await motoServicoDeletar(key);
       setListaMoto(prev => prev.filter(m => String(m.idMoto) !== String(key)));
+      return true;
     } catch (err: any) {
       console.warn('Erro ao deletar moto:', err.message || String(err));
+      setMensagem(i18n.t('moto.messages.deleteError'));
+      return false;
     } finally {
       setLoading(false);
     }

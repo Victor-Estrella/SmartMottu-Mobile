@@ -33,6 +33,7 @@
     "nameRequired": "El nombre es obligatorio.",
     "emailRequired": "El correo electrónico es obligatorio.",
     "emailInvalid": "Introduce un correo electrónico válido.",
+    "passwordRequired": "La contraseña es obligatoria.",
     "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
     "passwordMax": "La contraseña debe tener como máximo 15 caracteres.",
     "passwordConfirm": "No fue posible autenticar. Verifica tu correo y contraseña.",
@@ -92,6 +93,33 @@
     },
     "language": {
       "label": "Idioma"
+    },
+    "push": {
+      "title": "Notificaciones Push",
+      "statusLabel": "Permiso",
+      "status": {
+        "granted": "Concedido",
+        "denied": "Denegado",
+        "undetermined": "Pendiente",
+        "provisional": "Provisional",
+        "unknown": "Desconocido"
+      },
+      "tokenLabel": "Token Expo Push",
+      "tokenUnavailable": "Token no disponible",
+      "register": "Activar notificaciones",
+      "registerLoading": "Activando...",
+      "test": "Enviar push de prueba",
+      "testLoading": "Enviando...",
+      "feedback": {
+        "registered": "Token obtenido con éxito.",
+        "missing": "No fue posible generar el token. Verifica los permisos.",
+        "fcmRequired": "Configura las credenciales FCM para Android según la documentación de Expo.",
+        "testSent": "Push enviado por la API de Expo!",
+        "testScheduled": "Sin token: programamos una notificación local."
+      },
+      "localFallbackNotice": "Sin token activo usamos una notificación local después de unos segundos.",
+      "testTitle": "Notificación de prueba",
+      "testBody": "¡Tu integración de push está funcionando!"
     },
     "notifications": {
       "accountUpdatedTitle": "Cuenta actualizada",
@@ -173,6 +201,7 @@
     },
     "messages": {
       "createSuccess": "Moto registrada con éxito.",
+      "listError": "Error al cargar la lista de motos.",
       "duplicate": "Ya existe una moto con este identificador.",
       "invalidData": "Datos inválidos. Verifica los campos e inténtalo nuevamente.",
       "serverError": "Error interno del servidor. Inténtalo más tarde.",
@@ -194,6 +223,16 @@
       "Minha Mottu": "Mi Mottu",
       "Outro": "Otro"
     }
+  },
+  "moto.validation": {
+    "sectorRequired": "El sector es obligatorio.",
+    "modelRequired": "El modelo es obligatorio.",
+    "unitRequired": "La unidad es obligatoria.",
+    "statusRequired": "El estado es obligatorio.",
+    "plateRequired": "La placa es obligatoria.",
+    "plateLength": "La placa debe tener 7 caracteres.",
+    "chassiRequired": "El chasis es obligatorio.",
+    "chassiLength": "El chasis debe tener 17 caracteres."
   },
   "alerts": {
     "success": "Éxito"
@@ -234,5 +273,13 @@
       "updatedTitle": "Actualización de moto",
       "updatedBody": "La moto {{identifier}} ahora está en {{sector}} ({{status}})."
     }
+  },
+  "about": {
+    "title": "Acerca de la App",
+    "appName": "Aplicación",
+    "version": "Versión",
+    "commit": "Commit",
+    "hint": "Define EXPO_PUBLIC_GIT_COMMIT en el build para mostrar el hash del commit.",
+    "unknown": "Hash no disponible"
   }
 }

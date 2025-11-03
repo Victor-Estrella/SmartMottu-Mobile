@@ -11,6 +11,7 @@ import { MotoProvider } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
 import MotoLista from './MotoLista';
 import { useTranslation } from 'react-i18next';
+import Sobre from './Sobre';
 
 const Tab = createBottomTabNavigator();
 
@@ -71,6 +72,15 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                             ),
                         }}>
                             {(navProps: any) => ( <Configuracoes {...navProps} SucessoLogout={SucessoLogout} /> )}
+                        </Tab.Screen>
+                        <Tab.Screen name="Sobre" options={{
+                            title: t('about.title'),
+                            tabBarLabel: t('about.title'),
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <AntDesign name="info-circle" size={screenProps.size} color={screenProps.color} />
+                            ),
+                        }}>
+                            {() => (<Sobre />)}
                         </Tab.Screen>
                     </Tab.Navigator>
                 </View>
