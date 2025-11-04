@@ -103,6 +103,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         : await Notifications.getExpoPushTokenAsync();
       const token = tokenResponse.data ?? null;
       if (token) {
+        console.log('Expo push token obtido:', token);
         setExpoPushToken(token);
         setRegistrationError(null);
         return token;
