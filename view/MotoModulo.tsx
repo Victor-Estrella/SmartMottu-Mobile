@@ -10,11 +10,14 @@ import Configuracoes from './Configuracoes';
 import { MotoProvider } from '../contexto/MotoContext';
 import { useThemeGlobal } from '../styles/ThemeContext';
 import MotoLista from './MotoLista';
+import { useTranslation } from 'react-i18next';
+import Sobre from './Sobre';
 
 const Tab = createBottomTabNavigator();
 
 const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.ReactElement => {
     const { theme } = useThemeGlobal();
+    const { t } = useTranslation();
 
     const handleLogout = async () => {
         try {
@@ -30,12 +33,13 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
         <MotoProvider>
             <View style={{ flex: 1 }}>
                 <View style={{ padding: 10, alignItems: 'flex-end', backgroundColor: theme.background, zIndex: 2 }}>
-                    <Botao title="Sair" onPress={handleLogout} />
+                    <Botao title={t('moto.module.logout')} onPress={handleLogout} />
                 </View>
                 <View style={{ flex: 1, }}>
                     <Tab.Navigator screenOptions={{ headerShown: false }}>
                         <Tab.Screen name="MotoFormulario" options={{
-                            title: 'Formulario',
+                            title: t('navigation.tabs.form'),
+                            tabBarLabel: t('navigation.tabs.form'),
                             tabBarIcon: (screenProps: any): ReactNode => (
                                 <Feather name="clipboard" size={screenProps.size} color={screenProps.color} />
                             ),
@@ -43,7 +47,8 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                             {(navProps: any) => ( <FormularioMoto SucessoLogout={SucessoLogout} {...navProps} /> )}
                         </Tab.Screen>
                         <Tab.Screen name="Mapa" options={{  
-                            title: 'Mapa',
+                            title: t('navigation.tabs.map'),
+                            tabBarLabel: t('navigation.tabs.map'),
                             tabBarIcon: (screenProps: any): ReactNode => (
                                 <Feather name="map" size={screenProps.size} color={screenProps.color} />
                             ),
@@ -51,7 +56,8 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                             {(navProps: any) => ( <MapaPatio {...navProps} /> )}
                         </Tab.Screen>
                         <Tab.Screen name="Moto Informações" options={{
-                            title: 'Moto Informações',
+                            title: t('navigation.tabs.info'),
+                            tabBarLabel: t('navigation.tabs.info'),
                             tabBarIcon: (screenProps: any): ReactNode => (
                                 <AntDesign name="info-circle" size={screenProps.size} color={screenProps.color} />
                             ),
@@ -59,12 +65,22 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
                             {(navProps: any) => ( <MotoLista {...navProps} /> )}
                         </Tab.Screen>
                         <Tab.Screen name="Configurações" options={{
-                            title: 'Configurações',
+                            title: t('navigation.tabs.settings'),
+                            tabBarLabel: t('navigation.tabs.settings'),
                             tabBarIcon: (screenProps: any): ReactNode => (
                                 <Feather name="settings" size={screenProps.size} color={screenProps.color} />
                             ),
                         }}>
                             {(navProps: any) => ( <Configuracoes {...navProps} SucessoLogout={SucessoLogout} /> )}
+                        </Tab.Screen>
+                        <Tab.Screen name="Sobre" options={{
+                            title: t('about.title'),
+                            tabBarLabel: t('about.title'),
+                            tabBarIcon: (screenProps: any): ReactNode => (
+                                <AntDesign name="info-circle" size={screenProps.size} color={screenProps.color} />
+                            ),
+                        }}>
+                            {() => (<Sobre />)}
                         </Tab.Screen>
                     </Tab.Navigator>
                 </View>
@@ -76,7 +92,7 @@ const MotoModulo = ({ SucessoLogout }: { SucessoLogout: () => void }): React.Rea
 function Botao(props: BotaoProps) {
     return (
         <Pressable onPress={props.onPress} style={{ padding: 10, paddingHorizontal: 40 , backgroundColor: 'green', borderRadius: 10  }}>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Sair</Text>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>{props.title}</Text>
         </Pressable>
     );
 }

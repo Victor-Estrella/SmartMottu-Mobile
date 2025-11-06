@@ -5,9 +5,12 @@ import { Pressable, View, Text } from 'react-native';
 import { styles } from './styles/estilos';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 import { MotoModulo } from './view/MotoModulo';
 import Autenticacao from './view/Autenticacao';
 import { ThemeProvider, useThemeGlobal } from './styles/ThemeContext';
+import { NotificationProvider } from './contexto/NotificationContext';
+import './i18n';
 
 const {Navigator, Screen} = createStackNavigator();
 
@@ -22,7 +25,9 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <AppWithTheme login={login} setLogin={setLogin} />
+      <NotificationProvider>
+        <AppWithTheme login={login} setLogin={setLogin} />
+      </NotificationProvider>
     </ThemeProvider>
   );
 }
@@ -54,9 +59,10 @@ function AppWithTheme({ login, setLogin }: { login: boolean, setLogin: (v: boole
 }
 
 function ThemeSwitch({ onPress, isDark }: { onPress: () => void, isDark: boolean }) {
+  const { t } = useTranslation();
   return (
     <Pressable onPress={onPress} style={{ padding: 8, borderRadius: 20, backgroundColor: isDark ? '#222' : '#eee', marginRight: 8, marginTop: 30 }}>
-      <Text style={{ color: isDark ? '#fff' : '#222', fontWeight: 'bold' }}>{isDark ? '🌙 Escuro' : '☀️ Claro'}</Text>
+      <Text style={{ color: isDark ? '#fff' : '#222', fontWeight: 'bold' }}>{isDark ? t('theme.dark') : t('theme.light')}</Text>
     </Pressable>
   );
 }

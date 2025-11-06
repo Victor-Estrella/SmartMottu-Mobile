@@ -1,13 +1,20 @@
 import * as yup from 'yup';
 import { object, string } from 'yup';
+import i18n from '../i18n';
 
 const motoSchema: yup.ObjectSchema<any, any> = object({
-  modelo: string().required("Por favor preencha o modelo"),
-  unidade: string().required("Por favor preencha a unidade"),
-  status: string().required("Por favor preencha o status"),
-  setor: string().required("Por favor preencha o setor"),
-  placa: string().required("Por favor preencha a placa").min(7, "A placa deve ter 7 caracteres").max(7, "A placa deve ter 7 caracteres"),
-  nmChassi: string().required("Por favor preencha o chassi").min(17, "O chassi deve ter 17 caracteres").max(17, "O chassi deve ter 17 caracteres"),
+  modelo: string().required(i18n.t('moto.validation.modelRequired')),
+  unidade: string().required(i18n.t('moto.validation.unitRequired')),
+  status: string().required(i18n.t('moto.validation.statusRequired')),
+  setor: string().required(i18n.t('moto.validation.sectorRequired')),
+  placa: string()
+    .required(i18n.t('moto.validation.plateRequired'))
+    .min(7, i18n.t('moto.validation.plateLength'))
+    .max(7, i18n.t('moto.validation.plateLength')),
+  nmChassi: string()
+    .required(i18n.t('moto.validation.chassiRequired'))
+    .min(17, i18n.t('moto.validation.chassiLength'))
+    .max(17, i18n.t('moto.validation.chassiLength')),
 });
 
 type Moto = yup.InferType<typeof motoSchema> & { idMoto?: number, qrcode?: string };

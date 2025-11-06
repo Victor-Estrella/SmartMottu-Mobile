@@ -7,11 +7,13 @@ import { Cadastro } from './Cadastro';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => void }) {
+    const { t } = useTranslation();
 
     const logar = async (email: string, senha: string) => {
         try {
@@ -27,6 +29,8 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
             <Navigator>
                 <Screen name='Cadastro' options={{
                     headerShown: false,
+                    title: t('navigation.tabs.signup'),
+                    tabBarLabel: t('navigation.tabs.signup'),
                     tabBarIcon: (screenProps: any) =>
                         <FontAwesome name='wpforms' size={screenProps.size} color={screenProps.color}/>
                     }}>
@@ -34,6 +38,8 @@ export default function Autenticacao({ SucessoLogin }: { SucessoLogin: () => voi
                 </Screen>
                 <Screen name='Login' options={{
                     headerShown: false,
+                    title: t('navigation.tabs.login'),
+                    tabBarLabel: t('navigation.tabs.login'),
                     tabBarIcon: (screenProps: any) => 
                         <FontAwesome name='motorcycle' size={screenProps.size} color={screenProps.color}/>
                     }}>
