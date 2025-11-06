@@ -29,7 +29,8 @@
     "extra": {
       "eas": {
         "projectId": "18ece3cd-d1fa-4d7d-9e25-bfc7b528bd8d"
-      }
+      },
+      "gitCommit": "a8bb0a3"
     },
     "owner": "manoke"
   }
