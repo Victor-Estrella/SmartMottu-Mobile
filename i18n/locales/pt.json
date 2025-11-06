@@ -279,7 +279,7 @@
     "appName": "Aplicativo",
     "version": "Versão",
     "commit": "Commit",
-    "hint": "Defina EXPO_PUBLIC_GIT_COMMIT no build para exibir o hash do commit.",
-    "unknown": "Hash não disponível"
+    "unknown": "Hash não disponível",
+    "hint": "Defina EXPO_PUBLIC_GIT_COMMIT ou adicione extra.gitCommit para exibir o hash do commit."
   }
 }

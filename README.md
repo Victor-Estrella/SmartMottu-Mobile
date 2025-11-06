@@ -38,6 +38,8 @@ App.tsx             # Navegação raiz e ThemeProvider
 - AsyncStorage
 - Axios
 - react-native-qrcode-svg
+ - expo-notifications (Push)
+ - i18next (i18n)
 
 ## Como rodar
 
@@ -69,6 +71,58 @@ Back-end
 ```powershell
 $env:API_URL = "http://seu-servidor:8080"; npm run start
 ```
+
+## Publicação (Firebase App Distribution)
+
+1. Gere um build interno com EAS ou Gradle (Android):
+	 - EAS: `eas build --platform android --profile development` (ou `preview`/`production`)
+2. Faça upload do APK/AAB para o Firebase App Distribution.
+3. Adicione o e-mail do professor como tester no projeto Firebase.
+4. Garanta que a versão publicada corresponde a este repositório (hash do commit na tela Sobre).
+
+Observações Android:
+- `android/app/google-services.json` está configurado.
+- Plugin do Google Services aplicado corretamente.
+
+## Notificações Push (Expo + FCM)
+
+- O app usa `expo-notifications` e registra o token no dispositivo físico.
+- Pré-requisito: adicionar a chave de servidor do FCM no painel da Expo (Project → Credentials → Push Notifications) para o `projectId` configurado em `app.json`.
+- Teste rápido: na tela Configurações, ative as notificações e envie o push de teste; ou use a Expo Notification Tool com o token exibido.
+- Sem token/credencial, o app agenda uma notificação local de fallback.
+
+## Tela "Sobre o App" e Hash do Commit
+
+- A tela Sobre exibe `Aplicativo`, `Versão` e `Commit` de referência.
+- O hash é resolvido por `app.config.js` nesta ordem: `EXPO_PUBLIC_GIT_COMMIT` → `git rev-parse --short HEAD` → `expo.extra.gitCommit` → `unknown`.
+- Para fixar manualmente, definimos `expo.extra.gitCommit` em `app.json` quando necessário.
+
+## Internacionalização (PT/ES)
+
+- i18n com i18next, idiomas: Português e Espanhol. Persistência da escolha via AsyncStorage.
+- Todas as strings de UI estão centralizadas em `i18n/locales/*.json`.
+
+## Estilo e Tema
+
+- Suporte a modo claro/escuro via `ThemeContext` e alternância no app.
+- Estilos centralizados em `styles/` e aplicação consistente nas telas.
+
+## Integração com API
+
+- Camadas:
+	- `fetcher/` (HTTP com Axios)
+	- `service/` (validações com Yup e orquestração)
+	- `control/` (regras de negócio usadas nas views)
+- Funcionalidades implementadas:
+	- Autenticação (Cadastro/Login/Logout)
+	- Gestão de motos: CRUD completo (Create/Read/Update/Delete)
+	- Validações de formulário e feedback de usuário
+
+## Apresentação (Vídeo)
+
+**Link do vídeo (demonstração completa):** https://youtu.be/31pi_rCvIFM
+
+No vídeo são apresentados: navegação, CRUD de motos, autenticação, tema, i18n, notificações (registro/envio) e tela Sobre com hash.
 
 
 ## Vídeo de demonstração
