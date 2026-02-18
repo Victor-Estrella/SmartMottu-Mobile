@@ -16,6 +16,9 @@ export default function Sobre() {
       <Text style={{ color: theme.primary, fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 }}>
         {t('about.title')}
       </Text>
+      <Text style={{ color: theme.text, fontSize: 16, textAlign: 'center', marginBottom: 16 }}>
+        {t('about.description')}
+      </Text>
       <View style={{ backgroundColor: theme.card, borderRadius: 12, padding: 16 }}>
         <Text style={{ color: theme.text, fontSize: 16, marginBottom: 8 }}>
           {t('about.appName')}: <Text style={{ fontWeight: 'bold' }}>{name}</Text>

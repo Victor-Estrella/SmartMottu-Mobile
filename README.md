@@ -3,9 +3,10 @@
 Aplicativo mobile para gestão de pátios da Mottu, com autenticação, cadastro e gestão de motos, geração de QR Code por moto, mapa do pátio e alternância de tema claro/escuro.
 
 ## Integrantes
-- Julia Monteiro — RM: 557023 — Turma: 2TDSPV
-- Sofia Andrade Petruk — RM: 556585 — Turma: 2TDSPV
-- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH
+- Julia Monteiro — RM: 557023 — Turma: 2TDSPV - https://github.com/jliamonteiro
+- Sofia Andrade Petruk — RM: 556585 — Turma: 2TDSPV - https://github.com/sofiapetruk
+- Victor Henrique Estrella Carracci — RM: 556206 — Turma: 2TDSPH - https://github.com/Victor-Estrella 
+
 ## Proposta e funcionalidades
 Objetivo: resolver a dificuldade de localizar motos nos pátios, especialmente quando sem placa ou com chassi encoberto, garantindo controle, rastreabilidade e produtividade.
 
@@ -23,6 +24,7 @@ assets/
 contexto/           # Contextos globais (ex.: MotoContext)
 control/            # Hooks de controle (regras de negócio do app)
 fetcher/            # Acesso HTTP (axios) à API
+i18n/               # Internacionalização (i18next)
 model/              # Tipos e Schemas (Yup)
 service/            # Orquestração e validação antes do fetcher
 styles/             # Temas, estilos globais e ThemeContext
@@ -34,12 +36,14 @@ App.tsx             # Navegação raiz e ThemeProvider
 ## Tecnologias utilizadas
 - React Native (Expo)
 - React Navigation (Stack/Tab)
-- TypeScript + Yup
+- TypeScript + Yup (validações de formulário)
 - AsyncStorage
 - Axios
 - react-native-qrcode-svg
- - expo-notifications (Push)
- - i18next (i18n)
+- expo-notifications (Push)
+- i18next + react-i18next (i18n)
+- expo-localization
+- Firebase (React Native Firebase: app, app-distribution)
 
 ## Como rodar
 
@@ -50,8 +54,8 @@ Pré‑requisitos
 
 Clonar e instalar
 ```powershell
-git clone https://github.com/AntonioCarvalhoFIAP/challenge-3-Victor-Estrella.git
-cd challenge-3-Victor-Estrella
+git clone https://github.com/AntonioCarvalhoFIAP/challenge-4-Victor-Estrella.git
+cd challenge-4-Victor-Estrella
 npm install
 ```
 
@@ -77,12 +81,7 @@ $env:API_URL = "http://seu-servidor:8080"; npm run start
 1. Gere um build interno com EAS ou Gradle (Android):
 	 - EAS: `eas build --platform android --profile development` (ou `preview`/`production`)
 2. Faça upload do APK/AAB para o Firebase App Distribution.
-3. Adicione o e-mail do professor como tester no projeto Firebase.
-4. Garanta que a versão publicada corresponde a este repositório (hash do commit na tela Sobre).
 
-Observações Android:
-- `android/app/google-services.json` está configurado.
-- Plugin do Google Services aplicado corretamente.
 
 ## Notificações Push (Expo + FCM)
 
@@ -120,11 +119,13 @@ Observações Android:
 
 ## Apresentação (Vídeo)
 
-**Link do vídeo (demonstração completa):** https://youtu.be/31pi_rCvIFM
+**Link do vídeo (demonstração completa):** https://youtu.be/WF45zbjyZeA
 
 No vídeo são apresentados: navegação, CRUD de motos, autenticação, tema, i18n, notificações (registro/envio) e tela Sobre com hash.
 
+## Link download Firebase
+https://appdistribution.firebase.google.com/testerapps/1:1035319840404:android:88849abad640fd385c6e81/releases/7osdgpbh4ks38?utm_source=firebase-console
 
-## Vídeo de demonstração
+- caso não funcione: https://appdistribution.firebase.dev/i/2bc77192f5a2ecc9
 
-**Link do vídeo:** https://youtu.be/31pi_rCvIFM
+- e caso não funcione também, build no eas: https://expo.dev/accounts/manooke/projects/smartmottu/builds/3e624207-c3a1-49fa-9c44-dfd2cbb98399

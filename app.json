@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mottu",
-    "slug": "Mottu",
+    "name": "smartmottu",
+    "slug": "smartmottu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,18 +20,24 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "edgeToEdgeEnabled": true,
+      "predictBackGestureEnabled": false,
       "package": "com.smartMottu",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      "expo-notifications",
+      "expo-dev-client"
+    ],
     "extra": {
+      "gitCommit": "3404925",
       "eas": {
-        "projectId": "18ece3cd-d1fa-4d7d-9e25-bfc7b528bd8d"
-      },
-      "gitCommit": "a8bb0a3"
+        "projectId": "25e326fa-4084-4ce3-9fd9-b599ccc60682"
+      }
     },
-    "owner": "manoke"
+    "owner": "manooke"
   }
 }

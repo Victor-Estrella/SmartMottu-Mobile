@@ -30,8 +30,8 @@ const NotificationContext = createContext<NotificationContextValue | null>(null)
 
 Notifications.setNotificationHandler({
   handleNotification: async (): Promise<Notifications.NotificationBehavior> => ({
-    shouldPlaySound: Platform.OS === 'ios',
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
     shouldShowBanner: true,
     shouldShowList: true,
   }),
@@ -48,6 +48,8 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
         sound: 'default',
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
       });
     }
   }, []);
@@ -78,6 +80,8 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 
   const registerForPushNotificationsAsync = useCallback(async (): Promise<string | null> => {
     setRegistrationError(null);
+    await ensureAndroidChannel();
+
     const currentStatus = await ensurePermissionsAsync();
     if (currentStatus !== 'granted') {
       console.warn('Push notification permission not granted.');
@@ -137,7 +141,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
             title,
             body,
             data,
-            sound: Platform.OS === 'ios' ? 'default' : undefined,
+            sound: 'default',
           },
           trigger: {
             type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -174,12 +178,12 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
           method: 'POST',
           headers: {
             Accept: 'application/json',
-            'Accept-encoding': 'gzip, deflate',
+            'Accept-Encoding': 'gzip, deflate',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             to: token,
-            sound: Platform.OS === 'ios' ? 'default' : undefined,
+            sound: 'default',
             title,
             body,
             data,
@@ -187,7 +191,8 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
         });
 
         if (!response.ok) {
-          console.warn('Expo push API request failed', await response.text());
+          const errorText = await response.text();
+          console.warn('Expo push API request failed', errorText);
           await scheduleLocalNotification({
             title,
             body,
@@ -197,9 +202,12 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
           return false;
         }
 
-        const payload = await response.json();
-        if (payload?.data?.status !== 'ok') {
-          console.warn('Expo push API returned error', payload);
+        const raw = await response.json();
+        console.log('Expo push send response', raw);
+        const payload = (raw as any)?.data ?? raw;
+        const status = Array.isArray(payload) ? payload[0]?.status : payload?.status;
+        if (status !== 'ok') {
+          console.warn('Expo push API returned error', raw);
           await scheduleLocalNotification({
             title,
             body,
@@ -207,6 +215,10 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
             data: data ? { ...data, localFallback: true } : { localFallback: true },
           });
           return false;
+        }
+        const ticketId = Array.isArray(payload) ? payload[0]?.id : payload?.id;
+        if (ticketId) {
+          console.log('Expo push ticket id', ticketId);
         }
         return true;
       } catch (error) {
@@ -226,6 +238,21 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     ensurePermissionsAsync();
   }, [ensurePermissionsAsync]);
+
+  useEffect(() => {
+    const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+      console.log('📩 Notificação recebida em foreground:', notification);
+    });
+
+    const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log('📱 Usuário clicou na notificação:', response);
+    });
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (permissionStatus === 'granted' && !expoPushToken && Device.isDevice) {

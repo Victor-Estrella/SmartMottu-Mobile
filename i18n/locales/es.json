@@ -14,18 +14,12 @@
     }
   },
   "common": {
-    "appName": "SmartMottu",
     "actions": {
       "back": "Volver",
       "save": "Guardar",
-      "cancel": "Cancelar",
-      "delete": "Eliminar",
-      "update": "Actualizar",
-      "logout": "Cerrar sesión",
-      "details": "Detalles"
+      "cancel": "Cancelar"
     },
     "feedback": {
-      "success": "Éxito",
       "error": "Error"
     }
   },
@@ -37,10 +31,7 @@
     "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
     "passwordMax": "La contraseña debe tener como máximo 15 caracteres.",
     "passwordConfirm": "No fue posible autenticar. Verifica tu correo y contraseña.",
-    "userIdMissing": "ID de usuario no encontrado. Inicia sesión nuevamente.",
-    "systemPermission": "Necesitamos tu permiso para mostrar notificaciones.",
-    "systemPermissionSettings": "Activa las notificaciones en la configuración del sistema.",
-    "schedulePermission": "No fue posible programar la notificación. Verifica los permisos del sistema."
+    "userIdMissing": "ID de usuario no encontrado. Inicia sesión nuevamente."
   },
   "auth": {
     "signup": {
@@ -106,18 +97,13 @@
       },
       "tokenLabel": "Token Expo Push",
       "tokenUnavailable": "Token no disponible",
-      "register": "Activar notificaciones",
-      "registerLoading": "Activando...",
       "test": "Enviar push de prueba",
       "testLoading": "Enviando...",
       "feedback": {
-        "registered": "Token obtenido con éxito.",
         "missing": "No fue posible generar el token. Verifica los permisos.",
-        "fcmRequired": "Configura las credenciales FCM para Android según la documentación de Expo.",
         "testSent": "Push enviado por la API de Expo!",
         "testScheduled": "Sin token: programamos una notificación local."
       },
-      "localFallbackNotice": "Sin token activo usamos una notificación local después de unos segundos.",
       "testTitle": "Notificación de prueba",
       "testBody": "¡Tu integración de push está funcionando!"
     },
@@ -175,12 +161,10 @@
         "chassi": "Chasis"
       },
       "buttons": {
-        "back": "Volver",
         "update": "Actualizar",
         "updateLoading": "Actualizando...",
         "delete": "Eliminar",
-        "deleteLoading": "Eliminando...",
-        "save": "Guardar"
+        "deleteLoading": "Eliminando..."
       },
       "modalTitle": "Editar moto",
       "success": {
@@ -245,7 +229,6 @@
       "serverError": "Error interno del servidor. Inténtalo más tarde.",
       "unknown": "Error desconocido al intentar registrar.",
       "updateSuccess": "¡Cuenta actualizada con éxito!",
-      "updateUnknown": "Error desconocido al actualizar.",
       "userNotFound": "Usuario no encontrado.",
       "emailInUse": "Ya existe un usuario con este correo.",
       "deleteSuccess": "Registro eliminado con éxito",
@@ -264,9 +247,6 @@
     }
   },
   "notifications": {
-    "permissionRequired": "Necesitamos tu permiso para mostrar notificaciones.",
-    "systemSettings": "Activa las notificaciones en la configuración del sistema.",
-    "scheduled": "Notificación {{id}} programada. Pon la app en segundo plano para ver el banner.",
     "moto": {
       "createdTitle": "Nueva moto registrada",
       "createdBody": "{{model}} agregada al sector {{sector}}.",
@@ -276,6 +256,7 @@
   },
   "about": {
     "title": "Acerca de la App",
+    "description": "Aplicación mobile para la gestión de patios de Mottu, con autenticación, registro y gestión de motos, generación de código QR por moto, mapa del patio y alternancia de tema claro/oscuro.",
     "appName": "Aplicación",
     "version": "Versión",
     "commit": "Commit",

@@ -2,7 +2,7 @@ import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, TextInput, View, ScrollView, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { styles } from '../styles/estilos';
 import { BotaoPropsConfig } from '../model/BotaoPropsConfig';
@@ -28,7 +28,6 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
     const [erroSenha, setErroSenha] = React.useState('');
     const [mensagem, setMensagem] = React.useState<{ texto: string, tipo: 'sucesso' | 'erro' | '' }>({ texto: '', tipo: '' });
     const [pushFeedback, setPushFeedback] = React.useState<{ texto: string, tipo: 'sucesso' | 'erro' | 'info' | '' }>({ texto: '', tipo: '' });
-    const [registeringPush, setRegisteringPush] = React.useState(false);
     const [testingPush, setTestingPush] = React.useState(false);
     const [idUsuario, setIdUsuario] = React.useState<number | null>(null);
     const { theme, isDark } = useThemeGlobal();
@@ -186,39 +185,6 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         }
     };
 
-    const handleRegisterPush = async () => {
-        setRegisteringPush(true);
-        setPushFeedback({ texto: '', tipo: '' });
-        try {
-            const token = await registerForPushNotificationsAsync();
-            if (token) {
-                setPushFeedback({ texto: t('settings.push.feedback.registered'), tipo: 'sucesso' });
-            } else {
-                const messageKey: 'fcmRequired' | 'missing' =
-                    registrationError && registrationError.toLowerCase().includes('firebaseapp')
-                        ? 'fcmRequired'
-                        : 'missing';
-                const message =
-                    messageKey === 'fcmRequired'
-                        ? t('settings.push.feedback.fcmRequired')
-                        : t('settings.push.feedback.missing');
-                setPushFeedback({ texto: message, tipo: 'erro' });
-            }
-        } catch (error) {
-            const messageKey: 'fcmRequired' | 'missing' =
-                registrationError && registrationError.toLowerCase().includes('firebaseapp')
-                    ? 'fcmRequired'
-                    : 'missing';
-            const message =
-                messageKey === 'fcmRequired'
-                    ? t('settings.push.feedback.fcmRequired')
-                    : t('settings.push.feedback.missing');
-            setPushFeedback({ texto: message, tipo: 'erro' });
-        } finally {
-            setRegisteringPush(false);
-        }
-    };
-
     const handleTestPush = async () => {
         setTestingPush(true);
         setPushFeedback({ texto: '', tipo: '' });
@@ -249,125 +215,88 @@ const Configuracoes = (props: ConfiguracoesProps): React.ReactElement => {
         : 'unknown';
     const permissionLabel = t(`settings.push.status.${permissionKey as 'granted' | 'denied' | 'undetermined' | 'provisional' | 'unknown'}`);
     const tokenDisplay = expoPushToken ?? t('settings.push.tokenUnavailable');
-    const pickerTextColor = isDark ? theme.primary : theme.formText;
+    const pickerSelectedTextColor = theme.formText;
+    const pickerDropdownTextColor = React.useMemo(() => {
+        // Prevent Android dark mode dropdown from rendering light text on a light dialog background
+        if (Platform.OS === 'android' && isDark) {
+            return '#1a1a1a';
+        }
+        return theme.text;
+    }, [isDark, theme.text]);
 
     return (
-        <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
-            <Text style={[styles.tituloConfig, { color: theme.primary }]}>{t('settings.title')}</Text>
-            {mensagem.texto ? (
-                <Text style={{ color: mensagem.tipo === 'sucesso' ? theme.primary : 'red', marginBottom: 10, marginLeft: 10, fontWeight: 'bold', }}>{mensagem.texto}</Text>
-            ) : null}
-            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder={t('settings.placeholders.name')} value={nome} onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
-                placeholderTextColor={theme.formText}
-            />
-            {erroNome ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroNome}</Text> : null}
-            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder={t('settings.placeholders.email')} value={email} onChangeText={text => {
-                    setEmail(text);
-                    if (erroEmail) setErroEmail('');
-                    if (mensagem.texto) setMensagem({ texto: '', tipo: '' });
-                }}
-                placeholderTextColor={theme.formText} keyboardType="email-address" autoCapitalize="none"
-            />
-            {erroEmail ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroEmail}</Text> : null}
-            <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                placeholder={t('settings.placeholders.password')} value={senha} onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
-                placeholderTextColor={theme.formText} secureTextEntry
-            />
-            {erroSenha ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroSenha}</Text> : null}
-            <View style={{ width: '100%', marginTop: 16 }}>
-                <Text style={{ color: theme.text, marginLeft: 8, marginBottom: 4 }}>{t('settings.language.label')}</Text>
-                <Picker
-                    selectedValue={language}
-                    onValueChange={(value: SupportedLanguageCode) => handleLanguageSelection(value)}
-                    style={[styles.inputConfig, { backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
-                    dropdownIconColor={theme.primary}
-                    itemStyle={{ color: pickerTextColor }}
-                >
-                    {supportedLanguages.map(lang => (
-                        <Picker.Item key={lang.code} label={lang.label} value={lang.code} color={pickerTextColor} />
-                    ))}
-                </Picker>
-            </View>
-            <View
-                style={{
-                    width: '100%',
-                    marginTop: 24,
-                    backgroundColor: theme.card,
-                    borderRadius: 12,
-                    padding: 16,
-                    borderColor: theme.primary,
-                    borderWidth: 1,
-                }}
-            >
-                <Text style={{ color: theme.primary, fontWeight: 'bold', fontSize: 18, marginBottom: 8 }}>
-                    {t('settings.push.title')}
-                </Text>
-                <Text style={{ color: theme.text, marginBottom: 4 }}>
-                    {t('settings.push.statusLabel')}: <Text style={{ fontWeight: 'bold' }}>{permissionLabel}</Text>
-                </Text>
-                <Text style={{ color: theme.text, marginBottom: 8 }}>
-                    {t('settings.push.tokenLabel')}:
-                </Text>
-                <View style={{ backgroundColor: theme.background, borderRadius: 8, padding: 12, borderWidth: 1, borderColor: theme.primary + '33' }}>
-                    <Text selectable style={{ color: theme.text, fontFamily: 'monospace' }}>{tokenDisplay}</Text>
-                </View>
-                {pushFeedback.texto ? (
-                    <Text
-                        style={{
-                            color:
-                                pushFeedback.tipo === 'sucesso'
-                                    ? theme.primary
-                                    : pushFeedback.tipo === 'erro'
-                                    ? '#d9534f'
-                                    : theme.text,
-                            marginTop: 12,
-                        }}
-                    >
-                        {pushFeedback.texto}
-                    </Text>
+        <ScrollView style={{ flex: 1, backgroundColor: theme.background }} contentContainerStyle={{ paddingBottom: 24 }}keyboardShouldPersistTaps="handled">
+            <View style={[styles.containerConfig, { backgroundColor: theme.background }]}> 
+                <Text style={[styles.tituloConfig, { color: theme.primary }]}>{t('settings.title')}</Text>
+                {mensagem.texto ? (
+                    <Text style={{ color: mensagem.tipo === 'sucesso' ? theme.primary : 'red', marginBottom: 10, marginLeft: 10, fontWeight: 'bold', }}>{mensagem.texto}</Text>
                 ) : null}
-                <Pressable
-                    onPress={handleRegisterPush}
-                    disabled={registeringPush}
-                    style={({ pressed }) => ({
-                        marginTop: 16,
-                        backgroundColor: theme.button,
-                        borderRadius: 16,
-                        paddingVertical: 12,
-                        opacity: registeringPush || pressed ? 0.7 : 1,
-                    })}
-                >
-                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
-                        {registeringPush ? t('settings.push.registerLoading') : t('settings.push.register')}
+                <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                    placeholder={t('settings.placeholders.name')} value={nome} onChangeText={text => { setNome(text); if (erroNome) setErroNome(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+                    placeholderTextColor={theme.formText}
+                />
+                {erroNome ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroNome}</Text> : null}
+                <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                    placeholder={t('settings.placeholders.email')} value={email} onChangeText={text => {
+                        setEmail(text);
+                        if (erroEmail) setErroEmail('');
+                        if (mensagem.texto) setMensagem({ texto: '', tipo: '' });
+                    }}
+                    placeholderTextColor={theme.formText} keyboardType="email-address" autoCapitalize="none"
+                />
+                {erroEmail ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroEmail}</Text> : null}
+                <TextInput style={[styles.inputConfig, { color: theme.formText, backgroundColor: theme.formInputBackground, borderColor: theme.primary }]}
+                    placeholder={t('settings.placeholders.password')} value={senha} onChangeText={text => { setSenha(text); if (erroSenha) setErroSenha(''); if (mensagem.texto) setMensagem({ texto: '', tipo: '' }); }}
+                    placeholderTextColor={theme.formText} secureTextEntry
+                />
+                {erroSenha ? <Text style={{ color: 'red', marginLeft: 10 }}>{erroSenha}</Text> : null}
+                
+                <View style={styles.deleteConfig}>
+                    <Botao title={loading ? t('settings.buttons.updateLoading') : t('settings.buttons.update')} color={theme.button} onPress={atualizarConta} />
+                    <Botao title={loading ? t('settings.buttons.deleteLoading') : t('settings.buttons.delete')} color="#d9534f" onPress={deletarConta} />
+                </View>
+                {loading ? <ActivityIndicator style={{ marginTop: 12, alignSelf: 'center' }} color={theme.primary} /> : null}
+                
+                <View style={{ width: '100%', marginTop: 16 }}>
+                    <Text style={{ color: theme.text, marginLeft: 8, marginBottom: 4 }}>{t('settings.language.label')}</Text>
+                    <Picker selectedValue={language} onValueChange={(value: SupportedLanguageCode) => handleLanguageSelection(value)} style={[styles.inputConfig, { backgroundColor: theme.formInputBackground, borderColor: theme.primary, color: pickerSelectedTextColor }]}
+                        dropdownIconColor={pickerSelectedTextColor} itemStyle={{ color: pickerDropdownTextColor }}
+                    >
+                        {supportedLanguages.map(lang => (
+                            <Picker.Item key={lang.code} label={lang.label} value={lang.code} color={pickerDropdownTextColor} />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View style={{ width: '100%', marginTop: 24, backgroundColor: theme.card, borderRadius: 12, padding: 16, borderColor: theme.primary, borderWidth: 1, }}>
+                    <Text style={{ color: theme.primary, fontWeight: 'bold', fontSize: 18, marginBottom: 8 }}>
+                        {t('settings.push.title')}
                     </Text>
-                </Pressable>
-                <Pressable
-                    onPress={handleTestPush}
-                    disabled={testingPush}
-                    style={({ pressed }) => ({
-                        marginTop: 12,
-                        backgroundColor: theme.primary,
-                        borderRadius: 16,
-                        paddingVertical: 12,
-                        opacity: testingPush || pressed ? 0.7 : 1,
-                    })}
-                >
-                    <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
-                        {testingPush ? t('settings.push.testLoading') : t('settings.push.test')}
+                    <Text style={{ color: theme.text, marginBottom: 4 }}>
+                        {t('settings.push.statusLabel')}: <Text style={{ fontWeight: 'bold' }}>{permissionLabel}</Text>
                     </Text>
-                </Pressable>
-                <Text style={{ color: theme.text, fontSize: 12, marginTop: 12 }}>
-                    {t('settings.push.localFallbackNotice')}
-                </Text>
+                    <Text style={{ color: theme.text, marginBottom: 8 }}>
+                        {t('settings.push.tokenLabel')}:
+                    </Text>
+                    <View style={{ backgroundColor: theme.background, borderRadius: 8, padding: 12, borderWidth: 1, borderColor: theme.primary + '33' }}>
+                        <Text selectable style={{ color: theme.text, fontFamily: 'monospace' }}>{tokenDisplay}</Text>
+                    </View>
+                    {pushFeedback.texto ? (
+                        <Text style={{ color: pushFeedback.tipo === 'sucesso' ? theme.primary : pushFeedback.tipo === 'erro' ? '#d9534f' : theme.text, marginTop: 12, }}>
+                            {pushFeedback.texto}
+                        </Text>
+                    ) : null}
+
+                    <Pressable onPress={handleTestPush} disabled={testingPush} style={({ pressed }) => ({ marginTop: 12, backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 12, opacity: testingPush || pressed ? 0.7 : 1, })}>
+                        <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+                            {testingPush ? t('settings.push.testLoading') : t('settings.push.test')}
+                        </Text>
+                    </Pressable>
+
+                </View>
+
             </View>
-            <View style={styles.deleteConfig}>
-                <Botao title={loading ? t('settings.buttons.updateLoading') : t('settings.buttons.update')} color={theme.button} onPress={atualizarConta} />
-                <Botao title={loading ? t('settings.buttons.deleteLoading') : t('settings.buttons.delete')} color="#d9534f" onPress={deletarConta} />
-            </View>
-            {loading ? <ActivityIndicator style={{ marginTop: 12, alignSelf: 'center' }} color={theme.primary} /> : null}
-        </View>
+        </ScrollView>
     );
 };
 
